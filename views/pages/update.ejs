@@ -1,0 +1,18 @@
+<% layout('/layouts/boilerplate') -%>
+
+<section class="container">
+    <form action="/stays/<%=stay._id%>?_method=PUT" method="POST">
+        <div>
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" value="<%= stay.title %>">
+        </div>
+        <div>
+            <label for="location">Location</label>
+            <input type="text" name="location" id="location" value="<%=stay.location%>">
+        </div>
+        <button>List property</button>
+    </form>
+    <a href="/stays/<%=stay._id%>">Go back</a>
+ </section>   
+    <% block('navBar').append('<script src="/js/nav.js"></script>') %>
+    <% block('script').append('<script src="/js/script.js"></script>') %>

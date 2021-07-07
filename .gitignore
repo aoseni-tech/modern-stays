@@ -1,0 +1,4 @@
+#ignore all ts files
+*.ts
+#ignore all node files
+/.node_modules

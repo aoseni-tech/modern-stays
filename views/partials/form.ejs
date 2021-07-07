@@ -1,0 +1,125 @@
+<div id="form-container">
+    <form action="/search" method="GET" id="search-form">
+      <div id="location-section" class="form-div">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" id="location" placeholder="Your next stay" autocomplete="off" spellcheck="false" name="location"/>
+      </div>
+      <div id="check-in-section" class="form-div date-picker">
+        <span id="check-in-label" class="form-label">Check-in</span>
+        <span id="check-in-date" class="date-input-value">Arrive</span>
+      </div>
+      <div id="check-out-section" class="form-div date-picker">
+        <span id="check-out-label" class="form-label">Check-out</span>
+        <span id="check-out-date" class="date-input-value">Depart</span>
+      </div>
+      <button>
+        <svg width="187" height="35" viewBox="0 0 187 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23.3571 23.3571L33 33M14.7857 26.5714C21.2948 26.5714 26.5714 21.2948 26.5714 14.7857C26.5714 8.27664 21.2948 3 14.7857 3C8.27664 3 3 8.27664 3 14.7857C3 21.2948 8.27664 26.5714 14.7857 26.5714Z" stroke="white" stroke-width="5"/>
+          <path d="M61.44 33.4C59.28 33.4 57.1867 33.0933 55.16 32.48C53.16 31.8667 51.5733 31.0533 50.4 30.04L52.2 26C53.3467 26.9067 54.7467 27.6533 56.4 28.24C58.08 28.8 59.76 29.08 61.44 29.08C63.52 29.08 65.0667 28.7467 66.08 28.08C67.12 27.4133 67.64 26.5333 67.64 25.44C67.64 24.64 67.3467 23.9867 66.76 23.48C66.2 22.9467 65.48 22.5333 64.6 22.24C63.72 21.9467 62.52 21.6133 61 21.24C58.8667 20.7333 57.1333 20.2267 55.8 19.72C54.4933 19.2133 53.36 18.4267 52.4 17.36C51.4667 16.2667 51 14.8 51 12.96C51 11.4133 51.4133 10.0133 52.24 8.76C53.0933 7.48 54.36 6.46666 56.04 5.72C57.7467 4.97333 59.8267 4.6 62.28 4.6C63.9867 4.6 65.6667 4.81333 67.32 5.24C68.9733 5.66667 70.4 6.28 71.6 7.08L69.96 11.12C68.7333 10.4 67.4533 9.85333 66.12 9.48C64.7867 9.10667 63.4933 8.92 62.24 8.92C60.1867 8.92 58.6533 9.26666 57.64 9.96C56.6533 10.6533 56.16 11.5733 56.16 12.72C56.16 13.52 56.44 14.1733 57 14.68C57.5867 15.1867 58.32 15.5867 59.2 15.88C60.08 16.1733 61.28 16.5067 62.8 16.88C64.88 17.36 66.5867 17.8667 67.92 18.4C69.2533 18.9067 70.3867 19.6933 71.32 20.76C72.28 21.8267 72.76 23.2667 72.76 25.08C72.76 26.6267 72.3333 28.0267 71.48 29.28C70.6533 30.5333 69.3867 31.5333 67.68 32.28C65.9733 33.0267 63.8933 33.4 61.44 33.4ZM97.5163 22.44C97.5163 22.7867 97.4896 23.28 97.4363 23.92H80.6763C80.9696 25.4933 81.7296 26.7467 82.9563 27.68C84.2096 28.5867 85.7563 29.04 87.5963 29.04C89.9429 29.04 91.8763 28.2667 93.3963 26.72L96.0763 29.8C95.1163 30.9467 93.9029 31.8133 92.4363 32.4C90.9696 32.9867 89.3163 33.28 87.4763 33.28C85.1296 33.28 83.0629 32.8133 81.2763 31.88C79.4896 30.9467 78.1029 29.6533 77.1163 28C76.1563 26.32 75.6763 24.4267 75.6763 22.32C75.6763 20.24 76.1429 18.3733 77.0763 16.72C78.0363 15.04 79.3563 13.7333 81.0363 12.8C82.7163 11.8667 84.6096 11.4 86.7163 11.4C88.7963 11.4 90.6496 11.8667 92.2763 12.8C93.9296 13.7067 95.2096 15 96.1163 16.68C97.0496 18.3333 97.5163 20.2533 97.5163 22.44ZM86.7163 15.4C85.1163 15.4 83.7563 15.88 82.6363 16.84C81.5429 17.7733 80.8763 19.0267 80.6363 20.6H92.7563C92.5429 19.0533 91.8896 17.8 90.7963 16.84C89.7029 15.88 88.3429 15.4 86.7163 15.4ZM109.893 11.4C113.04 11.4 115.44 12.16 117.093 13.68C118.773 15.1733 119.613 17.44 119.613 20.48V33H114.893V30.4C114.28 31.3333 113.4 32.0533 112.253 32.56C111.133 33.04 109.773 33.28 108.173 33.28C106.573 33.28 105.173 33.0133 103.973 32.48C102.773 31.92 101.84 31.16 101.173 30.2C100.533 29.2133 100.213 28.1067 100.213 26.88C100.213 24.96 100.92 23.4267 102.333 22.28C103.773 21.1067 106.026 20.52 109.093 20.52H114.613V20.2C114.613 18.7067 114.16 17.56 113.253 16.76C112.373 15.96 111.053 15.56 109.293 15.56C108.093 15.56 106.906 15.7467 105.733 16.12C104.586 16.4933 103.613 17.0133 102.813 17.68L100.853 14.04C101.973 13.1867 103.32 12.5333 104.893 12.08C106.466 11.6267 108.133 11.4 109.893 11.4ZM109.213 29.64C110.466 29.64 111.573 29.36 112.533 28.8C113.52 28.2133 114.213 27.3867 114.613 26.32V23.84H109.453C106.573 23.84 105.133 24.7867 105.133 26.68C105.133 27.5867 105.493 28.3067 106.213 28.84C106.933 29.3733 107.933 29.64 109.213 29.64ZM130.79 14.76C132.23 12.52 134.763 11.4 138.39 11.4V16.16C137.963 16.08 137.577 16.04 137.23 16.04C135.283 16.04 133.763 16.6133 132.67 17.76C131.577 18.88 131.03 20.5067 131.03 22.64V33H126.03V11.64H130.79V14.76ZM152.236 33.28C150.023 33.28 148.036 32.8133 146.276 31.88C144.516 30.9467 143.143 29.6533 142.156 28C141.17 26.32 140.676 24.4267 140.676 22.32C140.676 20.2133 141.17 18.3333 142.156 16.68C143.143 15.0267 144.503 13.7333 146.236 12.8C147.996 11.8667 149.996 11.4 152.236 11.4C154.343 11.4 156.183 11.8267 157.756 12.68C159.356 13.5333 160.556 14.76 161.356 16.36L157.516 18.6C156.903 17.6133 156.13 16.88 155.196 16.4C154.29 15.8933 153.29 15.64 152.196 15.64C150.33 15.64 148.783 16.2533 147.556 17.48C146.33 18.68 145.716 20.2933 145.716 22.32C145.716 24.3467 146.316 25.9733 147.516 27.2C148.743 28.4 150.303 29 152.196 29C153.29 29 154.29 28.76 155.196 28.28C156.13 27.7733 156.903 27.0267 157.516 26.04L161.356 28.28C160.53 29.88 159.316 31.12 157.716 32C156.143 32.8533 154.316 33.28 152.236 33.28ZM177.603 11.4C180.296 11.4 182.456 12.1867 184.083 13.76C185.71 15.3333 186.523 17.6667 186.523 20.76V33H181.523V21.4C181.523 19.5333 181.083 18.1333 180.203 17.2C179.323 16.24 178.07 15.76 176.443 15.76C174.603 15.76 173.15 16.32 172.083 17.44C171.016 18.5333 170.483 20.12 170.483 22.2V33H165.483V3.32H170.483V14.12C171.31 13.24 172.323 12.5733 173.523 12.12C174.75 11.64 176.11 11.4 177.603 11.4Z" fill="white"/>
+        </svg>                              
+      </button>
+    </form>
+    <div class="scene calendar-container">
+      <span class="cal-clear">Clear</span>
+      <span class="close-cal">&Cross;</span>
+
+      <div class="sm-cal-form">
+        <div class="sm-date-picker">
+          <span id="sm-check-in-label" class="sm-form-label">Check-in</span>
+          <span id="sm-cal-check-in" class="sm-cal-value"></span>
+        </div>
+        <h4 class="sm-date-picker"><b>&rarr;</b></h4>
+        <div class="sm-date-picker">
+          <span id="sm-check-out-label" class="sm-form-label">Check-out</span>
+          <span id="sm-cal-check-out" class="sm-cal-value"></span>
+        </div>
+      </div>
+
+      <div class="continue-box">
+        <p class='no-of-nights'></p>
+        <span class="cont-btn" role="button">Continue</span>
+      </div>
+
+      <div class="slider calendar-control">
+        <div class="calendar">
+          <div class="months">
+            <h3 class="month-1 month"></h3>
+            <h3 class="month-2 month"></h3>
+          </div>
+          <div class="calendar-days">
+            <div class="grid-day-1 days"></div>
+            <div class="grid-day-2 days"></div>
+          </div>
+        </div>
+
+        <div class="calendar">
+          <div class="months">
+            <h3 class="month-1 month"></h3>
+            <h3 class="month-2 month"></h3>
+          </div>
+          <div class="calendar-days">
+            <div class="grid-day-1 days"></div>
+            <div class="grid-day-2 days"></div>
+          </div>
+        </div>
+
+        <div class="calendar">
+          <div class="months">
+            <h3 class="month-1 month"></h3>
+            <h3 class="month-2 month"></h3>
+          </div>
+          <div class="calendar-days">
+            <div class="grid-day-1 days"></div>
+            <div class="grid-day-2 days"></div>
+          </div>
+        </div>
+
+        <div class="calendar">
+          <div class="months">
+            <h3 class="month-1 month"></h3>
+            <h3 class="month-2 month"></h3>
+          </div>
+          <div class="calendar-days">
+            <div class="grid-day-1 days"></div>
+            <div class="grid-day-2 days"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div class="weeks-container">
+          <div class="weeks">
+            <p class="week">SU</p>
+            <p class="week">MO</p>
+            <p class="week">TU</p>
+            <p class="week">WE</p>
+            <p class="week">TH</p>
+            <p class="week">FR</p>
+            <p class="week">SA</p>
+          </div>
+          <div class="weeks">
+            <p class="week">SU</p>
+            <p class="week">MO</p>
+            <p class="week">TU</p>
+            <p class="week">WE</p>
+            <p class="week">TH</p>
+            <p class="week">FR</p>
+            <p class="week">SA</p>
+          </div>
+        </div>
+
+        <p class='no-of-nights' id="lodge-nights"></p>
+
+        <div>
+          <button class="prev-btn cal-btn disabled-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi-chevron-compact-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"/>
+           </svg>
+          </button>
+          <button class="next-btn cal-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi-chevron-compact-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z"/>
+            </svg>
+          </button>
+        </div>
+    </div>
+  </div> 

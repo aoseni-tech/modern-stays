@@ -1,0 +1,14 @@
+<% layout('/layouts/boilerplate') -%>
+<section class="container">
+  <h2><%= stay.title %> </h2>
+  <p><%= stay.location %> </p>
+  <p role="heading"><b>$<%=stay.price%></b>/night</p>
+  <img src="<%=stay.image%>" alt="">
+  <p><%=stay.description%></p>
+  <p><a href='/stays/<%=stay._id%>/update'>Update property</a></p>
+  <form action="/stays/<%=stay._id%>?_method=DELETE" method="POST">
+    <button>Remove listed property</button>
+  </form>
+</section>
+<% block('navBar').append('<script src="/js/calendar.js"></script>') %>
+<% block('script').append('<script src="/js/script.js"></script>') %>
