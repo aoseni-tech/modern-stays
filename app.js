@@ -38,7 +38,7 @@ app.get('/search', async (req, res) => {
     }
 });
 app.get('/stays/new', (req, res) => {
-    const title = 'Create new.MS';
+    const title = 'Add new.MS';
     const page = 'new';
     res.render('pages/new', { title, page });
 });

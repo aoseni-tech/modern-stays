@@ -41,7 +41,7 @@ page:string;
 })
 
 app.get('/stays/new', (req: any,res: { render: (arg0: string, arg1: { title: string; page:string; }) => void; })=>{
-  const title = 'Create new.MS';
+  const title = 'Add new.MS';
   const page = 'new';
   res.render('pages/new',{title,page})
 })

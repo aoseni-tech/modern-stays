@@ -1,16 +1,31 @@
 <% layout('/layouts/boilerplate') -%>
-<section class="container">
-    <form action="/stays" method="POST">
-        <div>
+<section class="listing-form__container">
+    <h1>Add a listing</h1>
+    <form action="/stays" method="POST" class="listing-form">
+        <div class="listing-form__group">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title">
+            <input type="text" name="title" id="title" class="input">
         </div>
-        <div>
+        <div class="listing-form__group">
             <label for="location">Location</label>
-            <input type="text" name="location" id="title">
+            <input type="text" name="location" id="listing-form__location" class="input">
         </div>
-        <button>List property</button>
+        <div class="listing-form__group">
+            <label for="image">Image</label>
+            <input type="text" name="image" id="image" class="input">
+        </div>
+        <div class="listing-form__group">
+            <label for="price">Price</label>
+            <div class="input-group">
+                <span id="price-label">&dollar;</span>
+                <input type="text" name="price" placeholder="0.00" id="price" class="input" aria-describedby="price-label">
+            </div>
+        </div>
+        <div class="listing-form__group">
+            <label for="description">Description</label>
+            <textarea name="description" id="description"  class="input"rows="3"></textarea>
+        </div>
+        <button class="listing-form__btn">List property</button>
     </form>
 </section>  
-    <% block('navBar').append('<script src="/js/nav.js"></script>') %>
     <% block('script').append('<script src="/js/script.js"></script>') %>

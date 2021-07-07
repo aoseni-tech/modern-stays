@@ -296,13 +296,6 @@ const checkInSection = document.querySelector('#check-in-section')! as HTMLEleme
 const checkOutSection = document.querySelector('#check-out-section')! as HTMLElement;
 const closeCalendar = document.querySelector('.close-cal')! as HTMLElement;
 const searchForm = document.querySelector('#search-form')! as HTMLFormElement;
-const hamburger = document.querySelector('#hamburger')! as HTMLElement;
-const navBar = document.querySelector('#navbar')! as HTMLElement;
-const navContent = document.querySelector('.nav-content')! as HTMLElement;
-const menu = document.querySelector('.menu')! as HTMLElement;
-const hamburgerLines = document.querySelectorAll(
-  '#hamburger>svg'
-)! as NodeListOf<HTMLElement>;
 let showCalendar: boolean = false;
 
 //event listener to add focus on form element
@@ -410,15 +403,7 @@ searchForm.addEventListener('submit', function () {
   this.appendChild(checkOutInput);
 });
 
-// hamburger animation
-hamburger.addEventListener('click', function () {
-  menu.classList.toggle('menu-open');
-  navContent.classList.toggle('opacity');
-  hamburgerLines[0].classList.toggle('line-one');
-  hamburgerLines[1].classList.toggle('line-two');
-  hamburgerLines[2].classList.toggle('line-three');
-  body.classList.toggle('overflow-hide');
-});
+
 
 //window event listener for other calendar on small screens
 function hideSceneCalendar() {
@@ -454,16 +439,5 @@ window.addEventListener('click', function (e) {
     checkOutSection.classList.remove('form-focus');
     showCalendar = false;
     hideSceneCalendar();
-  }
-  if(
-    e.target!.classList.contains('opacity')
-    ) {
-      menu.classList.remove('menu-open');
-      navContent.classList.remove('opacity');
-      hamburgerLines[0].classList.remove('line-one');
-      hamburgerLines[1].classList.remove('line-two');
-      hamburgerLines[2].classList.remove('line-three');
-      body.classList.remove('overflow-hide');
-    }
-    
+  }    
 });

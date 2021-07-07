@@ -283,11 +283,6 @@ const checkInSection = document.querySelector('#check-in-section');
 const checkOutSection = document.querySelector('#check-out-section');
 const closeCalendar = document.querySelector('.close-cal');
 const searchForm = document.querySelector('#search-form');
-const hamburger = document.querySelector('#hamburger');
-const navBar = document.querySelector('#navbar');
-const navContent = document.querySelector('.nav-content');
-const menu = document.querySelector('.menu');
-const hamburgerLines = document.querySelectorAll('#hamburger>svg');
 let showCalendar = false;
 //event listener to add focus on form element
 locationSection.addEventListener('click', function () {
@@ -384,15 +379,6 @@ searchForm.addEventListener('submit', function () {
     checkOutInput.setAttribute('value', checkOutValue);
     this.appendChild(checkOutInput);
 });
-// hamburger animation
-hamburger.addEventListener('click', function () {
-    menu.classList.toggle('menu-open');
-    navContent.classList.toggle('opacity');
-    hamburgerLines[0].classList.toggle('line-one');
-    hamburgerLines[1].classList.toggle('line-two');
-    hamburgerLines[2].classList.toggle('line-three');
-    body.classList.toggle('overflow-hide');
-});
 //window event listener for other calendar on small screens
 function hideSceneCalendar() {
     if (!showCalendar) {
@@ -424,13 +410,5 @@ window.addEventListener('click', function (e) {
         checkOutSection.classList.remove('form-focus');
         showCalendar = false;
         hideSceneCalendar();
-    }
-    if (e.target.classList.contains('opacity')) {
-        menu.classList.remove('menu-open');
-        navContent.classList.remove('opacity');
-        hamburgerLines[0].classList.remove('line-one');
-        hamburgerLines[1].classList.remove('line-two');
-        hamburgerLines[2].classList.remove('line-three');
-        body.classList.remove('overflow-hide');
     }
 });
