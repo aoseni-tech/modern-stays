@@ -19,34 +19,39 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'views'))
 
-app.get('/', (req: any,res: { render: (arg0: string, arg1: { title: string; }) => void; })=>{
+app.get('/', (req: any,res: { render: (arg0: string, arg1: { title: string;page:string; }) => void; })=>{
   const title = 'Modern Stays';
-  res.render('home',{title})
+  const page = 'home';
+  res.render('home',{title,page})
 })
 
 app.get('/search', async(req: any,res: { render: (arg0: string, arg1: { title: string;
 stays:string;
+page:string;
 }) => void; })=>{
   try{
   const{location} = req.query;
   const stays = await Stay.find({location: new RegExp(location, 'i')});
   const title = 'Modern Stays.stays';
-  res.render('pages/index', {title,stays});
+  const page = 'search';
+  res.render('pages/search', {title,stays,page});
   }catch(e){
     console.log(e)
   }
 })
 
-app.get('/stays/new', (req: any,res: { render: (arg0: string, arg1: { title: string; }) => void; })=>{
+app.get('/stays/new', (req: any,res: { render: (arg0: string, arg1: { title: string; page:string; }) => void; })=>{
   const title = 'Create new.MS';
-  res.render('pages/new',{title})
+  const page = 'new';
+  res.render('pages/new',{title,page})
 })
 
-app.get('/stays/:id', async(req: any,res: { render: (arg0: string, arg1: {title: any; stay:any;}) => void; })=>{
+app.get('/stays/:id', async(req: any,res: { render: (arg0: string, arg1: {title: any; stay:any; page:string;}) => void; })=>{
   try{
     const stay = await Stay.findById(req.params.id);
     const{title} = stay;
-    res.render('pages/show',{title:title+'.MS',stay});
+    const page = 'show';
+    res.render('pages/show',{title:title+'.MS',stay,page});
   }catch(e){
     console.log(e)
   }
@@ -62,11 +67,12 @@ app.post('/stays', async(req: any,res: { redirect: (arg0: string) => void; })=>{
     }
   })
 
-app.get('/stays/:id/update', async(req: any,res: { render: (arg0: string, arg1: {title: any; stay:any;}) => void; })=>{
+app.get('/stays/:id/update', async(req: any,res: { render: (arg0: string, arg1: {title: any; stay:any; page:string;}) => void; })=>{
     try{
       const stay = await Stay.findById(req.params.id);
       const{title} = stay;
-      res.render('pages/update',{title:`Update ${title}.MS`,stay});
+      const page = 'update';
+      res.render('pages/update',{title:`Update ${title}.MS`,stay,page});
     }catch(e){
       console.log(e)
     }

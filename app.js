@@ -22,14 +22,16 @@ app.set('view engine', 'ejs');
 app.set('views', path_1.default.join(__dirname, 'views'));
 app.get('/', (req, res) => {
     const title = 'Modern Stays';
-    res.render('home', { title });
+    const page = 'home';
+    res.render('home', { title, page });
 });
 app.get('/search', async (req, res) => {
     try {
         const { location } = req.query;
         const stays = await Stay.find({ location: new RegExp(location, 'i') });
         const title = 'Modern Stays.stays';
-        res.render('pages/index', { title, stays });
+        const page = 'search';
+        res.render('pages/search', { title, stays, page });
     }
     catch (e) {
         console.log(e);
@@ -37,13 +39,15 @@ app.get('/search', async (req, res) => {
 });
 app.get('/stays/new', (req, res) => {
     const title = 'Create new.MS';
-    res.render('pages/new', { title });
+    const page = 'new';
+    res.render('pages/new', { title, page });
 });
 app.get('/stays/:id', async (req, res) => {
     try {
         const stay = await Stay.findById(req.params.id);
         const { title } = stay;
-        res.render('pages/show', { title: title + '.MS', stay });
+        const page = 'show';
+        res.render('pages/show', { title: title + '.MS', stay, page });
     }
     catch (e) {
         console.log(e);
@@ -63,7 +67,8 @@ app.get('/stays/:id/update', async (req, res) => {
     try {
         const stay = await Stay.findById(req.params.id);
         const { title } = stay;
-        res.render('pages/update', { title: `Update ${title}.MS`, stay });
+        const page = 'update';
+        res.render('pages/update', { title: `Update ${title}.MS`, stay, page });
     }
     catch (e) {
         console.log(e);
