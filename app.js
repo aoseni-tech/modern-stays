@@ -42,12 +42,34 @@ app.get('/stays/new', (req, res) => {
     const page = 'new';
     res.render('pages/new', { title, page });
 });
-app.get('/stays/:id', async (req, res) => {
+app.route('/stays/:id')
+    .get(async (req, res) => {
     try {
         const stay = await Stay.findById(req.params.id);
         const { title } = stay;
         const page = 'show';
         res.render('pages/show', { title: title + '.MS', stay, page });
+    }
+    catch (e) {
+        console.log(e);
+    }
+})
+    .put(async (req, res) => {
+    try {
+        const { id } = req.params;
+        const update = req.body;
+        const stay = await Stay.findByIdAndUpdate(id, update);
+        res.redirect(`/stays/${stay._id}`);
+    }
+    catch (e) {
+        console.log(e);
+    }
+})
+    .delete(async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Stay.findByIdAndRemove(id);
+        res.redirect(`/`);
     }
     catch (e) {
         console.log(e);
@@ -69,27 +91,6 @@ app.get('/stays/:id/update', async (req, res) => {
         const { title } = stay;
         const page = 'update';
         res.render('pages/update', { title: `Update ${title}.MS`, stay, page });
-    }
-    catch (e) {
-        console.log(e);
-    }
-});
-app.put('/stays/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const update = req.body;
-        const stay = await Stay.findByIdAndUpdate(id, update);
-        res.redirect(`/stays/${stay._id}`);
-    }
-    catch (e) {
-        console.log(e);
-    }
-});
-app.delete('/stays/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        await Stay.findByIdAndRemove(id);
-        res.redirect(`/`);
     }
     catch (e) {
         console.log(e);

@@ -19,6 +19,7 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'views'))
 
+
 app.get('/', (req: any,res: { render: (arg0: string, arg1: { title: string;page:string; }) => void; })=>{
   const title = 'Modern Stays';
   const page = 'home';
@@ -46,12 +47,33 @@ app.get('/stays/new', (req: any,res: { render: (arg0: string, arg1: { title: str
   res.render('pages/new',{title,page})
 })
 
-app.get('/stays/:id', async(req: any,res: { render: (arg0: string, arg1: {title: any; stay:any; page:string;}) => void; })=>{
+
+app.route('/stays/:id')
+ .get(async(req: any,res: { render: (arg0: string, arg1: {title: any; stay:any; page:string;}) => void; })=>{
   try{
     const stay = await Stay.findById(req.params.id);
     const{title} = stay;
     const page = 'show';
     res.render('pages/show',{title:title+'.MS',stay,page});
+  }catch(e){
+    console.log(e)
+  }
+})
+.put(async(req: any,res: { redirect: (arg0: string) => void; })=>{
+  try{
+   const {id} = req.params;
+   const update = req.body;
+   const stay = await Stay.findByIdAndUpdate(id, update)
+   res.redirect(`/stays/${stay._id}`);
+  }catch(e){
+    console.log(e)
+  }
+})
+.delete(async(req: any,res: { redirect: (arg0: string) => void; })=>{
+  try{
+   const {id} = req.params;
+   await Stay.findByIdAndRemove(id)
+   res.redirect(`/`);
   }catch(e){
     console.log(e)
   }
@@ -77,29 +99,6 @@ app.get('/stays/:id/update', async(req: any,res: { render: (arg0: string, arg1: 
       console.log(e)
     }
   })
-
-  app.put('/stays/:id', async(req: any,res: { redirect: (arg0: string) => void; })=>{
-    try{
-     const {id} = req.params;
-     const update = req.body;
-     const stay = await Stay.findByIdAndUpdate(id, update)
-     res.redirect(`/stays/${stay._id}`);
-    }catch(e){
-      console.log(e)
-    }
-  })
-
-  app.delete('/stays/:id', async(req: any,res: { redirect: (arg0: string) => void; })=>{
-    try{
-     const {id} = req.params;
-     await Stay.findByIdAndRemove(id)
-     res.redirect(`/`);
-    }catch(e){
-      console.log(e)
-    }
-  })
-
-
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`)
