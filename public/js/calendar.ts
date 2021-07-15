@@ -422,18 +422,14 @@ function hideSceneCalendar() {
 //window-listener to remove classlist when not needed
 window.addEventListener('click', function (e) {
   if (!locationSection.contains(e.target as HTMLElement) && locationSection.classList.contains('form-focus')) {
-    checkInSection.classList.add('form-focus');
     locationSection.classList.remove('form-focus');
     locationInput.classList.remove('focus');
-    showCalendar = true;
-    hideSceneCalendar();
   }
   if (
     !checkInSection.contains(e.target as HTMLElement) &&
     !checkOutSection.contains(e.target as HTMLElement) &&
     !scene.contains(e.target as HTMLElement) &&
-    !e.target!.classList.contains('day') &&
-    (!checkInSection.classList.contains('form-focus') || !locationSection.classList.contains('form-focus')) 
+    !(<HTMLElement>e.target).classList.contains('day') 
   ) {
     checkInSection.classList.remove('form-focus');
     checkOutSection.classList.remove('form-focus');
