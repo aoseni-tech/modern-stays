@@ -16,7 +16,7 @@ hamburger.addEventListener('click', function () {
 
   //windows events
   window.addEventListener('click', function (e) {
-    if( e.target!.classList.contains('opacity') ) {
+    if( (<HTMLElement>e.target).classList.contains('opacity') ) {
         menu.classList.remove('menu-open');
         navContent.classList.remove('opacity');
         hamburgerLines[0].classList.remove('line-one');

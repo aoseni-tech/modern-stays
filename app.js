@@ -31,7 +31,7 @@ app.get('/search', async (req, res) => {
         const stays = await Stay.find({ location: new RegExp(location, 'i') });
         const title = 'Modern Stays.stays';
         const page = 'search';
-        res.render('pages/search', { title, stays, page });
+        res.render('pages/searchResults', { title, stays, page });
     }
     catch (e) {
         console.log(e);
