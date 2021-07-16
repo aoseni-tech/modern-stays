@@ -102,17 +102,11 @@
       z-index: 10;
     }
   
-    #navbar.hide {
-       z-index: -1;
-    }
+    #navbar.hide {z-index: -1;}
   
-   .logo path {
-     fill: #000;
-    }
+   .logo path {fill: #fd705d;}
    
-    .logo:nth-child(2) {
-      display: none;
-    }
+    .logo:nth-child(2) {display: none;}
   
     .nav-content {
       background-color: rgba(0, 0, 0, 0.5);
@@ -155,25 +149,23 @@
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
   
-    .menu-open {
-       transform: translateX(0%);
-    }
+    .menu-open {transform: translateX(0%);}
   
     .nav-item {
       width: 100%;
       text-align: center;
     }
   
-    .auth::after{
+    .home .auth::after{
       border-bottom: 1px solid #000;
     }
   
-    #nav-btn-link {
+    .home #nav-btn-link {
       color: #000;
       border-color: #000;
     }
   
-    #nav-btn-link:hover {
+    .home #nav-btn-link:hover {
       color: #fff;
       background: #000;
     }
