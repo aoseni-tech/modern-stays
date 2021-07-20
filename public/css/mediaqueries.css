@@ -100,6 +100,7 @@
       background: #fff;
       height: 48px;
       z-index: 10;
+      position: fixed;
     }
   
     #navbar.hide {z-index: -1;}
@@ -172,8 +173,6 @@
     
     #hamburger {
       display: flex;
-      position: absolute;
-      right: 3em;
       z-index: 5;
     }
   
@@ -198,6 +197,10 @@
       width: 45%;
     }
     /* FORM */
+#form-container {
+  position: static;
+}
+
     #search-form {
       flex-wrap: wrap;
     }
@@ -217,8 +220,7 @@
     }
 
     .form-div.form-focus {
-      background: #fff;
-      box-sizing: border-box;
+      border-bottom: 1px solid #fca99e;
     }
 
     .date-picker {
@@ -251,13 +253,11 @@
       margin-top: 2em;
     }
 
-    /* CALENDAR */
-
+    /* CALENDAR */    
     .scene, .stays .scene {
       width: 101vw;
-      height: 100vh;
-      top: -30%;
-      overflow: visible;
+      min-height: 100vh;
+      top: 15%;
     }
     .stays .scene {
       top: -1em;
@@ -279,7 +279,7 @@
       padding-bottom: 0.3em;
       background-color: #fff;
       height: 3em;
-      top: 0;
+      top: -.1em;
     }
 
     .weeks:nth-of-type(1) {
@@ -322,19 +322,28 @@
       display: none;
     }
 
+    .cal-clear {
+      height: 3em;
+      right: 0.5em;
+    }
+
+    .close-cal {    
+       top: -0.1em;
+    }
+
     .sm-cal-form{
       display: flex;
       position: absolute;
-      top: -12%;
+      top: -10%;
       left: 0;
-      width: 100%;
-      height: 12%;
+      width: 101vw;
+      height: 10%;
       background-color: #fff;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     }
 
     .sm-date-picker {
-      width: 50%;
+      width: 51%;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -345,8 +354,8 @@
     .continue-box {
       display: flex;
       flex-direction: column;
-      position: fixed;
-      top: 100vh;
+      position: absolute;
+      top: 85vh;
       left: 0;
       width: 100%;
       height: 70px;
@@ -357,11 +366,10 @@
       -webkit-box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.2); 
       box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.2); 
       transition: all 0.5s ease-in;
-      transform: translateY(0);
     }
 
     .continue-box.transform-up {
-      transform: translateY(-190%);
+      top: 71vh;
     }
 
     .cont-btn {
@@ -377,12 +385,14 @@
       background-color: #ff8474;
     }
       /* SHOWCASE */
+      #showcase-container {
+        justify-content: space-around;
+      }
+
       .showcase-item {
         width: 80%;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
         margin-bottom:2em ;
       }
 
@@ -390,10 +400,7 @@
         margin-bottom: 0;
       }
 
-      .showcase-svg {
-        margin: 0;
-      }
-
+     
        /* SEARCH PAGE */
     .search-card {
       grid-template-columns: 1fr;
