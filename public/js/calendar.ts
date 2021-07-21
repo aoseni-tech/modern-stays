@@ -304,26 +304,41 @@ const checkInSection = document.querySelector('#check-in-section')! as HTMLEleme
 const checkOutSection = document.querySelector('#check-out-section')! as HTMLElement;
 const closeCalendar = document.querySelector('.close-cal')! as HTMLElement;
 const searchForm = document.querySelector('#search-form')! as HTMLFormElement;
+const clear_location_input = document.querySelector('.clear-location')! as HTMLElement;
 let showCalendar: boolean = false;
 
 //event listener to add focus on form element
-locationSection.addEventListener('click', function () {
+locationSection.addEventListener('click', function (e) {
   locationInput.focus();
 });
 //event listener for location Input
 locationInput.addEventListener('focus', function () {
   locationSection.classList.add('form-focus');
   this.classList.add('focus');
-});
-
-locationInput.addEventListener('blur', function () {
-  locationSection.classList.remove('form-focus');
-  this.classList.remove('focus');
+  if(this.value !== '') {
+    clear_location_input.classList.add('show-clear-location')
+  } else {
+    clear_location_input.classList.remove('show-clear-location')
+  }
 });
 
 locationInput.addEventListener('keyup', function () {
    this.value = this.value.trim()    
+   if(this.value !== '') {
+    clear_location_input.classList.add('show-clear-location')
+  } else {
+    clear_location_input.classList.remove('show-clear-location')
+  }
 });
+
+//eventlistener for clear location input 
+clear_location_input.addEventListener('click', function(e) {
+  locationSection.classList.add('form-focus');
+  locationInput.classList.add('focus');
+  locationInput.value = '';
+  clear_location_input.classList.remove('show-clear-location')
+  locationInput.focus();
+})
 
 //event listener to displayCalendar && add focus on form element
 checkInSection.addEventListener('click', function (e) {
@@ -435,10 +450,11 @@ function toggleCalendarScene() {
 
 //window-listener to remove classlist when not needed
 body.addEventListener('click', function (e) {
-  if (!locationSection.contains(e.target as HTMLElement) && locationSection.classList.contains('form-focus')) {
+  if (!locationSection.contains(e.target as HTMLElement) ) {
     locationSection.classList.remove('form-focus');
     locationInput.classList.remove('focus');
     locationInput.blur();
+    clear_location_input.classList.remove('show-clear-location')
   }
   if (
     !checkInSection.contains(e.target as HTMLElement) &&
@@ -453,6 +469,7 @@ body.addEventListener('click', function (e) {
     reloadCalendar();
   }    
 });
+
 
 function reloadCalendar() {
   x = savedAngle;

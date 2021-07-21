@@ -22,7 +22,7 @@
       transform: translateX(5%);
     }
     
-    #search-form button {
+    .search-form_submit {
       width: 12%;
     }
     
@@ -231,21 +231,21 @@
       border-right: 1px solid rgba(0, 0, 0, 0.2);
     }
     
-    #search-form button {
+    .search-form_submit{
       right: 50%;
       top: 100%;
       transform: translateY(50%) translateX(50%);
       width: 20%;
     }
 
-    .stays #search-form button {
+    .stays .search-form_submit {
       display: none;
       right: 0;
       left: 50%;
       transform: translateX(-50%) translateY(50%);
     }
 
-    #search-form button>svg {
+    .search-form_submit>svg {
       transform: scale(0.7);
     }
 
