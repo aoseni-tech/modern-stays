@@ -50,6 +50,7 @@ let savedCount = 0;
 let savedClick = 0;
 let savedMonth = d.getMonth();
 let startSlide = false;
+let clearLocation = false;
 // generateMonths
 function getMonth(month, index, monthIndex, gridDay) {
     let monthNum = n + index + monthIndex;
@@ -300,18 +301,11 @@ let showCalendar = false;
 //event listener to add focus on form element
 locationSection.addEventListener('click', function (e) {
     locationInput.focus();
-});
-//event listener for location Input
-locationInput.addEventListener('focus', function () {
-    locationSection.classList.add('form-focus');
-    this.classList.add('focus');
-    if (this.value !== '') {
+    if (locationInput.value !== '') {
         clear_location_input.classList.add('show-clear-location');
     }
-    else {
-        clear_location_input.classList.remove('show-clear-location');
-    }
 });
+//event listener for location Input
 locationInput.addEventListener('keyup', function () {
     this.value = this.value.trim();
     if (this.value !== '') {
@@ -323,10 +317,8 @@ locationInput.addEventListener('keyup', function () {
 });
 //eventlistener for clear location input 
 clear_location_input.addEventListener('click', function (e) {
-    locationSection.classList.add('form-focus');
-    locationInput.classList.add('focus');
+    this.classList.remove('show-clear-location');
     locationInput.value = '';
-    clear_location_input.classList.remove('show-clear-location');
     locationInput.focus();
 });
 //event listener to displayCalendar && add focus on form element
@@ -429,7 +421,6 @@ body.addEventListener('click', function (e) {
     if (!locationSection.contains(e.target)) {
         locationSection.classList.remove('form-focus');
         locationInput.classList.remove('focus');
-        locationInput.blur();
         clear_location_input.classList.remove('show-clear-location');
     }
     if (!checkInSection.contains(e.target) &&

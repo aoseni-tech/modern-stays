@@ -272,7 +272,7 @@ button {
 
 .form-div.form-focus {
   background: #fff;
-  border: 1px solid #fca99e;
+  outline: 1px solid #fca99e;
   z-index: 12;
 }
 
@@ -281,11 +281,17 @@ button {
   outline: none;
   height: 50%;
   width: 100%;
-  background: #fcecdd;
+  background: none;
   padding: 0.5em 0;
   transition: all 0.2s ease-out;
   font-size: 1em;
   font-weight: 600;
+}
+
+#location-section:focus-within {
+  background: #fff;
+  outline: 1px solid #fca99e;
+  z-index: 12;
 }
 
 .clear-location {
@@ -329,11 +335,6 @@ button {
   font-weight: 400;
 }
 
-.stays #location,
-#location.focus {
-  background: none;
-}
-
 .search-form_submit {
   background: #ff8474;
   color: white;
@@ -353,10 +354,6 @@ button {
   transform: translateY(-50%);
   right: 0.5em;
   z-index: 12;
-}
-.stays .search-form_submit {
-  border-radius: 0.2em;
-  right: 0.5em;
 }
 
 .search-form_submit > span {
