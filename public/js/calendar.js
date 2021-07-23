@@ -19,6 +19,7 @@ const continueBox = document.querySelector('.continue-box');
 const continueBtn = document.querySelector('.cont-btn');
 const formContainer = document.querySelector('#form-container');
 const no_of_nights = document.querySelectorAll('.no-of-nights');
+const r = document.querySelector(':root');
 const angle = 360 / calendars.length;
 let checkInValue;
 let checkOutValue;
@@ -235,6 +236,8 @@ function rotateCalendars() {
         }
     }
     else if (window.innerWidth <= 770) {
+        let calHeight = window.innerHeight;
+        r.style.setProperty('--scene-height', `${calHeight}px`);
         slider.style.transform = `translateZ(0) rotateY(0deg)`;
         slider.scrollTop = 0;
         for (let i = 0; i < calendars.length; i++) {
@@ -297,7 +300,10 @@ const checkOutSection = document.querySelector('#check-out-section');
 const closeCalendar = document.querySelector('.close-cal');
 const searchForm = document.querySelector('#search-form');
 const clear_location_input = document.querySelector('.clear-location');
+const close_warning_modal = document.querySelector('.orientation-warning span');
+const orientation_warning_modal = document.querySelector('.orientation-warning');
 let showCalendar = false;
+let opac = "1";
 //event listener to add focus on form element
 locationSection.addEventListener('click', function (e) {
     locationInput.focus();
@@ -310,22 +316,31 @@ locationInput.addEventListener('keyup', function () {
     this.value = this.value.trim();
     if (this.value !== '') {
         clear_location_input.classList.add('show-clear-location');
+        clear_location_input.style.opacity = opac;
     }
     else {
         clear_location_input.classList.remove('show-clear-location');
     }
 });
+locationInput.addEventListener('blur', function () {
+    clear_location_input.classList.remove('show-clear-location');
+});
 //eventlistener for clear location input 
-clear_location_input.addEventListener('click', function (e) {
-    this.classList.remove('show-clear-location');
+clear_location_input.addEventListener('mousedown', function (e) {
     locationInput.value = '';
+    this.classList.remove('show-clear-location');
     locationInput.focus();
+});
+//event listener to close orientation warning
+close_warning_modal.addEventListener('click', function (e) {
+    orientation_warning_modal.classList.add('close-modal_orientation');
 });
 //event listener to displayCalendar && add focus on form element
 checkInSection.addEventListener('click', function (e) {
     showCalendar = true;
     toggleCalendarScene();
     slider.scrollTop = 0;
+    window.scrollTo(0, 0);
     checkOutSection.classList.remove('form-focus');
     this.classList.add('form-focus');
 });
@@ -333,6 +348,7 @@ checkOutSection.addEventListener('click', function () {
     showCalendar = true;
     toggleCalendarScene();
     slider.scrollTop = 0;
+    window.scrollTo(0, 0);
     if (!checkInValue || checkInValue === '') {
         checkInSection.classList.add('form-focus');
     }
@@ -409,11 +425,13 @@ function toggleCalendarScene() {
         scene.classList.remove('display-calendar');
         body.classList.remove('hidden');
         navBar.classList.remove('hide');
+        orientation_warning_modal.classList.add('close-modal_orientation');
     }
     else if (showCalendar) {
         scene.classList.add('display-calendar');
         body.classList.add('hidden');
         navBar.classList.add('hide');
+        orientation_warning_modal.classList.remove('close-modal_orientation');
     }
 }
 //window-listener to remove classlist when not needed
@@ -425,6 +443,7 @@ body.addEventListener('click', function (e) {
     }
     if (!checkInSection.contains(e.target) &&
         !checkOutSection.contains(e.target) &&
+        !orientation_warning_modal.contains(e.target) &&
         !scene.contains(e.target) &&
         !e.target.classList.contains('day')) {
         checkInSection.classList.remove('form-focus');

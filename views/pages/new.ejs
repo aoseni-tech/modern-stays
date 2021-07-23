@@ -17,13 +17,15 @@
         <div class="listing-form__group">
             <label for="price">Price</label>
             <div class="input-group">
-                <span id="price-label">&dollar;</span>
+                <div class="dollar-sign">
+                 <span id="price-label">&dollar;</span>
+                </div> 
                 <input type="text" pattern="[0-9]" name="price" placeholder="0.00" id="price" class="input" aria-describedby="price-label">
             </div>
         </div>
         <div class="listing-form__group">
             <label for="description">Description</label>
-            <textarea name="description" id="description"  class="input"rows="3"></textarea>
+            <textarea name="description" id="description"  class="input textarea"rows="5"></textarea>
         </div>
         <button class="listing-form__btn">List property</button>
     </form>

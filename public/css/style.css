@@ -1,5 +1,4 @@
-*,
-html {
+* {
   margin: 0;
   padding: 0;
   border: 0;
@@ -39,13 +38,18 @@ button {
   padding-top: 10vh;
 }
 
+input, textarea {
+  -webkit-appearance: none;
+}
+
 :root {
   --firstmonthGrid: 1/1;
   --secondmonthGrid: 1/1;
+  --scene-height: 100vh;
 }
 
 /* NAVBAR */
-#navbar {
+.navbar {
   width: 100vw;
   position: absolute;
   z-index: 3;
@@ -59,20 +63,17 @@ button {
   align-items: center;
 }
 
-.home #navbar {
+.home .navbar {
   color: #fff;
 }
-.stays #navbar {
+.stays .navbar {
   color: #000;
   position: fixed;
   background-color: #fff;
+  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
 }
-#show #navbar {
+#show .navbar {
   position: absolute;
-}
-#new #navbar,
-#update #navbar {
-  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
 }
 
 .stays .logo path {
@@ -151,7 +152,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   max-height: 700px;
   min-height: 600px;
@@ -189,6 +190,27 @@ button {
   z-index: -1;
 }
 /* SEARCH FORM */
+.search-form_section {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+}
+
+.stays .search-form_section {
+  min-height: max-content;
+  top: 10%;
+  position: fixed;
+  background-color: #fff;
+  z-index: 5;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#show .search-form_section {
+  position: relative;
+}
+
 #form-container {
   position: relative;
   width: 90%;
@@ -196,15 +218,7 @@ button {
 }
 .stays #form-container {
   margin: 1em auto;
-  position: fixed;
   padding: 1em 0 2em 0;
-  left: 50%;
-  top: 7%;
-  width: 100%;
-  transform: translateX(-50%);
-  background-color: #fff;
-  z-index: 5;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 #show #form-container {
   position: relative;
@@ -225,9 +239,6 @@ button {
   padding: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.2em;
-  width: 65%;
-  min-width: 650px;
-  max-width: 80%;
   margin: auto;
 }
 
@@ -272,8 +283,9 @@ button {
 
 .form-div.form-focus {
   background: #fff;
-  outline: 1px solid #fca99e;
-  z-index: 12;
+  border: none;
+  outline: 2px solid #fca99e;
+  z-index: 10;
 }
 
 #location {
@@ -288,10 +300,14 @@ button {
   font-weight: 600;
 }
 
+#location-section:focus-within #location {
+  border: none;
+}
+
 #location-section:focus-within {
   background: #fff;
-  outline: 1px solid #fca99e;
-  z-index: 12;
+  outline: 2px solid #fca99e;
+  z-index: 10;
 }
 
 .clear-location {
@@ -305,6 +321,7 @@ button {
   cursor: pointer;
   user-select: none;
   display: none;
+  opacity: 0;
   transform: translateY(-25%);
   background-color: rgba(0, 0, 0, 0.05);
 }
@@ -315,7 +332,7 @@ button {
   font-size: 1.5em;
   text-align: center;
   transform: translateY(-25%);
-  opacity: .7;
+  opacity: 0.7;
 }
 
 .clear-location.show-clear-location {
@@ -363,16 +380,16 @@ button {
 
 /* calendar */
 .scene {
-  width: 85%;
+  width: 90%;
   max-width: 830px;
   height: 280px;
   border-radius: 0.2em;
-  margin: 0.5em auto;
   perspective: 11000px;
   background-color: white;
   user-select: none;
   position: absolute;
   top: 40vh;
+  margin-top: 0.5em;
   display: none;
   overflow: hidden;
   transition: all 0.1s ease-out;
@@ -380,6 +397,11 @@ button {
   border: 1px solid rgba(0, 0, 0, 0.08);
   -webkit-box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
   box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
+}
+
+.stays .scene {
+  position: absolute;
+  top: 70%;
 }
 
 .display-calendar {
@@ -392,6 +414,7 @@ button {
   transform-style: preserve-3d;
   position: relative;
   transform: translateZ(-290px) rotateY(0deg);
+  -webkit-transform: translateZ(-290px) rotateY(0deg);
   transition: all 0.2s ease-in-out;
 }
 
@@ -410,6 +433,7 @@ button {
   display: flex;
   justify-content: space-evenly;
   top: 2.5em;
+  z-index: 5;
 }
 
 .weeks {
@@ -616,7 +640,7 @@ button {
 
 .sm-cal-form {
   display: none;
-  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .sm-cal-value {
@@ -650,6 +674,20 @@ button {
   font-size: 0.8em;
   font-weight: 600;
 }
+
+.orientation-warning {
+  display: none;
+  position: relative;
+}
+
+.orientation-warning span {
+  position: absolute;
+  top: 0;
+  right: 0.5em;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
 
 /* showcase */
 #showcase-section {
@@ -736,7 +774,7 @@ button {
 
 /* SEARCH PAGE */
 .search-page {
-  padding-top: 10%;
+  padding-top: 15%;
   z-index: -1;
 }
 
@@ -796,7 +834,7 @@ button {
 
 /* SHOW PAGE  */
 .show-wrapper {
-  margin: 0.5em auto;
+  margin: 1em auto 2em;
   width: 90%;
   max-width: 600px;
   position: relative;
@@ -820,7 +858,7 @@ button {
   margin: 0.5em 0;
 }
 
-.show-form button {
+.delete-button {
   padding: 0.5em;
   border: none;
   background-color: #dc3545;
@@ -829,7 +867,7 @@ button {
   border-radius: 0.2em;
 }
 
-.show-form button:hover {
+.delete-button:hover {
   background-color: #bb2d3b;
 }
 
@@ -854,7 +892,7 @@ button {
 .listing-form__container {
   width: 100%;
   text-align: center;
-  padding: 1em 0;
+  padding: 2em 0;
 }
 
 .listing-form {
@@ -873,6 +911,9 @@ button {
   display: grid;
   grid-template-columns: 0.8fr 9.5fr;
   width: 100%;
+  height: 2.5em;
+  border-radius: 0.3em;
+  margin-top: 0.5em;
 }
 
 .listing-form__group label,
@@ -882,13 +923,18 @@ button {
 }
 
 .listing-form__group .input {
-  min-height: 2em;
+  height: 2.5em;
   margin-top: 0.5em;
   padding: 0.5em 1em;
+  background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 0.3em;
-  box-sizing: border-box;
 }
+
+.listing-form__group .textarea {
+   height: 5em;
+}
+
 .listing-form__group .input:focus {
   background-color: #fff;
   border: 1px solid #000;
@@ -898,19 +944,25 @@ button {
 }
 
 .listing-form__group #price {
+  margin-top: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.listing-form__group span {
+.dollar-sign {
   background-color: #ccc;
-  height: 1.9em;
+  height: 100%;
   border-top-left-radius: 0.3em;
   border-bottom-left-radius: 0.3em;
-  margin-top: auto;
-  text-align: center;
-  line-height: 1.9em;
 }
+
+#price-label {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
 
 .listing-form__btn {
   border: none;

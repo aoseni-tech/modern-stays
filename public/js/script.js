@@ -1,9 +1,10 @@
 "use strict";
 const hamburger = document.querySelector('#hamburger');
-const navBar = document.querySelector('#navbar');
+const navBar = document.querySelector('.navbar');
 const navContent = document.querySelector('.nav-content');
 const menu = document.querySelector('.menu');
 const hamburgerLines = document.querySelectorAll('#hamburger>svg');
+const new_listing_input = document.querySelector('.listing-form__group .input');
 // hamburger animation
 hamburger.addEventListener('click', function () {
     menu.classList.toggle('menu-open');
