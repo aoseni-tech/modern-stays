@@ -3,7 +3,8 @@ const navBar = document.querySelector('.navbar')! as HTMLElement;
 const navContent = document.querySelector('.nav-content')! as HTMLElement;
 const menu = document.querySelector('.menu')! as HTMLElement;
 const hamburgerLines = document.querySelectorAll('#hamburger>svg')!as NodeListOf<HTMLElement>;
-const new_listing_input = document.querySelector('.listing-form__group .input')! as HTMLElement;
+const new_form_inputs = document.querySelectorAll('#add-new_form input')! as NodeListOf<HTMLElement>;
+
 
 // hamburger animation
 hamburger.addEventListener('click', function () {
@@ -16,6 +17,10 @@ hamburger.addEventListener('click', function () {
   });
 
   //windows events
+  window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+}
+
   window.addEventListener('click', function (e) {
     if( (<HTMLElement>e.target).classList.contains('opacity') ) {
         menu.classList.remove('menu-open');
@@ -26,3 +31,25 @@ hamburger.addEventListener('click', function () {
         body.classList.remove('overflow-hide');
       }
   })
+
+  //add new-form validation 
+  // class Animal {
+
+  //   constructor(input, legs = 4, noise = 'nothing') {
+  
+  //     this.type = 'animal';
+  //     this.name = name;
+  //     this.legs = legs;
+  //     this.noise = noise;
+  
+  //   }
+  
+  //   // getter
+  //   get dinner() {
+  //     return `${this.name} eats ${this.food || 'nothing'} for dinner.`;
+  //   }
+  
+  // }
+  // if(new_form_inputs) {
+
+  // }

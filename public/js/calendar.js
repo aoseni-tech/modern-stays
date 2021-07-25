@@ -239,7 +239,6 @@ function rotateCalendars() {
         let calHeight = window.innerHeight;
         r.style.setProperty('--scene-height', `${calHeight}px`);
         slider.style.transform = `translateZ(0) rotateY(0deg)`;
-        slider.scrollTop = 0;
         for (let i = 0; i < calendars.length; i++) {
             calendars[i].style.transform = `rotateY(0deg) translateZ(0)`;
         }
@@ -306,6 +305,7 @@ let showCalendar = false;
 let opac = "1";
 //event listener to add focus on form element
 locationSection.addEventListener('click', function (e) {
+    this.classList.add('form-focus');
     locationInput.focus();
     if (locationInput.value !== '') {
         clear_location_input.classList.add('show-clear-location');
@@ -329,6 +329,7 @@ locationInput.addEventListener('blur', function () {
 clear_location_input.addEventListener('mousedown', function (e) {
     locationInput.value = '';
     this.classList.remove('show-clear-location');
+    locationSection.classList.add('form-focus');
     locationInput.focus();
 });
 //event listener to close orientation warning
@@ -339,16 +340,12 @@ close_warning_modal.addEventListener('click', function (e) {
 checkInSection.addEventListener('click', function (e) {
     showCalendar = true;
     toggleCalendarScene();
-    slider.scrollTop = 0;
-    window.scrollTo(0, 0);
     checkOutSection.classList.remove('form-focus');
     this.classList.add('form-focus');
 });
 checkOutSection.addEventListener('click', function () {
     showCalendar = true;
     toggleCalendarScene();
-    slider.scrollTop = 0;
-    window.scrollTo(0, 0);
     if (!checkInValue || checkInValue === '') {
         checkInSection.classList.add('form-focus');
     }
@@ -364,7 +361,6 @@ clearCalendar.addEventListener('click', function () {
         checkOut.textContent = 'Depart';
         checkInValue = '';
         isCheckin = false;
-        savedCalData();
         checkOutValue = '';
         smallCalCheckOut.textContent = '';
         smallCalCheckIn.textContent = '';
@@ -388,6 +384,8 @@ clearCalendar.addEventListener('click', function () {
 //event listener to close Calendar
 function closeCal() {
     showCalendar = false;
+    savedCalData();
+    reloadCalendar();
     toggleCalendarScene();
     checkInSection.classList.remove('form-focus');
     checkOutSection.classList.remove('form-focus');
@@ -438,7 +436,6 @@ function toggleCalendarScene() {
 body.addEventListener('click', function (e) {
     if (!locationSection.contains(e.target)) {
         locationSection.classList.remove('form-focus');
-        locationInput.classList.remove('focus');
         clear_location_input.classList.remove('show-clear-location');
     }
     if (!checkInSection.contains(e.target) &&
@@ -468,11 +465,13 @@ function savedCalData() {
         savedClick = click;
         savedCount = count;
         savedMonth = n;
+        slider.scrollTop = slider.scrollTop;
     }
     else {
         savedAngle = 0;
         savedCount = 0;
         savedClick = 0;
         savedMonth = d.getMonth();
+        slider.scrollTop = 0;
     }
 }
