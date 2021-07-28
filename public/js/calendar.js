@@ -305,7 +305,6 @@ const orientation_warning_modal = document.querySelector('.orientation-warning')
 let showCalendar = false;
 //event listener to add focus on form element
 locationSection.addEventListener('click', function (e) {
-    this.classList.add('form-focus');
     locationInput.focus();
 });
 //event listener for location Input
@@ -318,10 +317,6 @@ locationInput.addEventListener('input', function () {
 });
 locationInput.addEventListener('blur', function () {
     clear_location_input.classList.remove('show-clear-location');
-    locationSection.classList.remove('form-focus');
-});
-locationInput.addEventListener('focus', function () {
-    locationSection.classList.add('form-focus');
 });
 //eventlistener for clear location input 
 clear_location_input.addEventListener('mousedown', function (e) {
