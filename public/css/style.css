@@ -300,16 +300,6 @@ input, textarea {
   font-weight: 600;
 }
 
-#location-section:focus-within #location {
-  border: none;
-}
-
-#location-section:focus-within {
-  background: #fff;
-  outline: 2px solid #fca99e;
-  z-index: 10;
-}
-
 .clear-location {
   font-weight: 500;
   position: absolute;
@@ -321,7 +311,6 @@ input, textarea {
   cursor: pointer;
   user-select: none;
   display: none;
-  opacity: 0;
   transform: translateY(-25%);
   background-color: rgba(0, 0, 0, 0.05);
 }
@@ -900,6 +889,7 @@ input, textarea {
   width: 80%;
   max-width: 500px;
   margin-left: 50%;
+  margin-bottom: 1.5em;
   transform: translateX(-50%);
   text-align: left;
 }
@@ -966,7 +956,7 @@ input, textarea {
   border-radius: 0.25em;
   font-weight: 600;
   cursor: pointer;
-  color: #fff;
+  color: #fff;  
 }
 
 .listing-form__back-link {

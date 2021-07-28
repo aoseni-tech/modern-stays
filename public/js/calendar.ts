@@ -312,11 +312,10 @@ const clear_location_input = document.querySelector('.clear-location')! as HTMLE
 const close_warning_modal = document.querySelector('.orientation-warning span')! as HTMLElement;
 const orientation_warning_modal = document.querySelector('.orientation-warning')! as HTMLElement;
 let showCalendar: boolean = false;
-let opac = "1";
 
 //event listener to add focus on form element
 locationSection.addEventListener('click', function (e) {
-  this.classList.add('form-focus');
+  this.classList.add('form-focus')
   locationInput.focus();
   if(locationInput.value !== '') {
     clear_location_input.classList.add('show-clear-location')
@@ -325,16 +324,20 @@ locationSection.addEventListener('click', function (e) {
 //event listener for location Input
 locationInput.addEventListener('keyup', function () {
    this.value = this.value.trim()    
-   if(this.value !== '') {
-    clear_location_input.classList.add('show-clear-location')
-    clear_location_input.style.opacity = opac;
-  } else {
-    clear_location_input.classList.remove('show-clear-location')
-  }
 });
+
+locationInput.addEventListener('input', function () {
+  if(this.value!=='')
+  clear_location_input.classList.add('show-clear-location');
+})
 
 locationInput.addEventListener('blur', function(){
   clear_location_input.classList.remove('show-clear-location')
+  locationSection.classList.remove('form-focus');
+})
+
+locationInput.addEventListener('focus', function(){
+  locationSection.classList.add('form-focus');
 })
 
 
