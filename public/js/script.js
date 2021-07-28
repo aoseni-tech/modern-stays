@@ -5,7 +5,7 @@ const navContent = document.querySelector('.nav-content');
 const menu = document.querySelector('.menu');
 const hamburgerLines = document.querySelectorAll('#hamburger>svg');
 const listing_form = document.querySelector('.listing-form');
-const form_inputs = document.querySelectorAll('.new-form_input');
+const form_inputs = document.querySelectorAll('.listing-form_input');
 const validationFeedback = document.querySelectorAll('.validity-feedback');
 // hamburger animation
 hamburger.addEventListener('click', function () {

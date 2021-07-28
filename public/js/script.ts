@@ -4,7 +4,7 @@ const navContent = document.querySelector('.nav-content')! as HTMLElement;
 const menu = document.querySelector('.menu')! as HTMLElement;
 const hamburgerLines = document.querySelectorAll('#hamburger>svg')! as NodeListOf<HTMLElement>;
 const listing_form = document.querySelector('.listing-form')! as HTMLFormElement;
-const form_inputs = document.querySelectorAll('.new-form_input')! as NodeListOf<HTMLInputElement>;
+const form_inputs = document.querySelectorAll('.listing-form_input')! as NodeListOf<HTMLInputElement>;
 const validationFeedback = document.querySelectorAll('.validity-feedback')! as NodeListOf<HTMLInputElement>;
 
 
