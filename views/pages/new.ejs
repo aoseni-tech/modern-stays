@@ -1,31 +1,34 @@
 <% layout('/layouts/boilerplate') -%>
 <section class="listing-form__container">
     <h1>Add a listing</h1>
-    <form action="/stays" method="POST" class="listing-form" id="add-new_form">
+    <form action="/stays" method="POST" class="listing-form" id="add-new_form" spellcheck="false">
         <div class="listing-form__group">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title" class="input">
+            <input type="text" name="title" id="title" class="new-form_input">
+            <small class="validity-feedback"></small>
         </div>
         <div class="listing-form__group">
             <label for="location">Location</label>
-            <input type="text" name="location" id="listing-form__location" class="input">
+            <input type="text" name="location" id="form-location" class="new-form_input">
+            <small class="validity-feedback"></small>
         </div>
         <div class="listing-form__group">
             <label for="image">Image</label>
-            <input type="text" name="image" id="image" class="input">
+            <input type="text" name="image" id="image-url" class="new-form_input">
+            <small class="validity-feedback"></small>
         </div>
         <div class="listing-form__group">
             <label for="price">Price</label>
-            <div class="input-group">
-                <div class="dollar-sign">
-                 <span id="price-label">&dollar;</span>
-                </div> 
-                <input type="text" pattern="[0-9]" name="price" placeholder="0.00" id="price" class="input" aria-describedby="price-label">
-            </div>
+            <div class="dollar-sign">
+                <span id="price-label">&dollar;</span>
+            </div> 
+            <input type="text" name="price" placeholder="0.00" id="price" class="new-form_input" aria-describedby="price-label">
+            <small class="validity-feedback"></small>
         </div>
         <div class="listing-form__group">
             <label for="description">Description</label>
-            <textarea name="description" id="description"  class="input textarea"rows="5"></textarea>
+            <textarea name="description" id="description"  class="new-form_input textarea"rows="8"></textarea>
+            <small class="validity-feedback"></small>
         </div>
         <button class="listing-form__btn">List property</button>
     </form>

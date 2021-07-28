@@ -3,7 +3,7 @@
 <section class="show-wrapper">
   <h2><%= stay.title %> </h2>
   <p class="muted show-wrapper__location"><%= stay.location %>. </p>
-  <p role="heading" class="show-wrapper__price"><b>$<%=stay.price%></b>/night</p>
+  <p role="heading" class="show-wrapper__price"><b>$<%=stay.price.toLocaleString()%></b>/night</p>
   <div class="container__show-image">
     <img src="<%=stay.image%>" alt="">
   </div>

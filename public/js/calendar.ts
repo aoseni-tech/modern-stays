@@ -49,6 +49,7 @@ let savedAngle = 0;
 let savedCount = 0;
 let savedClick = 0;
 let savedMonth = d.getMonth();
+let scrollTop = 0;
 let startSlide = false;
 let clearLocation = false;
 
@@ -376,6 +377,7 @@ clearCalendar.addEventListener('click', function () {
     checkInValue = '';
     isCheckin = false;
     checkOutValue = '';
+    savedCalData();
     smallCalCheckOut.textContent = '';
     smallCalCheckIn.textContent = '';
     smallCalCheckOut.classList.remove('larger');
@@ -399,7 +401,6 @@ clearCalendar.addEventListener('click', function () {
 //event listener to close Calendar
 function closeCal() {
   showCalendar = false;
-  savedCalData();
   reloadCalendar();
   toggleCalendarScene(); 
   checkInSection.classList.remove('form-focus');
@@ -486,6 +487,7 @@ function reloadCalendar() {
   click = savedClick;
   count = savedCount;
   n = savedMonth;
+  slider.scrollTop = scrollTop;
   slider.style.transform = `translateZ(-290px) rotateY(${x}deg)`;
   generateMonths();
   disableBtn();
@@ -497,12 +499,12 @@ function savedCalData() {
     savedClick = click;
     savedCount = count;
     savedMonth = n;
-    slider.scrollTop = slider.scrollTop;
+    scrollTop = slider.scrollTop;
   } else {
     savedAngle = 0;
     savedCount = 0;
     savedClick = 0;
     savedMonth = d.getMonth();
-    slider.scrollTop = 0;
+    scrollTop = 0;
   }
 }
