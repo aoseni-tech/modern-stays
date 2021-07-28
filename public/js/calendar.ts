@@ -325,6 +325,11 @@ locationInput.addEventListener('keyup', function () {
 locationInput.addEventListener('input', function () {
   if(this.value!=='')
   clear_location_input.classList.add('show-clear-location');
+});
+
+locationInput.addEventListener('focus', function () {
+  if(this.value!=='')
+  clear_location_input.classList.add('show-clear-location');
 })
 
 locationInput.addEventListener('blur', function(){

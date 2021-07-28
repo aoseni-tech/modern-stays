@@ -315,6 +315,10 @@ locationInput.addEventListener('input', function () {
     if (this.value !== '')
         clear_location_input.classList.add('show-clear-location');
 });
+locationInput.addEventListener('focus', function () {
+    if (this.value !== '')
+        clear_location_input.classList.add('show-clear-location');
+});
 locationInput.addEventListener('blur', function () {
     clear_location_input.classList.remove('show-clear-location');
 });
