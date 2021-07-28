@@ -303,21 +303,17 @@ const clear_location_input = document.querySelector('.clear-location');
 const close_warning_modal = document.querySelector('.orientation-warning span');
 const orientation_warning_modal = document.querySelector('.orientation-warning');
 let showCalendar = false;
-let opac = "1";
 //event listener to add focus on form element
 locationSection.addEventListener('click', function (e) {
-    this.classList.add('form-focus');
     locationInput.focus();
-    if (locationInput.value !== '') {
-        clear_location_input.classList.add('show-clear-location');
-    }
 });
 //event listener for location Input
 locationInput.addEventListener('keyup', function () {
     this.value = this.value.trim();
+});
+locationInput.addEventListener('input', function () {
     if (this.value !== '') {
         clear_location_input.classList.add('show-clear-location');
-        clear_location_input.style.opacity = opac;
     }
     else {
         clear_location_input.classList.remove('show-clear-location');
@@ -330,7 +326,6 @@ locationInput.addEventListener('blur', function () {
 clear_location_input.addEventListener('mousedown', function (e) {
     locationInput.value = '';
     this.classList.remove('show-clear-location');
-    locationSection.classList.add('form-focus');
     locationInput.focus();
 });
 //event listener to close orientation warning

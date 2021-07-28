@@ -282,9 +282,9 @@ input, textarea {
 }
 
 .form-div.form-focus {
-  background: #fff;
   border: none;
-  outline: 2px solid #fca99e;
+  background: #fff;
+  box-shadow: 0px 0px 0px 2px #FCA99E;
   z-index: 10;
 }
 
@@ -300,13 +300,10 @@ input, textarea {
   font-weight: 600;
 }
 
-#location-section:focus-within #location {
-  border: none;
-}
-
 #location-section:focus-within {
+  border: none;
   background: #fff;
-  outline: 2px solid #fca99e;
+  box-shadow: 0px 0px 0px 2px #FCA99E;
   z-index: 10;
 }
 
@@ -321,7 +318,6 @@ input, textarea {
   cursor: pointer;
   user-select: none;
   display: none;
-  opacity: 0;
   transform: translateY(-25%);
   background-color: rgba(0, 0, 0, 0.05);
 }
