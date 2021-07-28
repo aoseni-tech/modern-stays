@@ -315,16 +315,27 @@ let showCalendar: boolean = false;
 
 //event listener to add focus on form element
 locationSection.addEventListener('click', function (e) {
+<<<<<<< HEAD
   this.classList.add('form-focus')
+=======
+>>>>>>> stylingFrontend
   locationInput.focus();
-  if(locationInput.value !== '') {
-    clear_location_input.classList.add('show-clear-location')
-  }
 });
 //event listener for location Input
 locationInput.addEventListener('keyup', function () {
    this.value = this.value.trim()    
 });
+<<<<<<< HEAD
+=======
+
+locationInput.addEventListener('input', function(){
+  if(this.value !== '') {
+    clear_location_input.classList.add('show-clear-location')
+  } else {
+    clear_location_input.classList.remove('show-clear-location')
+  }
+})
+>>>>>>> stylingFrontend
 
 locationInput.addEventListener('input', function () {
   if(this.value!=='')
@@ -332,20 +343,22 @@ locationInput.addEventListener('input', function () {
 })
 
 locationInput.addEventListener('blur', function(){
+<<<<<<< HEAD
   clear_location_input.classList.remove('show-clear-location')
   locationSection.classList.remove('form-focus');
 })
 
 locationInput.addEventListener('focus', function(){
   locationSection.classList.add('form-focus');
+=======
+  clear_location_input.classList.remove('show-clear-location');
+>>>>>>> stylingFrontend
 })
-
 
 //eventlistener for clear location input 
 clear_location_input.addEventListener('mousedown', function(e) {
       locationInput.value = '';
       this.classList.remove('show-clear-location');
-      locationSection.classList.add('form-focus');
       locationInput.focus();
 })
 //event listener to close orientation warning

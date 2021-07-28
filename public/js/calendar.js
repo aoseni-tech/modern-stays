@@ -307,9 +307,6 @@ let showCalendar = false;
 locationSection.addEventListener('click', function (e) {
     this.classList.add('form-focus');
     locationInput.focus();
-    if (locationInput.value !== '') {
-        clear_location_input.classList.add('show-clear-location');
-    }
 });
 //event listener for location Input
 locationInput.addEventListener('keyup', function () {
@@ -330,7 +327,6 @@ locationInput.addEventListener('focus', function () {
 clear_location_input.addEventListener('mousedown', function (e) {
     locationInput.value = '';
     this.classList.remove('show-clear-location');
-    locationSection.classList.add('form-focus');
     locationInput.focus();
 });
 //event listener to close orientation warning

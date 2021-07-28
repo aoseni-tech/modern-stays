@@ -282,9 +282,9 @@ input, textarea {
 }
 
 .form-div.form-focus {
-  background: #fff;
   border: none;
-  outline: 2px solid #fca99e;
+  background: #fff;
+  box-shadow: 0px 0px 0px 2px #FCA99E;
   z-index: 10;
 }
 
@@ -300,6 +300,16 @@ input, textarea {
   font-weight: 600;
 }
 
+<<<<<<< HEAD
+=======
+#location-section:focus-within {
+  border: none;
+  background: #fff;
+  box-shadow: 0px 0px 0px 2px #FCA99E;
+  z-index: 10;
+}
+
+>>>>>>> stylingFrontend
 .clear-location {
   font-weight: 500;
   position: absolute;
