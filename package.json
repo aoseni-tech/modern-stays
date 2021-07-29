@@ -1,11 +1,13 @@
 {
-  "name": "modern-homes",
+  "name": "modern-stays",
   "version": "1.0.0",
   "description": "luxerious rents",
-  "main": "app.js",
+  "main": "dist/index.js",
   "scripts": {
+    "start": "NODE_ENV=production node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --project ./"
+    "build": "node copyStatics.js && tsc",
+    "heroku-postbuild": "node copyStatics.js && tsc && rm -v -rf src"
   },
   "author": "afolabi",
   "license": "ISC",
@@ -15,6 +17,7 @@
     "ejs": "^3.1.6",
     "ejs-mate": "^3.0.0",
     "express": "^4.17.1",
+    "fs-extra": "^10.0.0",
     "method-override": "^3.0.0",
     "mongoose": "^5.13.2",
     "nodemon": "^2.0.12"
@@ -29,5 +32,13 @@
       "docs/*"
     ],
     "delay": "9000"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoldenAceTech/modern-stays.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GoldenAceTech/modern-stays/issues"
+  },
+  "homepage": "https://github.com/GoldenAceTech/modern-stays#readme"
 }

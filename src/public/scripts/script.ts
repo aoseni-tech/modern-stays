@@ -35,63 +35,67 @@ window.addEventListener('click', function (e) {
 });
 
 //add new-form validation
-if (listing_form) {
-  class Validator {
-    value:string;
-    pattern:RegExp;
-    name:string;
 
-    constructor(value = '', pattern:RegExp, name:string) {
-  
-      this.value = value;
-      this.pattern = pattern;
-      this.name = name;
-  
-    }
+class Validator {
+    
+  value:string;
+  pattern:RegExp;
+  name:string;
 
-    get errorMessage() {
-      if(this.value === '')  return `${this.name.charAt(0).toUpperCase() + this.name.slice(1)} is required`
-      else return `Please provide a valid ${this.name}`
-    }
-
-    get isValid() {
-      if(this.value === '') return false
-      else return this.pattern.test(this.value);
-    }
-  
+  constructor(value = '', pattern:RegExp, name:string) {  
+    this.value = value;
+    this.pattern = pattern;
+    this.name = name;  
   }
-  const pattern = [
-    /^[a-zA-Z0-9\s,.'-]{3,}$/,
-    /^[a-zA-Z0-9\s,.'-]{3,}$/,
-    /^(ftp|http|https):\/\/[^ "]+$/,
-    /^(\d{1,3})?(,?\d{3})*(\.\d{2})?$/,
-    /^(?!\s*$).+/,
-  ];
 
-  const inputObjectArray:Array<any> = []
+  get errorMessage() {
+    if(this.value === '')  return `${this.name.charAt(0).toUpperCase() + this.name.slice(1)} is required`
+    else return `Please provide a valid ${this.name}`
+  }
 
+  get isValid() {
+    if(this.value === '') return false
+    else return this.pattern.test(this.value);
+  }
+
+}
+
+const pattern = [
+  /^[a-zA-Z0-9\s,.'-]{3,}$/,
+  /^[a-zA-Z0-9\s,.'-]{3,}$/,
+  /^(ftp|http|https):\/\/[^ "]+$/,
+  /^(\d{1,3})?(,?\d{3})*(\.\d{2})?$/,
+  /^(?!\s*$).+/,
+];
+
+const inputObjectArray:Array<any> = []
+
+
+function validationCheck() {
+  for (let i = 0; i < form_inputs.length; i++) {
+    inputObjectArray[i].value = form_inputs[i].value
+    form_inputs[i].classList.remove('invalid-input','valid-input')
+    validationFeedback[i].classList.remove('invalid-feedback','valid-feedback')
+    if(!inputObjectArray[i].isValid){
+      form_inputs[i].classList.add('invalid-input')
+      validationFeedback[i].classList.add('invalid-feedback')
+      validationFeedback[i].innerHTML = inputObjectArray[i].errorMessage
+    } else {
+      form_inputs[i].classList.add('valid-input')
+      validationFeedback[i].classList.add('valid-feedback')
+      validationFeedback[i].innerHTML = `&check; Looks good`
+    }
+  }
+}
+
+if (listing_form) {
+  
   for (let i = 0; i < form_inputs.length; i++) {
     inputObjectArray.push( 
       new Validator(form_inputs[i].value,pattern[i],form_inputs[i].getAttribute('name')!)
     );
   }
 
-  function validationCheck() {
-    for (let i = 0; i < form_inputs.length; i++) {
-      inputObjectArray[i].value = form_inputs[i].value
-      form_inputs[i].classList.remove('invalid-input','valid-input')
-      validationFeedback[i].classList.remove('invalid-feedback','valid-feedback')
-      if(!inputObjectArray[i].isValid){
-        form_inputs[i].classList.add('invalid-input')
-        validationFeedback[i].classList.add('invalid-feedback')
-        validationFeedback[i].innerHTML = inputObjectArray[i].errorMessage
-      } else {
-        form_inputs[i].classList.add('valid-input')
-        validationFeedback[i].classList.add('valid-feedback')
-        validationFeedback[i].innerHTML = `&check; Looks good`
-      }
-    }
-  }
   for (let i = 0; i < form_inputs.length; i++) {
         form_inputs[i].addEventListener('input', function() {
           if(form_inputs[i].classList.contains('invalid-input') || form_inputs[i].classList.contains('valid-input')){
@@ -100,12 +104,12 @@ if (listing_form) {
         });
   }
 
-    listing_form.addEventListener('submit', function (e) {
-      validationCheck()
-      for (let i = 0; i < form_inputs.length; i++) {
-        if(!inputObjectArray[i].isValid)   e.preventDefault();        
-      }
-    });
+  listing_form.addEventListener('submit', function (e) {
+    validationCheck()
+    for (let i = 0; i < form_inputs.length; i++) {
+      if(!inputObjectArray[i].isValid)   e.preventDefault();        
+    }
+  });
 
   }
 

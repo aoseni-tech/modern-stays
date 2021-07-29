@@ -1,5 +1,5 @@
 export {};
-import express from 'express';
+import express, { ErrorRequestHandler,Request, Response, NextFunction,Express } from 'express';
 import path from 'path';
 const methodOverride = require('method-override');
 const app = express();
@@ -17,21 +17,18 @@ app.use(methodOverride('_method'));
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname,'views'))
+app.set('views', path.join(__dirname,'../views'))
 
 
-app.get('/', (req: any,res: { render: (arg0: string, arg1: { title: string;page:string; }) => void; })=>{
+app.get('/', (req: Request, res: Response)=>{
   const title = 'Modern Stays';
   const page = 'home';
   res.render('home',{title,page})
 })
 
-app.get('/search', async(req: any,res: { render: (arg0: string, arg1: { title: string;
-stays:string;
-page:string;
-}) => void; })=>{
+app.get('/search', async(req:Request, res: Response)=>{
   try{
-  const{location} = req.query;
+  const{location}:any = req.query;
   const stays = await Stay.find({location: new RegExp(location, 'i')});
   const title = 'Modern Stays.stays';
   const page = 'search';
@@ -41,7 +38,7 @@ page:string;
   }
 })
 
-app.get('/stays/new', (req: any,res: { render: (arg0: string, arg1: { title: string; page:string; }) => void; })=>{
+app.get('/stays/new', (req:Request, res: Response)=>{
   const title = 'Add new.MS';
   const page = 'new';
   res.render('pages/new',{title,page})
@@ -49,7 +46,7 @@ app.get('/stays/new', (req: any,res: { render: (arg0: string, arg1: { title: str
 
 
 app.route('/stays/:id')
- .get(async(req: any,res: { render: (arg0: string, arg1: {title: any; stay:any; page:string;}) => void; })=>{
+ .get(async(req:Request, res: Response)=>{
   try{
     const stay = await Stay.findById(req.params.id);
     const{title} = stay;
@@ -59,7 +56,7 @@ app.route('/stays/:id')
     console.log(e)
   }
 })
-.put(async(req: any,res: { redirect: (arg0: string) => void; })=>{
+.put(async(req:Request, res: Response)=>{
   try{
    const {id} = req.params;
    const update = req.body;
@@ -69,7 +66,7 @@ app.route('/stays/:id')
     console.log(e)
   }
 })
-.delete(async(req: any,res: { redirect: (arg0: string) => void; })=>{
+.delete(async(req:Request, res: Response)=>{
   try{
    const {id} = req.params;
    await Stay.findByIdAndRemove(id)
@@ -79,7 +76,7 @@ app.route('/stays/:id')
   }
 })
 
-app.post('/stays', async(req: any,res: { redirect: (arg0: string) => void; })=>{
+app.post('/stays', async(req:Request, res: Response)=>{
     try{
     const stay = new Stay(req.body);
     await stay.save()
@@ -89,7 +86,7 @@ app.post('/stays', async(req: any,res: { redirect: (arg0: string) => void; })=>{
     }
   })
 
-app.get('/stays/:id/update', async(req: any,res: { render: (arg0: string, arg1: {title: any; stay:any; page:string;}) => void; })=>{
+app.get('/stays/:id/update', async(req:Request, res: Response)=>{
     try{
       const stay = await Stay.findById(req.params.id);
       const{title} = stay;

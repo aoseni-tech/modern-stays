@@ -1,7 +1,7 @@
 <% layout('/layouts/boilerplate') -%>
 <%- include('../partials/form') %> 
 <section class="show-wrapper">
-  <h2><%= stay.title %> </h2>
+  <h2> <%= stay.title %> </h2>
   <p class="muted show-wrapper__location"><%= stay.location %>. </p>
   <p role="heading" class="show-wrapper__price"><b>$<%=stay.price.toLocaleString()%></b>/night</p>
   <div class="container__show-image">
@@ -13,5 +13,5 @@
     <button class="delete-button">Remove listing</button>
   </form>
 </section>
-<% block('navBar').append('<script src="/js/calendar.js"></script>') %>
-<% block('script').append('<script src="/js/script.js"></script>') %>
+<% block('navBar').append('<script src="/scripts/calendar.js"></script>') %>
+<% block('script').append('<script src="/scripts/script.js"></script>') %>
