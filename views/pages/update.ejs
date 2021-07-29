@@ -1,0 +1,37 @@
+<% layout('/layouts/boilerplate') -%>
+<section class="listing-form__container">
+    <h1>Update listing</h1>
+    <form action="/stays/<%=stay._id%>?_method=PUT" method="POST" class="listing-form" spellcheck="false">
+        <div class="listing-form__group">
+            <label for="title">Title</label>
+            <input type="text" name="title" value="<%=stay.title%>" id="title" class="listing-form_input">
+            <small class="validity-feedback"></small>
+        </div>
+        <div class="listing-form__group">
+            <label for="location">Location</label>
+            <input type="text" name="location" value="<%=stay.location%>" id="listing-form__location" class="listing-form_input">
+            <small class="validity-feedback"></small>
+        </div>
+        <div class="listing-form__group">
+            <label for="image">Image</label>
+            <input type="text" name="image" id="image" value="<%=stay.image%>" class="listing-form_input">
+            <small class="validity-feedback"></small>
+        </div>
+        <div class="listing-form__group">
+            <label for="price">Price</label>
+            <div class="dollar-sign">
+                <span id="price-label">&dollar;</span>
+            </div>
+                <input type="text" name="price" placeholder="0.00" value="<%=stay.price%>" id="price" class="listing-form_input" aria-describedby="price-label">
+            <small class="validity-feedback"></small>    
+        </div>
+        <div class="listing-form__group">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" class="listing-form_input textarea" rows="8"><%=stay.description%></textarea>
+            <small class="validity-feedback"></small>
+        </div>
+        <button class="listing-form__btn">Update Listing</button>
+    </form>
+    <a href="/stays/<%=stay._id%>" class="listing-form__back-link">Back to listing</a>
+</section>    
+    <% block('script').append('<script src="/scripts/script.js"></script>') %>

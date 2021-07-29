@@ -1,0 +1,17 @@
+<% layout('/layouts/boilerplate') -%>
+<%- include('../partials/form') %> 
+<section class="show-wrapper">
+  <h2> <%= stay.title %> </h2>
+  <p class="muted show-wrapper__location"><%= stay.location %>. </p>
+  <p role="heading" class="show-wrapper__price"><b>$<%=stay.price.toLocaleString()%></b>/night</p>
+  <div class="container__show-image">
+    <img src="<%=stay.image%>" alt="">
+  </div>
+  <p class= "show-wrapper__description"><%=stay.description%></p>
+  <a class="listing-form__back-link" href='/stays/<%=stay._id%>/update'>Update Listing</a>
+  <form action="/stays/<%=stay._id%>?_method=DELETE" method="POST" class="show-form">
+    <button class="delete-button">Remove listing</button>
+  </form>
+</section>
+<% block('navBar').append('<script src="/scripts/calendar.js"></script>') %>
+<% block('script').append('<script src="/scripts/script.js"></script>') %>
