@@ -5,8 +5,7 @@ const menu = document.querySelector('.menu')! as HTMLElement;
 const hamburgerLines = document.querySelectorAll('#hamburger>svg')! as NodeListOf<HTMLElement>;
 const listing_form = document.querySelector('.listing-form')! as HTMLFormElement;
 const form_inputs = document.querySelectorAll('.listing-form_input')! as NodeListOf<HTMLInputElement>;
-const validationFeedback = document.querySelectorAll('.validity-feedback')! as NodeListOf<HTMLInputElement>;
-
+const feedback = document.querySelectorAll('.validity-feedback')! as NodeListOf<HTMLElement>;
 
 // hamburger animation
 hamburger.addEventListener('click', function () {
@@ -36,80 +35,32 @@ window.addEventListener('click', function (e) {
 
 //add new-form validation
 
-class Validator {
-    
-  value:string;
-  pattern:RegExp;
-  name:string;
-
-  constructor(value = '', pattern:RegExp, name:string) {  
-    this.value = value;
-    this.pattern = pattern;
-    this.name = name;  
-  }
-
-  get errorMessage() {
-    if(this.value === '')  return `${this.name.charAt(0).toUpperCase() + this.name.slice(1)} is required`
-    else return `Please provide a valid ${this.name}`
-  }
-
-  get isValid() {
-    if(this.value === '') return false
-    else return this.pattern.test(this.value);
-  }
-
-}
-
-const pattern = [
-  /^[a-zA-Z0-9\s,.'-]{3,}$/,
-  /^[a-zA-Z0-9\s,.'-]{3,}$/,
-  /^(ftp|http|https):\/\/[^ "]+$/,
-  /^(\d{1,3})?(,?\d{3})*(\.\d{2})?$/,
-  /^(?!\s*$).+/,
-];
-
-const inputObjectArray:Array<any> = []
-
-
 function validationCheck() {
-  for (let i = 0; i < form_inputs.length; i++) {
-    inputObjectArray[i].value = form_inputs[i].value
-    form_inputs[i].classList.remove('invalid-input','valid-input')
-    validationFeedback[i].classList.remove('invalid-feedback','valid-feedback')
-    if(!inputObjectArray[i].isValid){
-      form_inputs[i].classList.add('invalid-input')
-      validationFeedback[i].classList.add('invalid-feedback')
-      validationFeedback[i].innerHTML = inputObjectArray[i].errorMessage
+  for(let i = 0; i < form_inputs.length;i++) {
+    feedback[i].classList.remove('valid-feedback','invalid-feedback');
+    if(!form_inputs[i].checkValidity()) {
+      if(form_inputs[i].value==='') feedback[i].innerHTML = `${form_inputs[i].name} is required`
+      else feedback[i].innerHTML=`${form_inputs[i].title}`
+      feedback[i].classList.add('invalid-feedback');
     } else {
-      form_inputs[i].classList.add('valid-input')
-      validationFeedback[i].classList.add('valid-feedback')
-      validationFeedback[i].innerHTML = `&check; Looks good`
+      feedback[i].innerHTML = '&check; Looks good'
+      feedback[i].classList.add('valid-feedback');
     }
   }
 }
 
 if (listing_form) {
-  
-  for (let i = 0; i < form_inputs.length; i++) {
-    inputObjectArray.push( 
-      new Validator(form_inputs[i].value,pattern[i],form_inputs[i].getAttribute('name')!)
-    );
-  }
-
-  for (let i = 0; i < form_inputs.length; i++) {
-        form_inputs[i].addEventListener('input', function() {
-          if(form_inputs[i].classList.contains('invalid-input') || form_inputs[i].classList.contains('valid-input')){
-            validationCheck();
-          }
-        });
-  }
 
   listing_form.addEventListener('submit', function (e) {
-    validationCheck()
-    for (let i = 0; i < form_inputs.length; i++) {
-      if(!inputObjectArray[i].isValid)   e.preventDefault();        
+    if (!this.checkValidity()) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.classList.add('form-validated')
+      validationCheck();
+      for(let i = 0; i < form_inputs.length;i++) {   
+        form_inputs[i].addEventListener('input',validationCheck)
+      }
     }
   });
-
   }
 
