@@ -6,6 +6,7 @@ const hamburgerLines = document.querySelectorAll('#hamburger>svg')! as NodeListO
 const listing_form = document.querySelector('.listing-form')! as HTMLFormElement;
 const form_inputs = document.querySelectorAll('.listing-form_input')! as NodeListOf<HTMLInputElement>;
 const feedback = document.querySelectorAll('.validity-feedback')! as NodeListOf<HTMLElement>;
+const doc = document.documentElement;
 
 // hamburger animation
 hamburger.addEventListener('click', function () {
@@ -14,7 +15,7 @@ hamburger.addEventListener('click', function () {
   hamburgerLines[0].classList.toggle('line-one');
   hamburgerLines[1].classList.toggle('line-two');
   hamburgerLines[2].classList.toggle('line-three');
-  body.classList.toggle('overflow-hide');
+  doc.classList.toggle('overflow-hide');
 });
 
 //windows events
@@ -22,14 +23,14 @@ window.onbeforeunload = function () {
   window.scrollTo(0, 0);
 };
 
-window.addEventListener('click', function (e) {
+doc.addEventListener('click', function (e) {
   if ((<HTMLElement>e.target).classList.contains('opacity')) {
     menu.classList.remove('menu-open');
     navContent.classList.remove('opacity');
     hamburgerLines[0].classList.remove('line-one');
     hamburgerLines[1].classList.remove('line-two');
     hamburgerLines[2].classList.remove('line-three');
-    body.classList.remove('overflow-hide');
+    doc.classList.remove('overflow-hide');
   }
 });
 
@@ -39,7 +40,7 @@ function validationCheck() {
   for(let i = 0; i < form_inputs.length;i++) {
     feedback[i].classList.remove('valid-feedback','invalid-feedback');
     if(!form_inputs[i].checkValidity()) {
-      if(form_inputs[i].value==='') feedback[i].innerHTML = `${form_inputs[i].name} is required`
+      if(form_inputs[i].value==='') feedback[i].innerHTML=`${form_inputs[i].name} is required`
       else feedback[i].innerHTML=`${form_inputs[i].title}`
       feedback[i].classList.add('invalid-feedback');
     } else {
@@ -50,7 +51,6 @@ function validationCheck() {
 }
 
 if (listing_form) {
-
   listing_form.addEventListener('submit', function (e) {
     if (!this.checkValidity()) {
       e.preventDefault()
@@ -63,4 +63,3 @@ if (listing_form) {
     }
   });
   }
-

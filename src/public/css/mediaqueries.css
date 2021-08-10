@@ -195,11 +195,14 @@
   .stays .search-form_section,
   .search-form_section {
     position: static;
-    top: 0;
+    top: 0;    
   }
 
   #form-container {
     position: static;
+  }
+  .stays #form-container {
+    padding: 0.5em 0 3em 0;
   }
 
   #search-form {
@@ -230,10 +233,11 @@
     transform: translateY(50%) translateX(50%);
     width: 20%;
     min-width: 150px;
+    z-index: 1;
   }
 
   .stays .search-form_submit {
-    display: none;
+    top: 95%;
     right: 0;
     left: 50%;
     transform: translateX(-50%) translateY(50%);
@@ -428,6 +432,11 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+  }
+
+  /* LISTING FORM  */
+  .listing-form__container {
+    padding-top: 0;
   }
 }
 

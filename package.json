@@ -31,7 +31,7 @@
       "test/*",
       "docs/*"
     ],
-    "delay": "9000"
+    "delay": "5000"
   },
   "repository": {
     "type": "git",
