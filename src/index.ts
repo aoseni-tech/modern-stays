@@ -66,12 +66,15 @@ app.route('/stays/:id')
 }))
 
 app.all('*', (req:Request,res:Response,next:NextFunction) => {
-     next(new appError('Page not found', 404));
+     next(new appError('Page Not Found', 404));
 })  
 
 app.use((err:any,req:Request,res:Response,next:NextFunction) => {
   const {message = 'Something went wrong!',statusCode = 500} = err;
-  res.status(statusCode).send(message)
+  console.log(message);
+  const title = 'page not found - 404'
+  const page = 'error'
+  res.status(statusCode).render('error',{title,page})
 })  
 
 app.listen(port, () => {
