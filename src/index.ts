@@ -7,7 +7,8 @@ const ejsMate = require('ejs-mate');
 const wrapAsync = require('./utils/wrapAsync');
 const appError = require('./utils/express_error');
 const{ mongoose,Stay} = require('./models/staySchema');
-const{checkStayValidity,createNewStay,updateStay} = require('./middlewares/schema_form_validation');
+const {Review,check_review_validity,reviewErrors} = require('./models/review');
+const{checkStayValidity,createNewStay,updateStay} = require('./middlewares/staySchemaValidation');
 const db = mongoose.connect('mongodb://localhost:27017/modernStays', {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify:false}).then(() => {
   console.log('db connection open!')
 }).catch((err: { message: any; }) => console.log(err.message));
@@ -48,10 +49,14 @@ app.get('/stays/:id/update', wrapAsync(updateStay));
 
 app.route('/stays/:id')
  .get(wrapAsync(async(req:Request, res: Response)=>{
-    const stay = await Stay.findById(req.params.id);
-    const{title} = stay;
-    const page = 'show';
-    res.render('pages/show',{title:title+'.MS',stay,page});
+  const {id} = req.params
+    const stay = await Stay.findById(id).populate({
+    path: 'reviews',options: {sort: { _id: 'desc'} }
+  });
+  const {reviews,title} = stay;
+  const page = 'show';
+  res.render('pages/show',{title:title+'.MS',stay,page,reviews,reviewErrors});
+  reviewErrors.length = 0;
 }))
 .put(checkStayValidity,wrapAsync(async(req:Request, res: Response)=>{
    const {id} = req.params;
@@ -63,6 +68,23 @@ app.route('/stays/:id')
    const {id} = req.params;
    await Stay.findByIdAndRemove(id)
    res.redirect(`/`);
+}))
+
+app.post('/stays/:id/reviews',check_review_validity,wrapAsync(async(req:Request,res:Response)=>{
+  const {id} = req.params;
+  const stay = await Stay.findById(id);
+  const {review} = res.locals
+  stay.reviews.push(review._id);
+  await review.save();
+  await stay.save()
+  res.redirect(`/stays/${stay._id}#reviews`)
+}))
+
+app.delete('/stays/:id/reviews/:reviewId',wrapAsync(async(req:Request, res: Response)=>{
+  const {id,reviewId} = req.params;
+  await Stay.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
+  await Review.findByIdAndRemove(reviewId)
+  res.redirect(`/stays/${id}#reviews`)
 }))
 
 app.all('*', (req:Request,res:Response,next:NextFunction) => {

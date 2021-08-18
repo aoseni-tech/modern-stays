@@ -1,17 +1,85 @@
 <% layout('/layouts/boilerplate') -%>
 <%- include('../partials/form') %> 
 <section class="show-wrapper">
-  <h2> <%= stay.title %> </h2>
-  <p class="muted show-wrapper__location"><%= stay.location %>. </p>
-  <p role="heading" class="show-wrapper__price"><b>$<%=stay.price.toLocaleString()%></b>/night</p>
+ <div class="stay-details">
+  <div class="stay-title">
+    <h2> <%= stay.title %> </h2>
+    <p class="muted stay-details__location"><%= stay.location %>. </p>
+ </div>
   <div class="container__show-image">
     <img src="<%=stay.image%>" alt="">
+    <p role="heading" class="stay-details__price"><b>$<%=stay.price.toLocaleString()%></b>/night</p>
   </div>
-  <p class= "show-wrapper__description"><%=stay.description%></p>
-  <a class="listing-form__back-link" href='/stays/<%=stay._id%>/update'>Update Listing</a>
-  <form action="/stays/<%=stay._id%>?_method=DELETE" method="POST" class="show-form">
+  <p class= "stay-details__description"><%=stay.description%></p>
+  <a class="update-form__link" href='/stays/<%=stay._id%>/update'>Update Listing</a>
+  <form action="/stays/<%=stay._id%>?_method=DELETE" method="POST" class="stay-delete_form">
     <button class="delete-button">Remove listing</button>
   </form>
+ </div>
+
+ <div class="reviews-container">
+    <% if(reviews.length) { %>
+    <h2>Ratings & Reviews</h2>     
+    <div class="reviews">
+        <% for (let i = 0; i < 5 ; i++){ %>
+          <% if(reviews[i]) {%>
+        <div class="review">
+          <p>Rating: <%=reviews[i].rating%></p>
+          <p>Comment: <%= reviews[i].comment %></p>
+          <p>
+            <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
+              <button class="review-delete">Delete</button>
+            </form>
+          </p>
+        </div>
+        <% } %>
+        <% } %>  
+      </div>
+
+      <label class="show-reviews" for="show-radio">Show all <%=reviews.length%>  reviews ❯ </label>
+      <input type="radio"  name="toggle-review" id="show-radio">
+      
+      <div class="modal-cover"></div>
+      <div class="reviews-modal">
+        <h2> 
+          <span>&#11088;</span> <%= stay.averageRating %> &bull; <%=reviews.length%>  reviews
+        </h2>
+        <div class="modal-review">
+        <% for (let i = 0; i < reviews.length ; i++){ %>
+          <div class="review">
+            <p>Rating: <%=reviews[i].rating%></p>
+            <p>Comment: <%= reviews[i].comment %></p>
+            <p>
+              <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
+                <button class="review-delete">Delete</button>
+              </form>
+            </p>
+          </div>
+          <% } %> 
+        </div>
+        <label class="hide-reviews" for="hide-radio"><span>&#10006;</span></label>
+        <input type="radio" name="toggle-review" id="hide-radio">        
+      </div>
+      <% } %> 
+
+      <div class="review-form_container">
+        <h2>Leave a Review</h2>
+        <form action="/stays/<%=stay._id%>/reviews" id="review-form" class="<%=reviewErrors[0]%> post-form" method="POST" class="post-form" novalidate>
+          <div class="review-form">
+            <label for="rating">Rating</label>
+            <input type="range" name="rating" class="review-form_input" id="rating" step="0.1" min="1" max="5" value="1" required>
+          </div>
+          <div class="review-form">
+            <label for="comment">Comment</label>
+            <textarea name="comment" id="comment" minlength="2" title="must contain at least 2 characters" class="review-form_input form_input" cols="20" rows="10" required></textarea>
+            <small class="validity-feedback"><%=reviewErrors[2]%></small>
+          </div>
+          <button class="review-form_button">Submit</button>
+        </form>
+      </div>
+  </div>
+
 </section>
+
 <% block('calendar').append('<script src="/scripts/calendar.js"></script>') %>
 <% block('script').append('<script src="/scripts/script.js"></script>') %>

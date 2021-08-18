@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const{Schema} = mongoose;
+const {Review} = require('./review');
 const StaySchema = new Schema({
     title: {
         type: String,
@@ -51,7 +52,32 @@ const StaySchema = new Schema({
         message: props => `location is not valid, it's too short or contains invalid characters`
       },
       required:[true,'location is required']
-  }
+  },
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref:'Review',
+      count:true
+    }
+  ]
 });
+
+StaySchema.post('findOneAndRemove',async(doc)=>{
+  if(doc){
+    await Review.deleteMany({
+      _id: {
+        $in:doc.reviews
+      }
+    })
+  }
+})
+
+// virtual method for staySchema 
+StaySchema.virtual('averageRating').get(function() {
+  let ratings:Array<any> = [];
+  this.reviews.forEach((review:any) => ratings.push(review.rating));
+  return (ratings.reduce((a,b)=>a+b)/ratings.length).toFixed(2);
+});
+
 const Stay = mongoose.model('Stay',StaySchema);
 module.exports = {mongoose,Schema,Stay,StaySchema}
