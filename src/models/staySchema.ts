@@ -1,14 +1,26 @@
-import mongoose from 'mongoose';
-const{Schema} = mongoose;
-const {Review} = require('./review');
-const StaySchema = new Schema({
+import { Schema, model,Document,PopulatedDoc, MongooseDocumentMiddleware} from 'mongoose';
+const {Review} = require('./reviewSchema');
+const {Book} = require('./bookingSchema');
+
+interface Stay {
+  title: string;
+  price: string;
+  image: string;
+  description: string;
+  location: string;
+  reviews?: PopulatedDoc<Document>;
+  bookings?: Array<Schema.Types.ObjectId>;
+  rating?: number;
+}
+
+const schema = new Schema<Stay>({
     title: {
         type: String,
         validate: {
           validator: function(v:any) {
             return /^[a-zA-Z0-9\s,.'-]{3,}$/.test(v);
           },
-          message: props => `title is too short or contains invalid characters`
+          message: () => `title is too short or contains invalid characters`
         },
         required:[true,'title is required']
     },
@@ -18,7 +30,7 @@ const StaySchema = new Schema({
             validator: function(v:any) {
               return /^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/.test(v);
             },
-            message: props => `provide a valid price, price can only be numbers and must match US dollar price format`
+            message: () => `provide a valid price, price can only be numbers and must match US dollar price format`
           },
           required:[true,'price is required and must match US dollar price format']
     },
@@ -28,7 +40,7 @@ const StaySchema = new Schema({
         validator: function(v:any) {
           return /^(ftp|http|https):\/\/[^ ']+$/.test(v);
         },
-        message: props => `image url is not valid`
+        message: () => `image url is not valid`
       },
       required:[true,'image url is required']
   },
@@ -36,9 +48,9 @@ const StaySchema = new Schema({
       type: String,
       validate: {
         validator: function(v:any) {
-          return /^[a-zA-Z0-9\s,?.!'-]{10,}$/.test(v);
+          return /[\s\S]{10,}/.test(v);
         },
-        message: props => `description must contain at least 10 characters without special characters except " . , ' ? - "`
+        message: () => `description must contain at least 10 characters`
       },
       required:[true,'description is required'],
       minLength:[10,'description must contain at least 10 characters']
@@ -49,7 +61,7 @@ const StaySchema = new Schema({
         validator: function(v:any) {
           return /^[a-zA-Z0-9\s,.'-]{3,}$/.test(v);
         },
-        message: props => `location is not valid, it's too short or contains invalid characters`
+        message: () => `location is not valid, it's too short or contains invalid characters`
       },
       required:[true,'location is required']
   },
@@ -59,25 +71,37 @@ const StaySchema = new Schema({
       ref:'Review',
       count:true
     }
-  ]
+  ],
+  bookings:[
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Book'
+    }
+  ],
+  rating: {
+    type:Number
+  }
 });
 
-StaySchema.post('findOneAndRemove',async(doc)=>{
+schema.post('findOneAndUpdate', async function (doc){
   if(doc){
-    await Review.deleteMany({
-      _id: {
-        $in:doc.reviews
-      }
-    })
+    let ratings:Array<number> = [];
+    const reviews = await Review.find({_id: {$in:doc.reviews}})
+    reviews.forEach((review:any) => ratings.push(review.rating));
+    let rating = (ratings.reduce((a,b)=>a+b)/ratings.length).toFixed(2)
+    doc.rating = rating;
+    await doc.save();
   }
 })
 
-// virtual method for staySchema 
-StaySchema.virtual('averageRating').get(function() {
-  let ratings:Array<any> = [];
-  this.reviews.forEach((review:any) => ratings.push(review.rating));
-  return (ratings.reduce((a,b)=>a+b)/ratings.length).toFixed(2);
-});
+schema.post('findOneAndRemove',async(doc)=>{
+  if(doc){
+    await Promise.all([
+      Review.deleteMany({_id: {$in:doc.reviews}}),
+      Book.deleteMany({_id: {$in:doc.bookings}})
+    ]) 
+  }
+})
 
-const Stay = mongoose.model('Stay',StaySchema);
-module.exports = {mongoose,Schema,Stay,StaySchema}
+const Stay = model<Stay>('Stay',schema);
+module.exports = {Schema,Stay}

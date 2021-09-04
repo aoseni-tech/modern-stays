@@ -8,10 +8,10 @@ const firstMonth: NodeListOf<HTMLElement> = document.querySelectorAll('.calendar
 const secondMonth: NodeListOf<HTMLElement> = document.querySelectorAll('.calendar .month-2');
 const gridDaysOne: NodeListOf<HTMLElement> = document.querySelectorAll('.calendar .grid-day-1');
 const gridDaysTwo: NodeListOf<HTMLElement> = document.querySelectorAll('.calendar .grid-day-2');
-const checkIn = document.querySelector('#check-in-date') as HTMLElement;
-const checkOut = document.querySelector('#check-out-date') as HTMLElement;
-const smallCalCheckIn = document.querySelector('#sm-cal-check-in') as HTMLElement;
-const smallCalCheckOut = document.querySelector('#sm-cal-check-out') as HTMLElement;
+const checkIn = document.querySelector('#check-in-date')! as HTMLElement;
+const checkOut = document.querySelector('#check-out-date')! as HTMLElement;
+const smallCalCheckIn = document.querySelector('#sm-cal-check-in')! as HTMLElement;
+const smallCalCheckOut = document.querySelector('#sm-cal-check-out')! as HTMLElement;
 const smallCalLabel = document.querySelectorAll('.sm-form-label')! as NodeListOf<HTMLElement>;
 const clearCalendar = document.querySelector('.cal-clear')! as HTMLElement;
 const continueBox = document.querySelector('.continue-box')! as HTMLElement;
@@ -20,8 +20,8 @@ const formContainer = document.querySelector('#form-container')! as HTMLElement;
 const no_of_nights = document.querySelectorAll('.no-of-nights')! as NodeListOf<HTMLElement>;
 const r = document.querySelector(':root')! as HTMLHtmlElement;
 const angle: number = 360 / calendars.length;
-let checkInValue: string;
-let checkOutValue: string;
+const checkInInput = document.querySelector('#checkInDate')!as HTMLInputElement;
+const checkOutInput = document.querySelector('#checkOutDate')!as HTMLInputElement;
 let d: Date = new Date();
 let n: number = d.getMonth();
 let y: number = d.getFullYear();
@@ -43,13 +43,7 @@ let tmrValue: string = getDateValues(z, p, tmrDate);
 let nxtDayValue: string;
 let isCheckin = false;
 let x = 0;
-let click = 0;
 let count = 0;
-let savedAngle = 0;
-let savedCount = 0;
-let savedClick = 0;
-let savedMonth = d.getMonth();
-let scrollTop = 0;
 let startSlide = false;
 let clearLocation = false;
 
@@ -88,29 +82,39 @@ function getMonth(month: HTMLElement,index: number,monthIndex: number,gridDay:HT
     m < 10 ? (dataMonth = `0${m}`) : (dataMonth = `${m}`);
     let dateValue: string = `${year}-${dataMonth}-${dataDay}`;
     let nextDayValue: string = `${year}-${dataMonth}-${nextDay}`;
-    getBookingDate(day, dateString, dateValue, nextDayValue);
+    if(isBooking) {
+      getBookingDate(
+        day, dateString, dateValue, nextDayValue,
+        lodgeInDate,lodgeIn,lodgeInDate,
+        lodgeOutDate,lodgeOut,lodgeOutDate
+        );
+    }else {
+      getBookingDate(
+        day, dateString, dateValue, nextDayValue,
+        checkIn,checkInInput,checkInSection,
+        checkOut,checkOutInput,checkOutSection
+        );
+    }
     day.dataset.date = dateValue;
     gridDay.appendChild(day);
     let grid: string = `${weekDay}/${weekDay + 1}`;
     let firstDay = gridDay.firstChild! as HTMLElement;
     firstDay.style.gridColumn = grid;
-    markDays(day, dateValue);
+    if(isBooking) markDays(day, dateValue,lodgeIn,lodgeOut)
+    else markDays(day, dateValue,checkInInput,checkOutInput);
   }
 }
 //function created to get booking dates
 //1)create a function to mark dates
-function markDays(day: HTMLHeadingElement, val: string) {
+function markDays(day:HTMLElement,val: string,checkin:HTMLInputElement,checkout:HTMLInputElement) {
   day.classList.remove('stay-day', 'start-day', 'end-day');
-  if (
-    new Date(val) < new Date(checkOutValue) &&
-    new Date(val) > new Date(checkInValue)
-  ) {
+  if (new Date(val) < new Date(checkout.value) && new Date(val) > new Date(checkin.value) ) {
     day.classList.add('stay-day');
   }
-  if (checkInValue && val === checkInValue) {
+  if (checkin.value && val === checkin.value) {
     day.classList.add('start-day');
   }
-  if (checkOutValue && val === checkOutValue) {
+  if (checkout.value && val === checkout.value) {
     day.classList.add('end-day');
   }
 }
@@ -118,78 +122,107 @@ function markDays(day: HTMLHeadingElement, val: string) {
 const date_diff_indays = function(date1:string, date2:string) {
   let dt1 = new Date(date1);
   let dt2 = new Date(date2);
-  return `${Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24))} night(s)`;
+  return  Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
   }
 
-function getBookingDate(day:HTMLElement,dayStr:string,dateVal:string,nextDayVal:string) {
-  if (!day.classList.contains('past-day')) {
+function getBookingDate(
+day:HTMLElement,dayStr:string,dateVal:string,nextDayVal:string,
+checkin:HTMLElement,checkininput:HTMLInputElement,checkinsection:HTMLElement,
+checkout:HTMLElement,checkoutinput:HTMLInputElement,checkoutsection:HTMLElement
+) {
+  if (dateVal >= todayValue) {
     day.addEventListener('click', function () {
-      if (!checkInValue || checkInSection.classList.contains('form-focus')) {
-        checkIn.textContent = dayStr;
-        checkInValue = dateVal;
+      if (!checkininput.value || checkinsection.classList.contains('form-focus')) {
+        
+        checkin.textContent = dayStr;
+        checkininput.value = dateVal;
         isCheckin = true;
-        savedCalData ()
-        checkOut.textContent = 'Depart';
-        smallCalCheckIn.textContent = dayStr;
-        smallCalCheckOut.textContent = '';
-        smallCalCheckOut.classList.remove('larger');
-        smallCalCheckIn.classList.add('larger');
-        smallCalLabel[0].classList.add('smaller');
-        smallCalLabel[1].classList.remove('smaller');
+        checkout.textContent = 'check-out';
         continueBox.classList.remove('transform-up');
-        checkOutValue = '';
-        clearCalendar.classList.add('clear-dates');
-        checkInSection.classList.remove('form-focus');
-        checkIn.classList.add('selected-date');
-        checkOut.classList.remove('selected-date');
-        checkOutSection.classList.add('form-focus');
+        checkoutinput.value = '';
+        checkinsection.classList.remove('form-focus');
+        checkin.classList.add('selected-date');
+        checkout.classList.remove('selected-date');
+        checkoutsection.classList.add('form-focus');        
         nxtDayValue = nextDayVal;
+
       } else if (
-        (checkInValue && !checkOutValue) ||
-        (checkInValue && checkOutValue)
-      ) {
+        (checkininput.value && !checkoutinput.value) ||
+        (checkininput.value && checkoutinput.value) 
+         ) {
         let dateValChecker = dateVal;
-        if (new Date(dateValChecker) < new Date(checkInValue)) {
-          checkOut.textContent = 'Depart';
-          checkOutValue = '';
-          checkIn.textContent = dayStr;
-          checkInValue = dateValChecker;
+        if (new Date(dateValChecker) < new Date(checkininput.value)) {
+
+          checkout.textContent = 'check-out';
+          checkoutinput.value = '';
+          checkin.textContent = dayStr;
+          checkininput.value = dateValChecker;
           isCheckin = true;
-          savedCalData ()
           nxtDayValue = nextDayVal;
-          smallCalCheckIn.textContent = dayStr;
-          smallCalCheckOut.textContent = '';
-          smallCalCheckOut.classList.remove('larger');
-          smallCalCheckIn.classList.add('larger');
-          smallCalLabel[0].classList.add('smaller');
-          smallCalLabel[1].classList.remove('smaller');
-          clearCalendar.classList.remove('clear-dates');
           continueBox.classList.remove('transform-up');
-          checkOut.classList.remove('selected-date');
-          checkInSection.classList.remove('form-focus');
-          checkOutSection.classList.add('form-focus');
+          checkout.classList.remove('selected-date');
+          checkinsection.classList.remove('form-focus');
+          checkoutsection.classList.add('form-focus');   
+
         } else {
-          checkOut.textContent = dayStr;
-          checkOutValue = dateValChecker;
-          smallCalCheckOut.textContent = dayStr;
-          smallCalCheckOut.classList.add('larger');
-          smallCalLabel[1].classList.add('smaller');
-          clearCalendar.classList.add('clear-dates');
-          checkOut.classList.add('selected-date');
-          continueBox.classList.add('transform-up');
-          locationInput.classList.remove('form-light');
-          no_of_nights.forEach(nights => {
-            nights.textContent = date_diff_indays(checkInValue,checkOutValue);
-          })  
+
+          checkout.textContent = dayStr;
+          checkoutinput.value = dateValChecker;
+          checkout.classList.add('selected-date'); 
+
         }
       }
-      generateMonths();
+      generateMonths(checkin,checkininput,checkout,checkoutinput);
     });
   }
 }
 
-function generateMonths() {
-  if (window.innerWidth > 770) {
+// FUNCTION TO GIVE VALUE TO THE CHECKIN AND CHECKOUT DATE DISPLAY ON MOBILE VIEW 
+function style_mobile_cal(lodge:HTMLElement,label:HTMLElement,val:HTMLElement,input:HTMLInputElement) {
+  if(input.value) lodge.textContent = val.textContent
+  else lodge.textContent = '';
+   if(lodge.textContent !== ''||input.value) {
+     lodge.classList.add('larger')
+     label.classList.add('smaller')
+   } else {
+    lodge.classList.remove('larger')
+    label.classList.remove('smaller')
+   }
+}
+
+function generateMonths(
+  checkin:HTMLElement,checkininput:HTMLInputElement,
+  checkout:HTMLElement,checkoutinput:HTMLInputElement
+) {
+  if(checkoutinput.value||checkininput.value) clearCalendar.classList.add('clear-dates')
+  else clearCalendar.classList.remove('clear-dates');
+  
+  style_mobile_cal(smallCalCheckIn,smallCalLabel[0],checkin,checkininput);
+  style_mobile_cal(smallCalCheckOut,smallCalLabel[1],checkout,checkoutinput);
+
+  if(checkininput.value!=='' && checkoutinput.value!==''){
+    let nights = date_diff_indays(checkininput.value,checkoutinput.value); 
+      no_of_nights.forEach(night => {
+       night.textContent = `${nights} night(s)`;
+      })
+      continueBox.classList.add('transform-up');
+      if(total_fee_display && isBooking) {
+        total_fee_display.innerHTML = `$<b>${price * nights}<b>`
+        totalFee.value = `${price * nights}`
+      }
+  } else {
+    continueBox.classList.remove('transform-up');
+    no_of_nights.forEach(night => {
+      night.textContent = ``;
+     })
+  }
+
+  if (window.innerWidth > 800) {
+    if(isBooking) {
+      let top = (bookingForm.offsetTop - bookingForm.clientHeight) - 2;
+      scene.style.top = `${top}px`;
+      scene.style.left = `2%`;  
+    } 
     const calendars = document.querySelectorAll('.calendar')!as NodeListOf<HTMLElement>;
     for (let i = 0; i < calendars.length; i++) {
       if (i > 3) {
@@ -199,20 +232,29 @@ function generateMonths() {
         getMonth(secondMonth[i], 1, i, gridDaysTwo[i]);
       }
     }
-  } else if (window.innerWidth <= 770) {
+  } else if (window.innerWidth <= 800) {
+    scene.style.top = ``;
+    scene.style.left = ``; 
     const daysList = document.querySelectorAll('.days')! as NodeListOf<HTMLElement>;
     const months = document.querySelectorAll('.month')! as NodeListOf<HTMLElement>;
     n = d.getMonth();
     x = 0;
-    click = 0;
     count = 0;
     for (let i = 0; i < months.length; i++) {
       getMonth(months[i], 0, i, daysList[i]);
     }
   }
+
 }
-window.addEventListener('load', generateMonths);
-window.addEventListener('resize', generateMonths);
+
+window.addEventListener('load', ()=>{
+  if(isBooking) generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
+  else generateMonths(checkIn,checkInInput,checkOut,checkOutInput)
+});
+window.addEventListener('resize',()=>{
+  if(isBooking) generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
+  else generateMonths(checkIn,checkInInput,checkOut,checkOutInput)
+});
 
 slider.addEventListener('scroll', function () {
   if (this.scrollTop + this.clientHeight >= this.scrollHeight) {
@@ -228,14 +270,19 @@ slider.addEventListener('scroll', function () {
               <div class="grid-day-2 days"></div>
             </div>
             `;
-    this.appendChild(newCal) && generateMonths();
+    if(isBooking){
+      this.appendChild(newCal) && generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
+    } else {
+      this.appendChild(newCal) && generateMonths(checkIn,checkInInput,checkOut,checkOutInput)
+    }    
+    
   }
 });
 
 //***/
 
 function rotateCalendars() {
-  if (window.innerWidth > 770) {
+  if (window.innerWidth > 800) {
     slider.style.transform = `translateZ(-290px) rotateY(${x}deg)`;
     prev.classList.add('disabled-btn');
     for (let i = 0; i < calendars.length; i++) {
@@ -243,7 +290,7 @@ function rotateCalendars() {
         i * angle
       }deg) translateZ(290px)`;
     }
-  } else if (window.innerWidth <= 770) {
+  } else if (window.innerWidth <= 800) {
     let calHeight = window.innerHeight;
     r.style.setProperty('--scene-height', `${calHeight}px`);
     slider.style.transform = `translateZ(0) rotateY(0deg)`;
@@ -266,35 +313,26 @@ function disableBtn() {
   }
 }
 
-prev.addEventListener('click', function () {
+let currentMonth = n;
+prev.addEventListener('click', function (e) {
+  e.preventDefault()
   if (startSlide) {
     count--;
-    if (click > 0) {
-      click--;
-    } else if (click === 0) {
-      click = 3;
-    }
-    if (click === 3) {
-      n = n - 4;
-      setTimeout(function(){ generateMonths(); }, 100);      
-    }
+    n = (Math.floor(count/4)*4) + currentMonth;
+    if(isBooking) generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut) 
+    else generateMonths(checkIn,checkInInput,checkOut,checkOutInput) 
     x += angle;
     slider.style.transform = `translateZ(-290px) rotateY(${x}deg)`;
     disableBtn();
   } 
 });
 
-next.addEventListener('click', () => {
+next.addEventListener('click', (e) => {
+  e.preventDefault()
   count++;
-  if (click < 3) {
-    click++;
-  } else {
-    click = 0;
-  }
-  if (click === 0) {
-    n = n + 4;
-    generateMonths();
-  }
+  n = (Math.floor(count/4)*4) + currentMonth;
+  if(isBooking) generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
+  else generateMonths(checkIn,checkInInput,checkOut,checkOutInput) 
   x -= angle;
   slider.style.transform = `translateZ(-290px) rotateY(${x}deg)`;
   disableBtn();
@@ -311,7 +349,57 @@ const searchForm = document.querySelector('#search-form')! as HTMLFormElement;
 const clear_location_input = document.querySelector('.clear-location')! as HTMLElement;
 const close_warning_modal = document.querySelector('.orientation-warning span')! as HTMLElement;
 const orientation_warning_modal = document.querySelector('.orientation-warning')! as HTMLElement;
+const paginators = document.querySelectorAll('.page')!as NodeListOf<HTMLElement>;
+const pages = document.querySelector('.paginators span')!as HTMLElement;
+const skips = document.querySelector('#skips')!as HTMLInputElement;
+const searchSection = document.querySelector('.search-form_section')!as HTMLElement;
 let showCalendar: boolean = false;
+
+// FUNCTION TO DISABLE PAGINATION BUTTONS 
+function disablePaginationBtn() {
+  if ((page - 1) < 0) {
+    paginators[0].classList.add('disabled-btn');
+  } else {
+    paginators[0].classList.remove('disabled-btn');
+  };
+
+  if ((page + 1) >= no_of_pages) {
+    paginators[1].classList.add('disabled-btn');
+  } else {
+    paginators[1].classList.remove('disabled-btn');
+  }
+}
+
+let no_of_stays: string = pages?.dataset.count!
+let no_of_pages:number = Math.ceil(parseFloat(no_of_stays)/10)
+let page = parseFloat(skips?.value);
+let staysCount = parseFloat(no_of_stays);
+
+
+function paginate() {
+    skips.setAttribute('form','search-form')
+    sort_input.setAttribute('form','search-form')
+    searchForm.submit();
+}
+
+if(pages) { 
+
+   disablePaginationBtn();
+   paginators[0].addEventListener('click',function(){
+   if((page - 1) >= 0) {
+    skips.value = `${page- 1}`
+    paginate()
+   }
+   })
+
+   paginators[1].addEventListener('click',function(){
+    if((page + 1) < no_of_pages) {
+     skips.value = `${page + 1}`
+     paginate()
+    }
+    })
+
+  };
 
 //event listener to add focus on form element
 locationSection.addEventListener('click', function (e) {
@@ -319,7 +407,7 @@ locationSection.addEventListener('click', function (e) {
 });
 //event listener for location Input
 locationInput.addEventListener('keyup', function () {
-   this.value = this.value.trim()    
+  if(this.value===' ') this.value = this.value.trim()    
 });
 
 locationInput.addEventListener('input', function () {
@@ -348,106 +436,127 @@ close_warning_modal.addEventListener('click', function(e) {
 })
 
 //event listener to displayCalendar && add focus on form element
-checkInSection.addEventListener('click', function (e) {
+function changeCalStyle() {
+  setCalPosition();
+  generateMonths(checkIn,checkInInput,checkOut,checkOutInput) 
   showCalendar = true;
+  lodgeInDate?.classList.remove('form-focus')
+  lodgeOutDate?.classList.remove('form-focus')
+  isBooking = false;
   toggleCalendarScene();
+  scene.style.top = ``;
+  scene.style.left = ``;
+  scene.classList.remove('book-cal')
+}
+
+checkInSection.addEventListener('click', function (e) {
+  changeCalStyle()
   checkOutSection.classList.remove('form-focus');
   this.classList.add('form-focus');
 });
 
 checkOutSection.addEventListener('click', function () {
-  showCalendar = true;
-  toggleCalendarScene();
-  if (!checkInValue || checkInValue === '') {
+  changeCalStyle()
+  if (!checkInInput.value || checkInInput.value === '') {
     checkInSection.classList.add('form-focus');
-  } else if (checkInValue || checkInValue !== '') {
+  } else if (checkInInput.value || checkInInput.value !== '') {
     this.classList.add('form-focus');
     checkInSection.classList.remove('form-focus');
   }
 });
 
 //event listener to clear checkin & checkout dates
+function clearCal (
+  checkin:HTMLElement,checkininput:HTMLInputElement,checkinsection:HTMLElement,
+  checkout:HTMLElement,checkoutinput:HTMLInputElement,checkoutsection:HTMLElement
+  ) {
+if (checkininput.value!=='') {
+  checkin.textContent = 'check-in';
+  checkout.textContent = 'check-out';
+  checkout.classList.remove('selected-date');
+  checkin.classList.remove('selected-date');
+  checkininput.value = '';
+  isCheckin = false;
+  checkoutinput.value = '';
+  checkinsection.classList.remove('form-focus');
+  checkoutsection.classList.remove('form-focus');
+  smallCalCheckOut.textContent = '';
+  smallCalCheckIn.textContent = '';
+  smallCalCheckOut.classList.remove('larger');
+  smallCalCheckIn.classList.remove('larger');
+  smallCalLabel[0].classList.remove('smaller');
+  smallCalLabel[1].classList.remove('smaller');
+  continueBtn.classList.remove('transform-up');
+  continueBox.classList.remove('transform-up');
+  no_of_nights.forEach(nights => {
+    nights.textContent = '';
+  }) 
+  generateMonths(checkin,checkininput,checkout,checkoutinput) 
+} 
+}
+
 clearCalendar.addEventListener('click', function () {
-  if (clearCalendar.classList.contains('clear-dates')) {
-    checkIn.textContent = 'Arrive';
-    checkOut.textContent = 'Depart';
-    checkInValue = '';
-    isCheckin = false;
-    checkOutValue = '';
-    savedCalData();
-    smallCalCheckOut.textContent = '';
-    smallCalCheckIn.textContent = '';
-    smallCalCheckOut.classList.remove('larger');
-    smallCalCheckIn.classList.remove('larger');
-    smallCalLabel[0].classList.remove('smaller');
-    smallCalLabel[1].classList.remove('smaller');
-    continueBtn.classList.remove('transform-up');
-    checkOut.classList.remove('selected-date');
-    checkIn.classList.remove('selected-date');
-    checkInSection.classList.remove('form-focus');
-    checkOutSection.classList.remove('form-focus');
+  if(isBooking) {
+    clearCal(lodgeInDate,lodgeIn,lodgeInDate,lodgeOutDate,lodgeOut,lodgeOutDate)
     this.classList.remove('clear-dates');
-    continueBox.classList.remove('transform-up');
-    no_of_nights.forEach(nights => {
-      nights.textContent = '';
-    }) 
-    generateMonths();
+    totalFee.value = ''
+    total_fee_display.textContent=''
+  } else {
+    clearCal(checkIn,checkInInput,checkInSection,checkOut,checkOutInput,checkOutSection)
+    this.classList.remove('clear-dates');
   }
 });
-
 //event listener to close Calendar
 function closeCal() {
   showCalendar = false;
-  reloadCalendar();
   toggleCalendarScene(); 
   checkInSection.classList.remove('form-focus');
   checkOutSection.classList.remove('form-focus');
+  lodgeInDate?.classList.remove('form-focus');
+  lodgeOutDate?.classList.remove('form-focus');
 }
 
 closeCalendar.addEventListener('click', closeCal);
 
 continueBtn.addEventListener('click', closeCal);
+
 //search form event listener
+function setValueAttr() {
+
+ if (
+    (!checkOutInput.value || checkOutInput.value === '') &&
+    (checkInInput.value && checkInInput.value !== '')
+  ) {
+    checkOutInput.value = nxtDayValue;
+  } else if(
+    (!checkOutInput.value || checkOutInput.value !== '') &&
+    (!checkInInput.value && checkInInput.value === '')
+  ) {
+    checkInInput.setAttribute("disabled", "disabled")
+    checkOutInput.setAttribute("disabled", "disabled")
+  }
+
+  if(!locationInput.value || !locationInput.value.replace(/\s/g, '').length) {
+    locationInput.value = 'all'
+  }
+
+}
 searchForm.addEventListener('submit', function () {
-  if (!checkInValue || checkInValue === '') {
-    checkInValue = todayValue;
-  }
-  if (
-    (!checkOutValue || checkOutValue === '') &&
-    (!checkInValue || checkInValue === todayValue)
-  ) {
-    checkOutValue = tmrValue;
-  } else if (
-    (!checkOutValue || checkOutValue === '') &&
-    checkInValue &&
-    checkInValue !== ''
-  ) {
-    checkOutValue = nxtDayValue;
-  }
-
-  let checkInInput = document.createElement('INPUT');
-  checkInInput.setAttribute('name', 'checkInDate');
-  checkInInput.setAttribute('type', 'hidden');
-  checkInInput.setAttribute('value', checkInValue);
-  this.appendChild(checkInInput);
-
-  let checkOutInput = document.createElement('INPUT');
-  checkOutInput.setAttribute('name', 'checkOutDate');
-  checkOutInput.setAttribute('type', 'hidden');
-  checkOutInput.setAttribute('value', checkOutValue);
-  this.appendChild(checkOutInput);
+  setValueAttr()
 });
-
-
 
 //window event listener for other calendar on small screens
 function toggleCalendarScene() {
   if (!showCalendar) {
-    scene.classList.remove('display-calendar');
+    isBooking = false;
+    scene.classList.remove('display-calendar','book-cal');
+    scene.style.top = ``;
+    scene.style.left = ``;
     body.classList.remove('hidden');
     navBar.classList.remove('hide');
     orientation_warning_modal.classList.add('close-modal_orientation');
   } else if (showCalendar) {
+    disableBtn()    
     scene.classList.add('display-calendar');
     body.classList.add('hidden');
     navBar.classList.add('hide');
@@ -465,43 +574,139 @@ body.addEventListener('click', function (e) {
   if (
     !checkInSection.contains(e.target as HTMLElement) &&
     !checkOutSection.contains(e.target as HTMLElement) &&
+    !lodgeInDate?.contains(e.target as HTMLElement) &&
+    !lodgeOutDate?.contains(e.target as HTMLElement) &&
     !orientation_warning_modal.contains(e.target as HTMLElement) &&
     !scene.contains(e.target as HTMLElement) &&
     !(<HTMLElement>e.target).classList.contains('day') 
   ) {
     checkInSection.classList.remove('form-focus');
     checkOutSection.classList.remove('form-focus');
+    lodgeInDate?.classList.remove('form-focus');
+    lodgeOutDate?.classList.remove('form-focus');
+    isBooking = false;
+    scene.classList.remove('book-cal');
     showCalendar = false;
     toggleCalendarScene();
-    reloadCalendar();
+    setCalPosition();
   }    
 
 });
 
-
-function reloadCalendar() {
-  x = savedAngle;
-  click = savedClick;
-  count = savedCount;
-  n = savedMonth;
-  slider.scrollTop = scrollTop;
-  slider.style.transform = `translateZ(-290px) rotateY(${x}deg)`;
-  generateMonths();
-  disableBtn();
+function monthDiff(inDate:Date, dDate:string) {
+  let d1 = new Date(inDate)
+  let d2 = new Date(dDate)
+  var months;
+  months = (d2.getFullYear() - d1.getFullYear()) * 12;
+  months -= d1.getMonth();
+  months += d2.getMonth();
+  return months <= 0 ? 0 : months;
 }
 
-function savedCalData() {
-  if(isCheckin) {
-    savedAngle = x;
-    savedClick = click;
-    savedCount = count;
-    savedMonth = n;
-    scrollTop = slider.scrollTop;
+let pickedMonth;
+
+function setCalPosition() {
+  if(isBooking) {
+
+    let time = new Date(lodgeIn?.value)
+    if(time.getTime() === time.getTime()) {
+      count=monthDiff(d,lodgeIn?.value);
+    } else {
+      count = 0;
+    }
+
   } else {
-    savedAngle = 0;
-    savedCount = 0;
-    savedClick = 0;
-    savedMonth = d.getMonth();
-    scrollTop = 0;
+
+    let time = new Date(checkInInput?.value)
+    if(time.getTime() === time.getTime()) {
+    count = monthDiff(d,checkInInput?.value);
+    } else {
+      count = 0;
+    }
+
   }
+  if(window.innerWidth > 800){
+    x = -(count*angle);
+  } else{
+    x = 0;
+  } 
+  if(isBooking) pickedMonth  = monthDiff(d,lodgeIn.value);
+  else pickedMonth  = monthDiff(d,checkInInput.value);
+  slider.scrollTop = pickedMonth * daysList[0].clientHeight
+  n = (Math.floor(count/4)*4) + currentMonth;
+  slider.style.transform = `translateZ(-290px) rotateY(${x}deg)`;
+  if(isBooking) generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
+  else generateMonths(checkIn,checkInInput,checkOut,checkOutInput) 
+}
+
+//bookings
+const lodgeIn = document.querySelector('#lodge-in')!as HTMLInputElement
+const lodgeOut = document.querySelector('#lodge-out')!as HTMLInputElement
+const lodgeInDate = document.querySelector('.lodge-in-date')!as HTMLElement
+const lodgeOutDate = document.querySelector('.lodge-out-date')!as HTMLElement
+const stayInfo = document.querySelector('.stay-info')!as HTMLElement
+const bookingForm = document.querySelector('.book-form')!as HTMLFormElement
+let isBooking = false;
+const total_fee_display = document.querySelector('.totalPrice')!as HTMLElement;
+const stayPrice = document.querySelector('.price')!as HTMLElement; 
+const totalFee = document.querySelector('#totalFee')!as HTMLInputElement; 
+const view_stay_form = document.querySelectorAll('.view-stay')!as NodeListOf<HTMLFormElement>;
+const view_stay_inputs = document.querySelectorAll('.view-stay_input')!as NodeListOf<HTMLInputElement>;
+let price = parseFloat(stayPrice?.textContent!);
+
+function placeBookCal() {
+   setCalPosition();
+   checkOutSection.classList.remove('form-focus');
+   checkInSection.classList.remove('form-focus');
+   generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
+   showCalendar = true;
+   toggleCalendarScene();
+}
+
+lodgeInDate?.addEventListener('click', function(){
+  this.classList.add('form-focus')
+  lodgeOutDate.classList.remove('form-focus')
+  isBooking = true;
+  scene.classList.add('book-cal')
+  placeBookCal()
+})
+
+lodgeOutDate?.addEventListener('click', function(){
+  isBooking = true;
+  if(lodgeIn.value!==''){
+    lodgeInDate.classList.remove('form-focus')
+    this.classList.add('form-focus')
+  } else {
+    this.classList.remove('form-focus')
+    lodgeInDate.classList.add('form-focus')
+  }
+  scene.classList.add('book-cal')
+  placeBookCal()
+})
+
+if(lodgeIn?.value && lodgeOut?.value) {
+    let totalNights = date_diff_indays(lodgeIn.value,lodgeOut.value)
+    totalFee.value = `${price * totalNights}`
+    total_fee_display.textContent = `$${price * totalNights}`
+}
+
+if(view_stay_form) {
+  
+  view_stay_form.forEach(form => {
+
+    form.addEventListener('submit', function(){
+      let formName = this.id;
+      for(let i=0;i <2; i++) {
+          if(!view_stay_inputs[i].value.replace(/\s/g, '').length || !view_stay_inputs[i].value){
+            view_stay_inputs[i].setAttribute('form','')
+            view_stay_inputs[2]?.setAttribute('form',formName)
+        } else {
+          view_stay_inputs[i].setAttribute('form',formName)
+          view_stay_inputs[2].setAttribute('form','')
+        }
+      }
+    })
+
+  })
+
 }

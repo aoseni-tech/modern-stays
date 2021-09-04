@@ -10,16 +10,19 @@
           autocomplete="off"
           spellcheck="false"
           name="location"
+          <% if(location && location !== 'all'){%>value="<%=location%>"<%} %>             
         />
         <div class="clear-location"><p>&Cross;</p></div>
       </div>
       <div id="check-in-section" class="form-div date-picker">
         <span id="check-in-label" class="form-label">Check-in</span>
-        <span id="check-in-date" class="date-input-value">Arrive</span>
+        <span id="check-in-date" class="date-input-value <%=checkIn?'selected-date':''%>" ><%=checkIn||'check-in'%></span>
+        <input type="hidden" id="checkInDate" name="checkInDate" value="<%=checkInDate%>">
       </div>
       <div id="check-out-section" class="form-div date-picker">
         <span id="check-out-label" class="form-label">Check-out</span>
-        <span id="check-out-date" class="date-input-value">Depart</span>
+        <span id="check-out-date" class="date-input-value <%=checkOut?'selected-date':''%>"><%=checkOut||'check-out'%></span>
+        <input type="hidden" id="checkOutDate" name="checkOutDate" value="<%=checkOutDate%>">
       </div>
       <button class="search-form_submit">
         <svg

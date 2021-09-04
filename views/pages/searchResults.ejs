@@ -1,25 +1,98 @@
 <% layout('/layouts/boilerplate') -%>
 <%- include('../partials/form') %> 
-
 <section class="container search-page">
+  <% if(stays.length === 0) {%>
+    <h1>NO STAYS FOUND FOR "<span style="color: #fd705d;"><%= location.toUpperCase() %></span>" </h1> 
+    <% } %> 
+    <section class="filters">
 
+      <div class="sort-by">
+        <p>Sort by</p>
+        <input type="text" value="<%=sortBy||'Relevance'%>" readonly>
+        <input type="hidden" name="sorts" id="sorts" value="<%=sorts%>" readonly>
+        <span class="arrow-down">&#9660;</span>
+        <ul class="sort-options">
+          <li>
+              <a href="#">
+                <input type="radio" name="sort" class="sort-radios" id="relevance" value="asc">
+                <label for="relevance">Relevance</label>
+              </a>
+          </li>
+          <li>
+              <a href="#">
+                <input type="radio" name="sort" class="sort-radios" id="newest" value="desc">
+                <label for="newest">Newest</label>
+              </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="filter">
+        <p>Ratings</p>
+        <input type="text" value="<%=rate||'All'%>" readonly>
+        <input type="hidden" name="ratings" id="ratings" value="<%=rating%>" readonly>
+        <span class="arrow-down">&#9660;</span>
+        <ul class="rating-options">
+          <li>
+              <a href="#">
+                <input type="radio" name="rating" class="filter-radios" id="all" value="all">
+                <label for="all">All</label>
+              </a>
+          </li>
+          <li>
+              <a href="#">
+                <input type="radio" name="rating" class="filter-radios" id="three-star" value="3">
+                <label for="three-star">★★★ 3+</label>
+              </a>
+          </li>
+          <li>
+            <a href="#">
+              <input type="radio" name="rating" class="filter-radios" id="four-star" value="4">
+              <label for="four-star">★★★★ 4+</label>
+            </a>
+        </li>
+        </ul>
+      </div>
+    </section>
+    <input type="hidden" name="checkInDate" value="<%=checkInDate%>" class="view-stay_input">
+    <input type="hidden" name="checkOutDate" value="<%=checkOutDate%>" class="view-stay_input">
+    <input type="hidden" name="noDate" value="true" class="view-stay_input">
 <% stays.forEach(stay => { %>
   <div class="search-card" >
     <div class="card-div">
-      <img src="<%=stay.image%>" alt="" />
+      <img src="<%=stay.image%>" alt="" />   
     </div>
     <div class="card-div">
        <h2><%=stay.title%></h2>
+       <% if(stay.reviews.length) { %> 
+        <p role="doc-tip" aria-roledescription="average-rating" class="average-rating">
+          <svg viewBox="0 0 1000 1000" role="presentation" aria-hidden="true" focusable="false" style="height: 14px; width: 14px; fill:  #fd705d;"><path d="M972 380c9 28 2 50-20 67L725 619l87 280c11 39-18 75-54 75-12 0-23-4-33-12L499 790 273 962a58 58 0 0 1-78-12 50 50 0 0 1-8-51l86-278L46 447c-21-17-28-39-19-67 8-24 29-40 52-40h280l87-279c7-23 28-39 52-39 25 0 47 17 54 41l87 277h280c24 0 45 16 53 40z"></path></svg>
+          <%=stay.rating.toFixed(2)%> 
+          <span>(<%= stay.reviews.length %> <% if(stay.reviews.length >1) {%>reviews <% }else{ %>review <% } %>   ) </span>
+        </p>
+      <% } %>
        <p class="description"><%=stay.description.slice(0,100)%>...</p>
        <span class="location"><%=stay.location%></span>
        <div class="info">
-           <a href="/stays/<%=stay.id%>" target="_blank" class="show-link">view</a>
-           <p><b>$<%=stay.price%></b>/night</p>
+         <form action="/stays/<%=stay.id%>" id='<%=stay.title%>' target="_blank" class="view-stay">
+           <button class="show-link">view</button>
+         </form>  
+           <p><b>$<%=parseFloat(stay.price)%></b>/night</p>
        </div>
     </div>
   </div>
 <% }) %>
+<% if(stays.length) {%> 
+  <nav class="paginators">
+    <a role="button" data-location="<%=location%> " class="prev-page page">&#10094;</a>
+    <input type="hidden" name="page_offset" value="<%=page_offset%>" id="skips">
+    <span role="doc-tip" data-count="<%= stayCount %>" > <%=(page_offset * 10) + 1%> - <%=page_offset * 10 + stays.length%> of <%= stayCount %> <%=stayCount>1?'Stays':'Stay'%></span>
+    <a role="button" data-location="<%=location%> " class="next-page page">&#10095;</a>
+  </nav>
+  <% } %> 
 </section>
+
+
 
 <% block('calendar').append('<script src="/scripts/calendar.js"></script>') %>
 <% block('script').append('<script src="/scripts/script.js"></script>') %>

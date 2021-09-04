@@ -1,14 +1,22 @@
 import express, {Request, Response, NextFunction} from 'express';
 import path from 'path';
+import mongoose from 'mongoose';
 const methodOverride = require('method-override');
 const app = express();
 const port = 3000;
 const ejsMate = require('ejs-mate');
-const wrapAsync = require('./utils/wrapAsync');
-const appError = require('./utils/express_error');
-const{ mongoose,Stay} = require('./models/staySchema');
-const {Review,check_review_validity,reviewErrors} = require('./models/review');
-const{checkStayValidity,createNewStay,updateStay} = require('./middlewares/staySchemaValidation');
+const Express_error = require('./utils/express_error');
+const stays =  require('./routes/stays');
+const reviews = require('./routes/reviews');
+const bookings = require('./routes/book');
+
+function createDateString(date:string) {
+  let options: object = {month:'short',year:'numeric',weekday:'short',day:'2-digit'};
+  let dateString =  new Date(date?.replace(/-/g,'/')).toLocaleString('en-us', options);
+  if(dateString != 'Invalid Date') return dateString
+  else return;
+}
+
 const db = mongoose.connect('mongodb://localhost:27017/modernStays', {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify:false}).then(() => {
   console.log('db connection open!')
 }).catch((err: { message: any; }) => console.log(err.message));
@@ -18,77 +26,33 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 app.use(methodOverride('_method'));
 
-
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'../views'))
 
+app.use((req:Request, res: Response,next) => {
+  res.locals.location = req.query.location;
+  res.locals.checkInDate = req.query.checkInDate;
+  res.locals.checkOutDate = req.query.checkOutDate;
+  res.locals.checkIn = createDateString(res.locals.checkInDate)
+  res.locals.checkOut = createDateString(res.locals.checkOutDate)
+  res.locals.sort = req.query.sorts;
+  res.locals.rating = req.query.ratings;
+  next()
+})
+
 app.get('/', (req: Request, res: Response)=>{
   const title = 'Modern Stays';
   const page = 'home';
-  res.render('home',{title,page})
-})
+  res.render('home',{title,stays,page})
+});
 
-app.route('/stays')
-.get(wrapAsync(async(req:Request, res: Response)=>{  
-  const{location}:any = req.query;
-  const stays = await Stay.find({location: new RegExp(location, 'i')});
-  const title = 'Modern Stays.stays';
-  const page = 'search';
-  res.render('pages/searchResults', {title,stays,page});
-}))
-.post(checkStayValidity,wrapAsync(async(req:Request, res: Response)=>{
-  const {stay} = res.locals;
-  await stay.save();
-  res.redirect(`/stays/${stay._id}`);
-}));
-
-app.get('/stays/new',createNewStay)
-
-app.get('/stays/:id/update', wrapAsync(updateStay));
-
-app.route('/stays/:id')
- .get(wrapAsync(async(req:Request, res: Response)=>{
-  const {id} = req.params
-    const stay = await Stay.findById(id).populate({
-    path: 'reviews',options: {sort: { _id: 'desc'} }
-  });
-  const {reviews,title} = stay;
-  const page = 'show';
-  res.render('pages/show',{title:title+'.MS',stay,page,reviews,reviewErrors});
-  reviewErrors.length = 0;
-}))
-.put(checkStayValidity,wrapAsync(async(req:Request, res: Response)=>{
-   const {id} = req.params;
-   const update = req.body;
-   const stay = await Stay.findByIdAndUpdate(id, update)
-   res.redirect(`/stays/${stay._id}`);
-}))
-.delete(wrapAsync(async(req:Request, res: Response)=>{
-   const {id} = req.params;
-   await Stay.findByIdAndRemove(id)
-   res.redirect(`/`);
-}))
-
-app.post('/stays/:id/reviews',check_review_validity,wrapAsync(async(req:Request,res:Response)=>{
-  const {id} = req.params;
-  const stay = await Stay.findById(id);
-  const {review} = res.locals
-  stay.reviews.push(review._id);
-  await review.save();
-  await stay.save()
-  res.redirect(`/stays/${stay._id}#reviews`)
-}))
-
-app.delete('/stays/:id/reviews/:reviewId',wrapAsync(async(req:Request, res: Response)=>{
-  const {id,reviewId} = req.params;
-  await Stay.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
-  await Review.findByIdAndRemove(reviewId)
-  res.redirect(`/stays/${id}#reviews`)
-}))
+app.use('/stays',stays)
+app.use('/stays/:id/reviews',reviews)
+app.use('/stays/:id/bookings',bookings)
 
 app.all('*', (req:Request,res:Response,next:NextFunction) => {
-     next(new appError('Page Not Found', 404));
+     next(new Express_error('Page Not Found', 404));
 })  
 
 app.use((err:any,req:Request,res:Response,next:NextFunction) => {

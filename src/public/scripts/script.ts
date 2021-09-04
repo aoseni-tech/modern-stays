@@ -1,5 +1,6 @@
 const hamburger = document.querySelector('#hamburger')! as HTMLElement;
 const navBar = document.querySelector('.navbar')! as HTMLElement;
+const stay_search_form = document.querySelector('.stays .search-form_section')! as HTMLElement;
 const navContent = document.querySelector('.nav-content')! as HTMLElement;
 const menu = document.querySelector('.menu')! as HTMLElement;
 const hamburgerLines = document.querySelectorAll('#hamburger>svg')! as NodeListOf<HTMLElement>;
@@ -10,7 +11,40 @@ const openModal = document.querySelector('.show-reviews')! as HTMLElement;
 const openModalRadio = document.querySelector('#show-radio')! as HTMLInputElement;
 const closeModal = document.querySelector('.hide-reviews')! as HTMLElement;
 const modalCover = document.querySelector('.modal-cover')! as HTMLElement;
+const searchPage = document.querySelector('.search-page')! as HTMLElement;
+const filter_container = document.querySelector('.search-page .filters')! as HTMLElement;
 const doc = document.documentElement;
+
+
+
+  // setting top for form section on stays pages 
+  function set_stayTop() {
+    if(filter_container) {
+    const filter_styles = window.getComputedStyle(filter_container);
+    let filter_height = filter_container.clientHeight - parseFloat(filter_styles.paddingTop) - parseFloat(filter_styles.paddingBottom);
+
+    if(window.innerWidth > 950) {
+    let stayTop = navBar.clientHeight;
+    let searchPage_top = navBar.offsetHeight + searchForm.offsetHeight + filter_height;
+    if(stay_search_form) {
+      searchPage.style.paddingTop = `${searchPage_top}px`
+      stay_search_form.style.top = `${stayTop}px`
+    }
+  } else {
+    if(stay_search_form) {
+      searchPage.style.paddingTop = ``
+      stay_search_form.style.top = ``
+    }
+  }
+  }
+
+}
+
+  window.addEventListener('resize',set_stayTop)
+  window.addEventListener('load',set_stayTop)
+
+
+
 
 // hamburger animation
 hamburger.addEventListener('click', function () {
@@ -36,6 +70,10 @@ doc.addEventListener('click', function (e) {
     hamburgerLines[2].classList.remove('line-three');
     doc.classList.remove('overflow-hide');
   }
+
+  if(openModal && openModalRadio.checked) {
+    this.classList.add('overflow-hide')
+  } else {this.classList.remove('overflow-hide')}
 });
 
 //form validation
@@ -68,24 +106,85 @@ if (post_form) {
   }
 
   //reviews modal
-  if(openModal) {
-    openModal.addEventListener('click', ()=>{
-      modalCover.classList.add('show');
-      doc.classList.add('overflow-hide');
-    })  
-  }
-
-  if(closeModal) {
-    closeModal.addEventListener('click', ()=> {
-      modalCover.classList.remove('show');
-      doc.classList.remove('overflow-hide');
-    })  
-  }
-
   if(modalCover) {
     modalCover.addEventListener('click',  function() {
-      this.classList.remove('show');
       openModalRadio.checked = false;
-      doc.classList.remove('overflow-hide');
     })
   }
+
+  //filter radio logics
+const sort_radios = document.querySelectorAll('.sort-by input[type=radio]')! as NodeListOf<HTMLInputElement>;
+const sort_options = document.querySelectorAll('.sort-by label')! as NodeListOf<HTMLInputElement>;
+const sort_menu = document.querySelector('.sort-by ul')! as HTMLElement;
+const sort_input = document.querySelector('.sort-by input[type=hidden]')! as HTMLInputElement;
+const sort_input_text = document.querySelector('.sort-by input[type=text]')! as HTMLInputElement;
+
+const filter_radios = document.querySelectorAll('.filter input[type=radio]')! as NodeListOf<HTMLInputElement>;
+const filter_options = document.querySelectorAll('.filter label')! as NodeListOf<HTMLInputElement>;
+const filter_menu = document.querySelector('.filter ul')! as HTMLElement;
+const filter_input = document.querySelector('.filter input[type=hidden]')! as HTMLInputElement;
+const filter_input_text = document.querySelector('.filter input[type=text]')! as HTMLInputElement;
+
+const filtersInput = document.querySelectorAll('.filters input[type=hidden]')! as NodeListOf<HTMLInputElement>;
+
+function dropDrown(options:NodeListOf<HTMLInputElement>,readInput:HTMLInputElement,menu:HTMLElement,radios:NodeListOf<HTMLInputElement>,textInput:HTMLInputElement){
+  if(options) {
+
+    for(let i =0; i < options.length;i++) {
+      options[i].addEventListener('click',()=>{
+        menu.classList.remove('show-options');
+        readInput.value = radios[i].value;
+        filtersInput.forEach(filterinput=>{
+          filterinput.setAttribute('form','search-form');
+        })
+        searchForm.submit()
+      })
+
+    }   
+
+  }
+
+  if(textInput) {
+    textInput.addEventListener('click',()=>{
+      menu.classList.toggle('show-options');
+    }) 
+
+    textInput.addEventListener('focus',()=>{   
+      dropDrownAccessibility();
+    })
+    
+    window.addEventListener('click',(e)=>{
+      if(!textInput.contains(e.target as HTMLElement) &&
+         !menu.contains(e.target as HTMLElement)) {
+        menu.classList.remove('show-options')
+      }
+    })
+
+  }
+
+  function dropDrownAccessibility() { 
+    textInput.addEventListener('keydown', function (e) { 
+    switch (e.code) {
+    case 'ArrowUp':
+    e.preventDefault()
+    menu.classList.add('show-options');
+    radios[radios.length - 1].focus()
+    radios[radios.length - 1].checked = true;
+    break;
+    case 'ArrowDown':
+    e.preventDefault()
+    menu.classList.add('show-options');
+    radios[0].focus()
+    radios[0].checked = true;
+    break;
+    }                 
+    
+   })
+  }
+
+}
+
+
+//call dropdown function
+dropDrown(sort_options,sort_input,sort_menu,sort_radios,sort_input_text);
+dropDrown(filter_options,filter_input,filter_menu,filter_radios,filter_input_text);

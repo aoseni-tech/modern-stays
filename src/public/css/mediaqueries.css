@@ -21,6 +21,11 @@
     z-index: -1;
   }
 
+  .stays #form-container {
+    margin: 1em auto;
+    padding: 1em 0;
+}
+
   .calendar-days,
   .weeks-container {
     justify-content: space-evenly;
@@ -50,14 +55,9 @@
   .search-card {
     width: 90vw;
     height: 300px;
-    margin-top: 1em;
     margin-left: 50%;
     transform: translateX(-50%);
     overflow: hidden;
-  }
-
-  .search-card:first-child {
-    border-top: 0;
   }
 
   .card-div:last-child {
@@ -411,7 +411,7 @@
   /* SEARCH PAGE */
   .search-card {
     grid-template-columns: 1fr;
-    grid-template-rows: 300px 150px;
+    grid-template-rows: 300px 200px;
     height: auto;
     gap: 0;
     border: none;
@@ -419,6 +419,13 @@
   .search-card:last-child {
     border: none;
     margin-bottom: 1em;
+  }
+  .search-card:first-of-type  {
+    padding-top: 0;
+  }
+
+  .search-page .filters {
+    justify-content: center;
   }
 
   .card-div:last-child {
@@ -464,11 +471,6 @@
     left: 0;
     transform: translateY(0%) translateX(0%);
     border-radius: 0;
-  }
-
-  .stay-details{
-    padding-bottom: 3em;
-    margin-bottom: 1em;
   }
 
 }
