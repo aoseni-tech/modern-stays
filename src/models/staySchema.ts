@@ -85,10 +85,10 @@ const schema = new Schema<Stay>({
 
 schema.post('findOneAndUpdate', async function (doc){
   if(doc){
-    let ratings:Array<number> = [];
+    let ratings:Array<number> = [0];
     const reviews = await Review.find({_id: {$in:doc.reviews}})
     reviews.forEach((review:any) => ratings.push(review.rating));
-    let rating = (ratings.reduce((a,b)=>a+b)/ratings.length).toFixed(2)
+    let rating = (ratings.reduce((a,b)=>a+b)/reviews.length).toFixed(2)
     doc.rating = rating;
     await doc.save();
   }
