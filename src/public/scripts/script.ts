@@ -18,27 +18,30 @@ const doc = document.documentElement;
 
 
   // setting top for form section on stays pages 
-  function set_stayTop() {
-    if(filter_container) {
-    const filter_styles = window.getComputedStyle(filter_container);
-    let filter_height = filter_container.clientHeight - parseFloat(filter_styles.paddingTop) - parseFloat(filter_styles.paddingBottom);
+  function set_stayTop() { 
 
-    if(window.innerWidth > 950) {
-    let stayTop = navBar.clientHeight;
-    let searchPage_top = navBar.offsetHeight + searchForm.offsetHeight + filter_height;
-    if(stay_search_form) {
-      searchPage.style.paddingTop = `${searchPage_top}px`
-      stay_search_form.style.top = `${stayTop}px`
-    }
-  } else {
-    if(stay_search_form) {
-      searchPage.style.paddingTop = ``
-      stay_search_form.style.top = ``
-    }
-  }
-  }
+      if(filter_container) {
 
-}
+      const filter_styles = window.getComputedStyle(filter_container);
+      let filter_height = filter_container.clientHeight - parseFloat(filter_styles.paddingTop) - parseFloat(filter_styles.paddingBottom);
+
+      if(window.innerWidth > 950) {
+      let stayTop = navBar.clientHeight;
+      let searchPage_top = navBar.clientHeight + searchForm.clientHeight + filter_height;
+      if(stay_search_form) {
+        searchPage.style.paddingTop = `${searchPage_top}px`
+        stay_search_form.style.top = `${stayTop}px`
+      }
+    } else {
+        if(stay_search_form) {
+          searchPage.style.paddingTop = ``
+          stay_search_form.style.top = ``
+        }
+      }
+
+    }
+
+  }
 
   window.addEventListener('resize',set_stayTop)
   window.addEventListener('load',set_stayTop)

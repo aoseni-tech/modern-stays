@@ -1,11 +1,11 @@
 <% layout('/layouts/boilerplate') -%>
 <%- include('../partials/form') %> 
 <section class="container search-page">
-  <% if(stays.length === 0) {%>
+<% if(stays.length === 0) {%>
     <h1>NO STAYS FOUND FOR "<span style="color: #fd705d;"><%= location.toUpperCase() %></span>" </h1> 
-    <% } %> 
-    <section class="filters">
+<% } else{ %> 
 
+    <section class="filters">
       <div class="sort-by">
         <p>Sort by</p>
         <input type="text" value="<%=sortBy||'Relevance'%>" readonly>
@@ -54,11 +54,12 @@
         </ul>
       </div>
     </section>
+    
     <input type="hidden" name="checkInDate" value="<%=checkInDate%>" class="view-stay_input">
     <input type="hidden" name="checkOutDate" value="<%=checkOutDate%>" class="view-stay_input">
     <input type="hidden" name="noDate" value="true" class="view-stay_input">
-<% stays.forEach(stay => { %>
-  <div class="search-card" >
+   <% stays.forEach(stay => { %>
+   <div class="search-card" >
     <div class="card-div">
       <img src="<%=stay.image%>" alt="" />   
     </div>
@@ -80,16 +81,16 @@
            <p><b>$<%=parseFloat(stay.price)%></b>/night</p>
        </div>
     </div>
-  </div>
-<% }) %>
-<% if(stays.length) {%> 
+   </div>
+  <% }) %>
+
   <nav class="paginators">
     <a role="button" data-location="<%=location%> " class="prev-page page">&#10094;</a>
     <input type="hidden" name="page_offset" value="<%=page_offset%>" id="skips">
     <span role="doc-tip" data-count="<%= stayCount %>" > <%=(page_offset * 10) + 1%> - <%=page_offset * 10 + stays.length%> of <%= stayCount %> <%=stayCount>1?'Stays':'Stay'%></span>
     <a role="button" data-location="<%=location%> " class="next-page page">&#10095;</a>
   </nav>
-  <% } %> 
+<% } %> 
 </section>
 
 
