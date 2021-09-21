@@ -196,6 +196,7 @@ a{
   height: 100%;
   padding-bottom: 0.4em;
   transition: all 0.2s ease-in-out;
+  z-index: -1;
 }
 .home .auth::after {
   border-bottom: 1px solid #fff;
@@ -204,11 +205,14 @@ a{
   border-bottom: 1px solid #000;
 }
 
-#nav-btn-link {
-  text-decoration: none;
+.nav-item a {
   padding: 0.7em 0.7em;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-size: 0.9em;
+}
+
+#nav-btn-link {
+  text-transform: uppercase;
   border-top-right-radius: 0.5em;
   border-bottom-left-radius: 0.5em;
   font-size: 0.8em;
