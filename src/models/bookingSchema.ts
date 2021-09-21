@@ -6,18 +6,9 @@ interface Book {
     totalFee?: String;
   }
 
-let min_date = new Date(new Date().setDate(new Date().getDate() - 1))
-let current_date = new Date();
-
 const bookSchema = new Schema<Book>({
     lodgeIn:  {
         type:Date,
-        validate: {
-            validator: function(v:any) {
-              return new Date(v) > min_date;
-            },
-            message: () => `lodge In date must be on or  after "${current_date.toDateString()}"`
-          },
         required:[true,'Check-in date is required to book'],
         default: Date.now
     },

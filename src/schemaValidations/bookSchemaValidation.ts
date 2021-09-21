@@ -56,7 +56,8 @@ const check_availability = (req:Request,res:Response,next:NextFunction) => {
     const avail = (b:{lodgeIn:string,lodgeOut:string}) => 
     (new Date(`${lodgeIn}`) >= new Date(`${b.lodgeIn}`) && new Date(`${lodgeIn}`) <= new Date(`${b.lodgeOut}`)) || 
     (new Date(`${lodgeIn}`) <= new Date(`${b.lodgeIn}`) && new Date(`${lodgeOut}`) >= new Date(`${b.lodgeOut}`)) ||
-    (new Date(`${lodgeOut}`) >= new Date(`${b.lodgeIn}`) && new Date(`${lodgeOut}`) <= new Date(`${b.lodgeOut}`));
+    (new Date(`${lodgeOut}`) >= new Date(`${b.lodgeIn}`) && new Date(`${lodgeOut}`) <= new Date(`${b.lodgeOut}`)) ||
+    (new Date(`${lodgeIn}`) < new Date() || new Date(`${lodgeOut}`) < new Date());
 
     if(bookings.length) {
         if(bookings.some(avail)) {

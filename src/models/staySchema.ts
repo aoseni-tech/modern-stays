@@ -1,6 +1,6 @@
 import { Schema, model,Document,Model} from 'mongoose';
 const {Review}: {Review:Model<{}, {}>} = require('./reviewSchema');
-const {bookSchema}: {Book:Model<{}, {}>;bookSchema:Schema} = require('./bookingSchema');
+const {bookSchema}: {bookSchema:Schema} = require('./bookingSchema');
 
 interface Stay {
   title: string;
@@ -85,7 +85,7 @@ const schema = new Schema<Stay>({
   }
 });
 
-schema.post('findOneAndUpdate', async function (doc){
+schema.post('findOneAndUpdate', async function (doc, next){
   if(doc){
     let ratings:Array<number> = [0];
     const reviews:Array<Document> = await Review.find({_id: {$in:doc.reviews}})
