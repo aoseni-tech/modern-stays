@@ -1,5 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
-const{Stay,StaySchema} = require('../models/staySchema');
+const{schema,Stay} = require('../models/staySchema');
 let errMessages: string[]  = []; //array to store the error messages from the stayschema
 let data_values: string[]  = []; //values stored from input after form submission if any validation fails
 let dataKeys:any[] = []; //array to store object keys from req.body in order to retrieve validate messages from schema validate method;
@@ -29,6 +29,7 @@ const checkStayValidity = (req:Request,res:Response,next:NextFunction)=>{
   const stay = new Stay(req.body);
   let id = req.params.id;
   let schema_error  = stay.validateSync();
+  
   if(schema_error){
     errMessages.push('form-validated');
     for(let data in req.body) {
@@ -39,7 +40,7 @@ const checkStayValidity = (req:Request,res:Response,next:NextFunction)=>{
    }    
    if(data_values[4].length<10) data_values[4] = "";
    for(let i = 0; i < dataKeys.length; i++) {
-     if(!errMessages[i+1]) errMessages[i+1] = StaySchema.obj[dataKeys[i]].validate.message();
+     if(!errMessages[i+1]) errMessages[i+1] = schema.obj[dataKeys[i]].validate.message();
     }
     
    if(req.method === 'PUT') res.redirect(`/stays/${id}/update`)

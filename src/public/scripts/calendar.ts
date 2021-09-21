@@ -46,6 +46,22 @@ let x = 0;
 let count = 0;
 let startSlide = false;
 let clearLocation = false;
+let isBooking = false;
+
+//get booking dates that are unavailable
+let stay_id = document.querySelector('.book-form')?.getAttribute('action');
+let bookings:Array<{lodgeIn:string,lodgeOut:string}> ;
+const unavailable_dates = async () =>{
+  try {
+    let response = await fetch(`http://localhost:3000${stay_id}`);
+    bookings = await response.json();
+  } catch(e:any){
+    console.log(e.message)
+  }
+}
+if(stay_id) {
+  unavailable_dates();
+}
 
 // generateMonths
 function getMonth(month: HTMLElement,index: number,monthIndex: number,gridDay:HTMLElement) {
@@ -72,8 +88,7 @@ function getMonth(month: HTMLElement,index: number,monthIndex: number,gridDay:HT
       weekday: 'short',
       day: '2-digit',
     };
-    let dateString: string = dayDate.toLocaleString('en-us', stringOptions);
-    d > dateChecker && day.classList.add('past-day');
+    let dateString: string = dayDate.toLocaleString('en-us', stringOptions);    
     let dataDay: string;
     let nextDay: string;
     let dataMonth: string;
@@ -82,27 +97,64 @@ function getMonth(month: HTMLElement,index: number,monthIndex: number,gridDay:HT
     m < 10 ? (dataMonth = `0${m}`) : (dataMonth = `${m}`);
     let dateValue: string = `${year}-${dataMonth}-${dataDay}`;
     let nextDayValue: string = `${year}-${dataMonth}-${nextDay}`;
-    if(isBooking) {
-      getBookingDate(
-        day, dateString, dateValue, nextDayValue,
-        lodgeInDate,lodgeIn,lodgeInDate,
-        lodgeOutDate,lodgeOut,lodgeOutDate
-        );
-    }else {
-      getBookingDate(
-        day, dateString, dateValue, nextDayValue,
-        checkIn,checkInInput,checkInSection,
-        checkOut,checkOutInput,checkOutSection
-        );
-    }
     day.dataset.date = dateValue;
     gridDay.appendChild(day);
     let grid: string = `${weekDay}/${weekDay + 1}`;
     let firstDay = gridDay.firstChild! as HTMLElement;
     firstDay.style.gridColumn = grid;
-    if(isBooking) markDays(day, dateValue,lodgeIn,lodgeOut)
-    else markDays(day, dateValue,checkInInput,checkOutInput);
+
+    let unavailable = [];
+    if(d > dateChecker){
+      day.classList.add('unavailable') 
+      unavailable.push(day)
+    }
+
+    if(bookings?.length){
+      if(isBooking) {
+        for (let j = 0; j < bookings.length; j++) {
+          if((new Date(`${dateValue}`) >= new Date(`${bookings[j].lodgeIn}`) && new Date(`${dateValue}`) <= new Date(`${bookings[j].lodgeOut}`))) {
+            day.classList.add('unavailable')
+            unavailable.push(day)
+          } 
+        }
+      }
+
+      if(isBooking && new Date(lodgeIn.value).getTime() === new Date(lodgeIn.value).getTime()) {
+        for (let j = 0; j < bookings.length; j++) {
+          if(
+            ((new Date(`${bookings[j].lodgeIn}`) > new Date(lodgeIn.value)) || 
+            (new Date(`${bookings[j].lodgeOut}`) > new Date(lodgeIn.value))) &&
+            ((new Date(`${bookings[j].lodgeIn}`) < new Date(`${dateValue}`)) || 
+            (new Date(`${bookings[j].lodgeOut}`) < new Date(`${dateValue}`)))
+            ) {
+            day.classList.add('unavailable')
+            unavailable.push(day)
+            }
+        }
+      }   
+
+    } 
+
+    if(!unavailable.includes(day)) {
+      if(isBooking) {
+        getBookingDate(
+          day, dateString, dateValue, nextDayValue,
+          lodgeInDate,lodgeIn,lodgeInDate,
+          lodgeOutDate,lodgeOut,lodgeOutDate
+          );
+          markDays(day, dateValue,lodgeIn,lodgeOut)
+      }else {
+        getBookingDate(
+          day, dateString, dateValue, nextDayValue,
+          checkIn,checkInInput,checkInSection,
+          checkOut,checkOutInput,checkOutSection
+          );
+          markDays(day, dateValue,checkInInput,checkOutInput)
+      }
+    }
+
   }
+
 }
 //function created to get booking dates
 //1)create a function to mark dates
@@ -130,7 +182,7 @@ day:HTMLElement,dayStr:string,dateVal:string,nextDayVal:string,
 checkin:HTMLElement,checkininput:HTMLInputElement,checkinsection:HTMLElement,
 checkout:HTMLElement,checkoutinput:HTMLInputElement,checkoutsection:HTMLElement
 ) {
-  if (dateVal >= todayValue) {
+
     day.addEventListener('click', function () {
       if (!checkininput.value || checkinsection.classList.contains('form-focus')) {
         
@@ -174,7 +226,7 @@ checkout:HTMLElement,checkoutinput:HTMLInputElement,checkoutsection:HTMLElement
       }
       generateMonths(checkin,checkininput,checkout,checkoutinput);
     });
-  }
+
 }
 
 // FUNCTION TO GIVE VALUE TO THE CHECKIN AND CHECKOUT DATE DISPLAY ON MOBILE VIEW 
@@ -379,6 +431,7 @@ let staysCount = parseFloat(no_of_stays);
 function paginate() {
     skips.setAttribute('form','search-form')
     sort_input.setAttribute('form','search-form')
+    filter_input.setAttribute('form','search-form')
     searchForm.submit();
 }
 
@@ -437,12 +490,12 @@ close_warning_modal.addEventListener('click', function(e) {
 
 //event listener to displayCalendar && add focus on form element
 function changeCalStyle() {
+  isBooking = false;
   setCalPosition();
   generateMonths(checkIn,checkInInput,checkOut,checkOutInput) 
   showCalendar = true;
   lodgeInDate?.classList.remove('form-focus')
   lodgeOutDate?.classList.remove('form-focus')
-  isBooking = false;
   toggleCalendarScene();
   scene.style.top = ``;
   scene.style.left = ``;
@@ -522,7 +575,6 @@ continueBtn.addEventListener('click', closeCal);
 
 //search form event listener
 function setValueAttr() {
-
  if (
     (!checkOutInput.value || checkOutInput.value === '') &&
     (checkInInput.value && checkInInput.value !== '')
@@ -536,10 +588,7 @@ function setValueAttr() {
     checkOutInput.setAttribute("disabled", "disabled")
   }
 
-  if(!locationInput.value || !locationInput.value.replace(/\s/g, '').length) {
-    locationInput.value = 'all'
-  }
-
+  if(locationInput.value) {locationInput.value = locationInput.value.replace(/\//g,'')}  
 }
 searchForm.addEventListener('submit', function () {
   setValueAttr()
@@ -563,7 +612,6 @@ function toggleCalendarScene() {
     orientation_warning_modal.classList.remove('close-modal_orientation');
   }
 }
-
 
 //window-listener to remove classlist when not needed
 body.addEventListener('click', function (e) {
@@ -646,7 +694,6 @@ const lodgeInDate = document.querySelector('.lodge-in-date')!as HTMLElement
 const lodgeOutDate = document.querySelector('.lodge-out-date')!as HTMLElement
 const stayInfo = document.querySelector('.stay-info')!as HTMLElement
 const bookingForm = document.querySelector('.book-form')!as HTMLFormElement
-let isBooking = false;
 const total_fee_display = document.querySelector('.totalPrice')!as HTMLElement;
 const stayPrice = document.querySelector('.price')!as HTMLElement; 
 const totalFee = document.querySelector('#totalFee')!as HTMLInputElement; 

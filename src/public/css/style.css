@@ -63,7 +63,8 @@ a{
 }
 
 .form-validated input:invalid + .validity-feedback::before, 
-.form-validated textarea:invalid + .validity-feedback::before {
+.form-validated textarea:invalid + .validity-feedback::before,
+.invalid::before {
   content: '!';
   font-weight: 600;
   font-size: .8em;
@@ -85,7 +86,9 @@ a{
 }
 
 .invalid{
-  text-align: center;
+  font-size: 0.85em;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .form-validated input:invalid:focus, .form-validated textarea:invalid:focus {
@@ -470,10 +473,6 @@ a{
   top: 70%;
 }
 
-.booking-cal {
-  
-}
-
 .display-calendar {
   transform: scale(1);  
   transition: rotate 0.1s ease-out;
@@ -568,9 +567,10 @@ a{
   position: relative;
 }
 
-.past-day {
+.unavailable {
   opacity: 0.25;
   cursor: auto;
+  text-decoration: line-through;
 }
 
 .start-day::before,
@@ -1208,12 +1208,6 @@ a{
   background: transparent;
 }
 
-/* .book-form .lodgeDate.focus {
-  outline: 0;
-  border-radius: .5em;
-  box-shadow: 0px 0px 0px 2px rgba(0,0,0,.8);
-} */
-
 .book-form .book-price {
   grid-column: 1/3;
   background-color: #fff;
@@ -1265,6 +1259,10 @@ a{
   padding: 1em 0.5em;
   margin: 1em  0;
   position: relative;
+}
+
+.review-text p{
+  font-style: italic;
 }
 
 .review:nth-child(1) {

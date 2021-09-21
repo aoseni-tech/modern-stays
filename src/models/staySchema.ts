@@ -1,6 +1,6 @@
-import { Schema, model,Document,PopulatedDoc, MongooseDocumentMiddleware} from 'mongoose';
-const {Review} = require('./reviewSchema');
-const {Book} = require('./bookingSchema');
+import { Schema, model,Document,Model} from 'mongoose';
+const {Review}: {Review:Model<{}, {}>} = require('./reviewSchema');
+const {bookSchema}: {Book:Model<{}, {}>;bookSchema:Schema} = require('./bookingSchema');
 
 interface Stay {
   title: string;
@@ -8,8 +8,8 @@ interface Stay {
   image: string;
   description: string;
   location: string;
-  reviews?: PopulatedDoc<Document>;
-  bookings?: Array<Schema.Types.ObjectId>;
+  reviews?: Array<Schema.Types.ObjectId>;
+  bookings?: Array<typeof bookSchema>;
   rating?: number;
 }
 
@@ -72,36 +72,39 @@ const schema = new Schema<Stay>({
       count:true
     }
   ],
-  bookings:[
+  bookings:
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Book'
+      type: [bookSchema],
+      select: false,
+      default: () => ([{}])
     }
-  ],
+  ,
   rating: {
-    type:Number
+    type:Number,
+    default:0
   }
 });
 
 schema.post('findOneAndUpdate', async function (doc){
   if(doc){
     let ratings:Array<number> = [0];
-    const reviews = await Review.find({_id: {$in:doc.reviews}})
-    reviews.forEach((review:any) => ratings.push(review.rating));
+    const reviews:Array<Document> = await Review.find({_id: {$in:doc.reviews}})
+    if(reviews.length){
+    reviews.forEach((review:any) => ratings.push(parseFloat(review.rating)));
     let rating = (ratings.reduce((a,b)=>a+b)/reviews.length).toFixed(2)
     doc.rating = rating;
     await doc.save();
+    }
   }
 })
 
 schema.post('findOneAndRemove',async(doc)=>{
   if(doc){
     await Promise.all([
-      Review.deleteMany({_id: {$in:doc.reviews}}),
-      Book.deleteMany({_id: {$in:doc.bookings}})
+      Review.deleteMany({_id: {$in:doc.reviews}})
     ]) 
   }
 })
 
 const Stay = model<Stay>('Stay',schema);
-module.exports = {Schema,Stay}
+module.exports = {schema,Stay}

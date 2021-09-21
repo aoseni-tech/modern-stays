@@ -36,7 +36,6 @@ app.use((req:Request, res: Response,next) => {
   res.locals.checkOutDate = req.query.checkOutDate;
   res.locals.checkIn = createDateString(res.locals.checkInDate)
   res.locals.checkOut = createDateString(res.locals.checkOutDate)
-  res.locals.sort = req.query.sorts;
   res.locals.rating = req.query.ratings;
   next()
 })

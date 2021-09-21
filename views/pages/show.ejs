@@ -48,7 +48,8 @@
         <% for(let i = 1; i < bookErrors.length; i++){ %>   
         <small class="validity-feedback invalid"><%=bookErrors[i]%></small>
         <% } %>  
-    <% } %> 
+      <% } %> 
+
     </div>
 
   </div>
@@ -64,8 +65,11 @@
         <% for (let i = 0; i < 5 ; i++){ %>
           <% if(reviews[i]) {%>
         <div class="review">
-          <p>Rating: <%=reviews[i].rating%></p>
-          <p>Comment: <%= reviews[i].comment %></p>
+          <div class='review-text'>
+            <p>Rating: <%=reviews[i].rating%></p>
+            <p>Comment: <%= reviews[i].comment %></p>
+          </div>
+
           <p>
             <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
               <button class="review-delete">Delete</button>
@@ -89,8 +93,11 @@
         <div class="modal-review">
         <% for (let i = 0; i < reviews.length ; i++){ %>
           <div class="review">
-            <p>Rating: <%=reviews[i].rating%></p>
-            <p>Comment: <%= reviews[i].comment %></p>
+            <div class='review-text'>
+              <p>Rating: <%=reviews[i].rating%></p>
+              <p >Comment: <%= reviews[i].comment %></p>
+            </div>
+
             <p>
               <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
                 <button class="review-delete">Delete</button>
@@ -106,7 +113,7 @@
 
       <div class="review-form_container">
         <h2>Leave a Review</h2>
-        <form action="/stays/<%=stay._id%>/reviews" id="review-form" class="<%=reviewErrors[0]%> post-form" method="POST" class="post-form" novalidate>
+        <form action="/stays/<%=stay._id%>/reviews" id="review-form" class="<%=reviewErrors[0]%> post-form" method="POST" novalidate>
           <div class="review-form">
             <label for="rating">Rating</label>
             <input type="range" name="rating" class="review-form_input" id="rating" step="0.1" min="1" max="5" value="1" required>
@@ -120,6 +127,12 @@
         </form>
       </div>
   </div>
+
+  <% bookings.forEach(booking =>{%> 
+    <form action="/stays/<%=stay._id%>/bookings/<%=booking._id%>?_method=DELETE" method="post">
+      <button>delete</button>
+    </form>
+  <%}) %> 
 
 </section>
 

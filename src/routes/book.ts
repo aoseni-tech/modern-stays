@@ -1,35 +1,31 @@
 import express, {Request, Response} from 'express';
 const router = express.Router({mergeParams:true});
-const{check_booking_validity,Book} = require('../schemaValidations/bookSchemaValidation');
+const{booking_validations} = require('../schemaValidations/bookSchemaValidation');
 const wrapAsync = require('../utils/wrapAsync');
 const{Stay} = require('../models/staySchema');
 
 router.route('')
 .get(wrapAsync(async(req:Request, res: Response)=>{
     const {id} = req.params;
-    const stay = await Stay.findById(id).populate('bookings')
-    let bookings = stay.bookings
+    const stay = await Stay.findById(id).select('bookings')
+    const {bookings}: {bookings:Array<Document>} = stay
     res.json(bookings)
   }))
-.post(check_booking_validity,wrapAsync(async(req:Request,res:Response)=>{
+.post(booking_validations,wrapAsync(async(req:Request,res:Response)=>{
     const {id} = req.params;
-    const stay = await Stay.findById(id);
+    const stay = await Stay.findById(id).select('bookings');
     const {booking} = res.locals
-    stay.bookings.push(booking._id);
-    await Promise.all([
-        booking.save(),
-        stay.save()
-    ])
+    stay.bookings.push(booking);
+    await stay.save()
     res.redirect(`/stays/${stay._id}`)
   }))
   
 router.delete('/:bookingId',wrapAsync(async(req:Request, res: Response)=>{
     const {id,bookingId} = req.params;
-    await Promise.all ([
-        Stay.findByIdAndUpdate(id, {$pull: {bookings: bookingId}}),
-        Book.findByIdAndRemove(bookingId)
-    ])
+    const stay = await Stay.findById(id).select('bookings')
+    stay.bookings.id(bookingId).remove();
+    await stay.save()
     res.redirect(`/stays/${id}`)
   }))
-
+  
 module.exports = router;

@@ -12,19 +12,19 @@
   "author": "afolabi",
   "license": "ISC",
   "dependencies": {
-    "@types/ejs": "^3.0.7",
+    "@types/ejs": "^3.1.0",
     "@types/mongoose": "^5.11.96",
     "ejs": "^3.1.6",
     "ejs-mate": "^3.0.0",
     "express": "^4.17.1",
     "fs-extra": "^10.0.0",
     "method-override": "^3.0.0",
-    "mongoose": "^5.13.2",
+    "mongoose": "^5.13.9",
     "nodemon": "^2.0.12"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/node": "^16.3.1"
+    "@types/node": "^16.9.2"
   },
   "nodemonConfig": {
     "ignore": [
