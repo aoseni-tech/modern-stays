@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express';
 import {Document,Schema} from 'mongoose';
 const router = express.Router({mergeParams:true});
-const {checkStayValidity,createNewStay,updateStay} = require('../schemaValidations/staySchemaValidation');
+const {checkStayValidity,createNewStay,updateStay}= require('../schemaValidations/staySchemaValidation');
 const wrapAsync = require('../utils/wrapAsync');
 const {checkQuery} = require('../middlewares/checkQuery');
 const{Stay} = require('../models/staySchema');
@@ -30,7 +30,7 @@ router.route('')
   .skip(parseFloat(page_offset)*10)
   .limit(10)
 
-  const title = `Modern Stays.${location}`;
+  const title = `Modern Stays.${'All' || location}`;
   const page = 'search';
   res.render('pages/searchResults',{title,stays,page,stayCount,page_offset})
 
@@ -38,6 +38,7 @@ router.route('')
 .post(checkStayValidity,wrapAsync(async(req:Request, res: Response)=>{
   const {stay} = res.locals;
   await stay.save();
+  req.flash('success', `Successfully added to the listings:  ${stay.title}, ${stay.location}.`)
   res.redirect(`/stays/${stay._id}`);
 }));
 
@@ -62,11 +63,13 @@ router.route('/:id')
    const {id} = req.params;
    const update = req.body;
    const stay = await Stay.findByIdAndUpdate(id, update).select('+bookings')
+   req.flash('success', `Updated your listing:  ${stay.title}, ${stay.location}.`)
    res.redirect(`/stays/${stay._id}`);
 }))
 .delete(wrapAsync(async(req:Request, res: Response)=>{
    const {id} = req.params;
-   await Stay.findByIdAndRemove(id)
+   const stay = await Stay.findByIdAndRemove(id)
+   req.flash('info', `${stay.title}, ${stay.location}. have been removed from your listings`)
    res.redirect(`/`);
 }))
 

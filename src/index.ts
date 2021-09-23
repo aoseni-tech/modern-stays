@@ -5,6 +5,8 @@ const methodOverride = require('method-override');
 const app = express();
 const port = 3000;
 const ejsMate = require('ejs-mate');
+const session = require('express-session');
+const flash = require('connect-flash');
 const Express_error = require('./utils/express_error');
 const stays =  require('./routes/stays');
 const reviews = require('./routes/reviews');
@@ -17,7 +19,12 @@ function createDateString(date:string) {
   else return;
 }
 
-const db = mongoose.connect('mongodb://localhost:27017/modernStays', {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify:false}).then(() => {
+const db = mongoose.connect('mongodb://localhost:27017/modernStays', {
+  useNewUrlParser: true, 
+  useUnifiedTopology: true,
+  useFindAndModify:false,
+  useCreateIndex: true
+}).then(() => {
   console.log('db connection open!')
 }).catch((err: { message: any; }) => console.log(err.message));
 
@@ -30,6 +37,18 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'../views'))
 
+const sessionConfig = {
+  secret: 'keyboardcat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { 
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  }
+}
+
+app.use(session(sessionConfig))
+app.use(flash())
+
 app.use((req:Request, res: Response,next) => {
   res.locals.location = req.query.location;
   res.locals.checkInDate = req.query.checkInDate;
@@ -37,18 +56,20 @@ app.use((req:Request, res: Response,next) => {
   res.locals.checkIn = createDateString(res.locals.checkInDate)
   res.locals.checkOut = createDateString(res.locals.checkOutDate)
   res.locals.rating = req.query.ratings;
+  res.locals.success = req.flash('success')
+  res.locals.info = req.flash('info')
   next()
 })
-
-app.get('/', (req: Request, res: Response)=>{
-  const title = 'Modern Stays';
-  const page = 'home';
-  res.render('home',{title,stays,page})
-});
 
 app.use('/stays',stays)
 app.use('/stays/:id/reviews',reviews)
 app.use('/stays/:id/bookings',bookings)
+
+app.get('/', (req: Request, res: Response)=>{
+  const title = 'Modern Stays';
+  const page = 'home';
+  res.render('pages/home',{title,stays,page})
+});
 
 app.all('*', (req:Request,res:Response,next:NextFunction) => {
      next(new Express_error('Page Not Found', 404));
@@ -59,7 +80,7 @@ app.use((err:any,req:Request,res:Response,next:NextFunction) => {
   console.log(message);
   const title = 'page not found - 404'
   const page = 'error'
-  res.status(statusCode).render('error',{title,page})
+  res.status(statusCode).render('pages/error',{title,page})
 })  
 
 app.listen(port, () => {

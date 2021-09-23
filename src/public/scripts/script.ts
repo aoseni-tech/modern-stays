@@ -191,3 +191,11 @@ function dropDrown(options:NodeListOf<HTMLInputElement>,readInput:HTMLInputEleme
 //call dropdown function
 dropDrown(sort_options,sort_input,sort_menu,sort_radios,sort_input_text);
 dropDrown(filter_options,filter_input,filter_menu,filter_radios,filter_input_text);
+
+const flashMessage = document.querySelector('.message')!as HTMLElement;
+
+if(flashMessage) {
+  setTimeout(()=>{
+   flashMessage.remove()
+  }, 3000)
+}
