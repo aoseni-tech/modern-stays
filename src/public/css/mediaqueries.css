@@ -442,6 +442,10 @@
     padding-top: 0;
   }
 
+  .listing-form__btn {
+    width: 100%; 
+  }
+
   /* SHOW PAGE  */
 
   .show-wrapper {

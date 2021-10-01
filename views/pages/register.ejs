@@ -1,0 +1,26 @@
+<% layout('/layouts/boilerplate') -%>
+<section class="listing-form__container">    
+    <h1>Sign Up</h1>
+    <form action="/register" method="POST" class="post-form listing-form <%=errMessages[0]%>" id="register_form" spellcheck="false"  novalidate>
+        <% if(error && error.length) {%> 
+            <small class="validity-feedback invalid error"><%= error  %></small>
+        <% } %> 
+        <div class="listing-form__group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="listing-form_input form_input" value=""  pattern="^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$" title="username can only use letters(a-z,A-Z),numbers,underscores and periods below 30 characters" required>
+            <small class="validity-feedback"><%=errMessages[1]%></small>
+        </div>
+        <div class="listing-form__group">
+            <label for="email">Email</label>
+            <input type="text" name="email" id="form-email" class="listing-form_input form_input" value="" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" title="please provide a valid email address" required>
+            <small class="validity-feedback"><%=errMessages[2]%></small>
+        </div>
+        <div class="listing-form__group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" value=""  class="listing-form_input form_input" pattern=".{5,}" title="password must contain at least five(5) characters" required>
+            <small class="validity-feedback"><%=errMessages[3]%></small>
+        </div>
+        <button class="listing-form__btn">Sign-up</button>
+    </form>
+</section>  
+    <% block('script').append('<script src="/scripts/script.js"></script>') %>

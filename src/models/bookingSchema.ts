@@ -3,7 +3,7 @@ import {Schema, model } from 'mongoose';
 interface Book {
     lodgeIn: Date;
     lodgeOut: Date;
-    totalFee?: String;
+    totalFee: String;
   }
 
 const bookSchema = new Schema<Book>({

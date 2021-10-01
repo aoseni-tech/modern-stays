@@ -7,6 +7,7 @@ const {checkQuery} = require('../middlewares/checkQuery');
 const{Stay} = require('../models/staySchema');
 const{reviewErrors} = require('../schemaValidations/reviewSchemaValidation');
 const{bookErrors} = require('../schemaValidations/bookSchemaValidation');
+const {isAuthenticated} = require('../middlewares/isAuthenticated');
 
 router.route('')
 .get(checkQuery,wrapAsync(async(req:Request, res: Response)=>{  
@@ -42,8 +43,8 @@ router.route('')
   res.redirect(`/stays/${stay._id}`);
 }));
 
-router.get('/new',createNewStay)
-router.get('/:id/update', wrapAsync(updateStay));
+router.get('/new',isAuthenticated,createNewStay)
+router.get('/:id/update',isAuthenticated,wrapAsync(updateStay));
 
 router.route('/:id')
  .get(wrapAsync(async(req:Request, res: Response)=>{
@@ -66,7 +67,7 @@ router.route('/:id')
    req.flash('success', `Updated your listing:  ${stay.title}, ${stay.location}.`)
    res.redirect(`/stays/${stay._id}`);
 }))
-.delete(wrapAsync(async(req:Request, res: Response)=>{
+.delete(isAuthenticated,wrapAsync(async(req:Request, res: Response)=>{
    const {id} = req.params;
    const stay = await Stay.findByIdAndRemove(id)
    req.flash('info', `${stay.title}, ${stay.location}. have been removed from your listings`)

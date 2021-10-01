@@ -68,8 +68,7 @@ const schema = new Schema<Stay>({
   reviews: [
     {
       type: Schema.Types.ObjectId,
-      ref:'Review',
-      count:true
+      ref:'Review'
     }
   ],
   bookings:

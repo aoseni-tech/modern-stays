@@ -197,5 +197,5 @@ const flashMessage = document.querySelector('.message')!as HTMLElement;
 if(flashMessage) {
   setTimeout(()=>{
    flashMessage.remove()
-  }, 3000)
+  }, 10000)
 }

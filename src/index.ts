@@ -6,11 +6,16 @@ const app = express();
 const port = 3000;
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+import { SessionData, Store, MemoryStore, Session } from 'express-session';
 const flash = require('connect-flash');
 const Express_error = require('./utils/express_error');
-const stays =  require('./routes/stays');
-const reviews = require('./routes/reviews');
-const bookings = require('./routes/book');
+const userRoute =  require('./routes/user');
+const staysRoute =  require('./routes/stays');
+const reviewsRoute = require('./routes/reviews');
+const bookingsRoute = require('./routes/book');
+const passport = require('passport');
+const {User} = require('./models/userSchema');
+const LocalStrategy = require('passport-local').Strategy;
 
 function createDateString(date:string) {
   let options: object = {month:'short',year:'numeric',weekday:'short',day:'2-digit'};
@@ -42,12 +47,21 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: true,
   cookie: { 
+    httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }
 
 app.use(session(sessionConfig))
 app.use(flash())
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req:Request, res: Response,next) => {
   res.locals.location = req.query.location;
@@ -58,17 +72,23 @@ app.use((req:Request, res: Response,next) => {
   res.locals.rating = req.query.ratings;
   res.locals.success = req.flash('success')
   res.locals.info = req.flash('info')
+  res.locals.error = req.flash('error')
+  res.locals.currentUser = req.user
+  if(!['/login','/register'].includes(req.originalUrl)){
+  req.session.returnTo = req.originalUrl
+  }
   next()
 })
 
-app.use('/stays',stays)
-app.use('/stays/:id/reviews',reviews)
-app.use('/stays/:id/bookings',bookings)
+app.use('/',userRoute)
+app.use('/stays',staysRoute)
+app.use('/stays/:id/reviews',reviewsRoute)
+app.use('/stays/:id/bookings',bookingsRoute)
 
 app.get('/', (req: Request, res: Response)=>{
   const title = 'Modern Stays';
   const page = 'home';
-  res.render('pages/home',{title,stays,page})
+  res.render('pages/home',{title,page})
 });
 
 app.all('*', (req:Request,res:Response,next:NextFunction) => {
@@ -80,7 +100,7 @@ app.use((err:any,req:Request,res:Response,next:NextFunction) => {
   console.log(message);
   const title = 'page not found - 404'
   const page = 'error'
-  res.status(statusCode).render('pages/error',{title,page})
+  res.status(statusCode).render('pages/error',{title,page,message})
 })  
 
 app.listen(port, () => {

@@ -1,0 +1,19 @@
+<% layout('/layouts/boilerplate') -%>
+<section class="listing-form__container">
+    <h1>Log In</h1>
+    <form action="/login" method="POST" class="listing-form" id="login_form" spellcheck="false"  novalidate>
+        <% if(error && error.length) {%> 
+            <small class="validity-feedback invalid error"><%= error  %></small>
+        <% } %> 
+        <div class="listing-form__group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="listing-form_input form_input" required>
+        </div>
+        <div class="listing-form__group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="listing-form_input form_input" required>
+        </div>
+        <button class="listing-form__btn">Log-in</button>
+    </form>
+</section>  
+    <% block('script').append('<script src="/scripts/script.js"></script>') %>
