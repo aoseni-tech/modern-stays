@@ -6,7 +6,6 @@ const app = express();
 const port = 3000;
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
-import { SessionData, Store, MemoryStore, Session } from 'express-session';
 const flash = require('connect-flash');
 const Express_error = require('./utils/express_error');
 const userRoute =  require('./routes/user');
@@ -14,7 +13,7 @@ const staysRoute =  require('./routes/stays');
 const reviewsRoute = require('./routes/reviews');
 const bookingsRoute = require('./routes/book');
 const passport = require('passport');
-const {User} = require('./models/userSchema');
+import { UserModel } from './models/userSchema';
 const LocalStrategy = require('passport-local').Strategy;
 
 function createDateString(date:string) {
@@ -57,11 +56,12 @@ app.use(flash())
 
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.use(User.createStrategy());
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(UserModel.authenticate()));
+passport.use(UserModel.createStrategy());
+
+passport.serializeUser(UserModel.serializeUser());
+passport.deserializeUser(UserModel.deserializeUser());
 
 app.use((req:Request, res: Response,next) => {
   res.locals.location = req.query.location;

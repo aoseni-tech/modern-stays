@@ -1,5 +1,5 @@
-import express, {Request, Response, NextFunction} from 'express';
-const{schema,User} = require('../models/userSchema');
+import {Request, Response, NextFunction} from 'express';
+import { UserModel } from '../models/userSchema';
 let errMessages: string[]  = []; //array to store the error messages from the stayschema
 
 const clearErrors = ()=>{
@@ -17,7 +17,7 @@ const validate = (req:Request,res:Response,next:NextFunction)=>{
   const {username,password} =  req.body;
   let validUsername = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/
   let validPassword = /.{5,}/   
-  let user = new User(req.body);
+  let user = new UserModel(req.body);
   let schema_error  = user.validateSync();
 
   if (!username || !username.match(validUsername)) {
@@ -38,8 +38,7 @@ const validate = (req:Request,res:Response,next:NextFunction)=>{
 const showErrors =  (req:Request,res:Response,next:NextFunction)=>{  
     if(errMessages.length) {
         errMessages.unshift('form-validated')
-        if(req.method === 'PUT') res.redirect(`/register`)
-        else res.redirect(`/register`);
+        res.redirect(`/register`);
     }  else {
       next();
     }

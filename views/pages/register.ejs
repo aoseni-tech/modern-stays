@@ -3,7 +3,7 @@
     <h1>Sign Up</h1>
     <form action="/register" method="POST" class="post-form listing-form <%=errMessages[0]%>" id="register_form" spellcheck="false"  novalidate>
         <% if(error && error.length) {%> 
-            <small class="validity-feedback invalid error"><%= error  %></small>
+            <small class="error"><%= error  %></small>
         <% } %> 
         <div class="listing-form__group">
             <label for="username">Username</label>

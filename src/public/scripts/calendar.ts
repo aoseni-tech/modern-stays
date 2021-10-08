@@ -423,7 +423,7 @@ function disablePaginationBtn() {
 }
 
 let no_of_stays: string = pages?.dataset.count!
-let no_of_pages:number = Math.ceil(parseFloat(no_of_stays)/10)
+let no_of_pages:number = Math.ceil(parseFloat(no_of_stays)/5)
 let page = parseFloat(skips?.value);
 let staysCount = parseFloat(no_of_stays);
 

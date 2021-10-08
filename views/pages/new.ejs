@@ -1,34 +1,37 @@
 <% layout('/layouts/boilerplate') -%>
 <section class="listing-form__container">
+    <% if(error && error.length) {%> 
+        <small class="validity-feedback invalid error"><%= error  %></small>
+    <% } %> 
     <h1>Add a listing</h1>
-    <form action="/stays" method="POST" class="post-form listing-form <%=errMessages[0]%>" id="add-new_form" spellcheck="false"  novalidate>
+    <form action="/stays" method="POST" class="post-form listing-form <%=formStatus%>" id="add-new_form" spellcheck="false"  novalidate>
         <div class="listing-form__group">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title" class="listing-form_input form_input" value="<%=data_values[0]%>" pattern="^[a-zA-Z0-9\s,.'-]{3,}$" title="title must contain at least three characters" required>
-            <small class="validity-feedback"><%=errMessages[1]%></small>
+            <input type="text" name="title" id="title" class="listing-form_input form_input" value="<%=stayInfo.title?.value%>" pattern="^[a-zA-Z0-9\s,.'-]{3,}$" title="title must contain at least three characters" required>
+            <small class="validity-feedback"><%=stayInfo.title?.error%></small>
         </div>
         <div class="listing-form__group">
             <label for="location">Location</label>
-            <input type="text" name="location" id="form-location" value="<%=data_values[1]%>" class="listing-form_input form_input" pattern="^[a-zA-Z0-9\s,.'-]{3,}$" title="location is not valid" required>
-            <small class="validity-feedback"><%=errMessages[2]%></small>
+            <input type="text" name="location" id="form-location" value="<%=stayInfo.location?.value%>" class="listing-form_input form_input" pattern="^[a-zA-Z0-9\s,.'-]{3,}$" title="location is not valid" required>
+            <small class="validity-feedback"><%=stayInfo.location?.error%></small>
         </div>
         <div class="listing-form__group">
             <label for="image">Image</label>
-            <input type="url" name="image" id="image-url" value="<%=data_values[2]%>" class="listing-form_input form_input" title="image must be a valid url" required>
-            <small class="validity-feedback"><%=errMessages[3]%></small>
+            <input type="url" name="image" id="image-url" value="<%=stayInfo.image?.value%>" class="listing-form_input form_input" title="image must be a valid url" required>
+            <small class="validity-feedback"><%=stayInfo.image?.error%></small>
         </div>
         <div class="listing-form__group">
             <label for="price">Price</label>
             <div class="dollar-sign">
                 <span id="price-label">&dollar;</span>
             </div> 
-            <input type="text" name="price" placeholder="0.00" id="price" class="listing-form_input form_input" aria-describedby="price-label" value="<%=data_values[3]%>" pattern="^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$" title="Must be a valid US price format" required>
-            <small class="validity-feedback"><%=errMessages[4]%></small>
+            <input type="text" name="price" placeholder="0.00" id="price" class="listing-form_input form_input" aria-describedby="price-label" value="<%=stayInfo.price?.value%>" pattern="^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$" title="Must be a valid US price format" required>
+            <small class="validity-feedback"><%=stayInfo.price?.error%></small>
         </div>
         <div class="listing-form__group">
             <label for="description">Description</label>
-            <textarea name="description" id="description"  class="listing-form_input textarea form_input" minlength="10" rows="8" title="description must contain at least 10 characters without special characters except ,?.!'-" required><%= data_values[4]?.trim() %></textarea>
-            <small class="validity-feedback"><%=errMessages[5]%></small>
+            <textarea name="description" id="description"  class="listing-form_input textarea form_input" minlength="10" rows="8" title="description must contain at least 10 characters without special characters except ,?.!'-" required><%= stayInfo.description?.value %></textarea>
+            <small class="validity-feedback"><%=stayInfo.description?.error%></small>
         </div>
         <button class="listing-form__btn">List property</button>
     </form>

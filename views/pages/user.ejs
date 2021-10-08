@@ -1,8 +1,6 @@
 <% layout('/layouts/boilerplate') -%>
 <section class="profile-page">
-
     <div class="profile-card">
-
         <header>
             <h1>My Profile</h1>
         </header>
@@ -24,8 +22,23 @@
             <section class="expandbutton">
                 <input type="checkbox" id="mystays" name="mystays">
                 <label for="mystays"> My Stays </label>
-                  <div class="mylist">
-                    <ul></ul>
+                <div class="mylist">
+                  <% if(stays.length) { %> 
+                    <div class="user-stays">
+                        <% stays.forEach(stay=>{ %> 
+                           <ul class="user-stay">
+                               <li class="name">
+                                   <%= stay.title %><br>
+                                   <span><%=  stay.location %></span>  
+                                </li>                             
+                               <a href="/stays/<%=stay._id%>" target="_blank" class="user-stay_link">view</a>
+                           </ul>
+                        <% }) %>                       
+                    </div>
+                  <% }else{ %> 
+                    <p>You haven't posted a listing yet. Click 
+                        <a href="/stays/new" style="color: #0d6efd; text-decoration:underline;">add stay</a> to add a stay.</p>
+                  <% } %>     
                 </div>
             </section>
         </div>
@@ -34,13 +47,46 @@
             <section class="expandbutton">
                 <input type="checkbox" id="mybookings" name="mybookings">
                 <label for="mybookings"> My Bookings</label>
-                  <div class="mylist">
-                    <ul></ul>
-                  </div>
+                <div class="mylist">
+                  <% if(bookings.length) { %>                 
+                    <div class="user-bookings">
+                        <p style="font-style: italic;">&ast;<span style="color: #0d6efd; font-size: .8em;"><i> click on a red button to cancel booking before check-in day</i></span></p>
+                        <p style="font-style: italic;">&ast;<span style="color: #0d6efd; font-size: .8em;"><i> you can view a stay by clicking on the name</i></span></p>
+                        <% bookings.forEach(booking=>{ %> 
+                           <ul class="user-booking">
+                               <li class="booking-stay">
+                                   <a href="/stays/<%=booking.stay._id%>" target="_blank">
+                                    <%= booking.stay.title %> <br>
+                                    <span><%=  booking.stay.location %></span>
+                                   </a>
+                                </li>
+                               <li class="booking-lodge">
+                                <%= booking.lodgeIn.toLocaleString('en-us',{timeZone:'UTC',dateStyle:'short'}) %> -
+                                <%= booking.lodgeOut.toLocaleString('en-us',{timeZone:'UTC',dateStyle:'short'}) %> 
+                               </li> 
+                               <% if(new Date(booking.lodgeIn) > new Date()) { %> 
+                        <form action="/stays/<%=booking.stay._id%>/bookings/<%= booking._id %>?_method=DELETE" method="POST">
+                                <button id="cancel-btn">&Otimes;</button>                            
+                        </form>
+                               <%  } else if(new Date(booking.lodgeOut) < new Date()) {%>   
+                                    <p style="color: #198754;">completed ✓</p>
+                               <%  }  %>                         
+                           </ul>
+                        <% }) %>                       
+                    </div>
+                  <% }else { %>
+                    <p>You have no bookings at this time.</p>
+                  <% } %>     
+                </div>
             </section>
         </div>
 
+        <form action="/user/<%=currentUser._id%>?_method=DELETE" method="post" id="actDelete-form">
+            <button class="delete-button" id="actDelete-btn">Delete my account</button>
+        </form>  
+        
     </div>
+
 </section>
    
 <% block('script').append('<script src="/scripts/script.js"></script>') %>

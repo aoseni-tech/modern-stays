@@ -13,10 +13,12 @@
         <p role="heading" class="stay-details__price">$<b class="price"><%=parseFloat(stay.price)%></b>/night</p>
       </div>
       <p class= "stay-details__description"><%=stay.description%></p>
+      <% if(`${stay?.host}` === `${currentUser?._id}`){ %> 
       <a class="update-form__link" href='/stays/<%=stay._id%>/update'>Update Listing</a>
       <form action="/stays/<%=stay._id%>?_method=DELETE" method="POST" class="stay-delete_form">
         <button class="delete-button">Remove listing</button>
       </form>
+      <% } %> 
     </div>
 
     <div class="book-form_container">
@@ -54,11 +56,12 @@
 
   </div>
 
- <div class="reviews-container">
+  <div class="reviews-container">
     <% if(reviews.length) { %>
     <h2>Ratings & Reviews</h2>
     <p role="doc-tip" aria-roledescription="average-rating" class="average-rating">
-      <svg viewBox="0 0 1000 1000" role="presentation" aria-hidden="true" focusable="false" style="height: 14px; width: 14px; fill:  #fd705d;"><path d="M972 380c9 28 2 50-20 67L725 619l87 280c11 39-18 75-54 75-12 0-23-4-33-12L499 790 273 962a58 58 0 0 1-78-12 50 50 0 0 1-8-51l86-278L46 447c-21-17-28-39-19-67 8-24 29-40 52-40h280l87-279c7-23 28-39 52-39 25 0 47 17 54 41l87 277h280c24 0 45 16 53 40z"></path></svg> <%= stay.rating?.toFixed(2) %> 
+      <span style="color: #fd705d; font-size: 1em;">&bigstar;</span>  
+      <%= stay.rating?.toFixed(2) %> 
       <span>(<%= stay.reviews.length %> <% if(stay.reviews.length >1) {%>reviews <% }else{ %>review <% } %>   ) </span>
     </p>     
     <div class="reviews">
@@ -69,12 +72,13 @@
             <p>Rating: <%=reviews[i].rating%></p>
             <p>Comment: <%= reviews[i].comment %></p>
           </div>
-
+          <% if(`${reviews[i]?.user}` === `${currentUser?._id}`){ %> 
           <p>
             <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
               <button class="review-delete">Delete</button>
             </form>
           </p>
+          <% } %> 
         </div>
         <% } %>
         <% } %>  
@@ -87,7 +91,7 @@
       <div class="reviews-modal">
         <h2> 
           <span> 
-            <svg viewBox="0 0 1000 1000" role="presentation" aria-hidden="true" focusable="false" style="height: 14px; width: 14px; fill:  #fd705d;"><path d="M972 380c9 28 2 50-20 67L725 619l87 280c11 39-18 75-54 75-12 0-23-4-33-12L499 790 273 962a58 58 0 0 1-78-12 50 50 0 0 1-8-51l86-278L46 447c-21-17-28-39-19-67 8-24 29-40 52-40h280l87-279c7-23 28-39 52-39 25 0 47 17 54 41l87 277h280c24 0 45 16 53 40z"></path></svg>
+            <span style="color: #fd705d; font-size: 1em;">&bigstar;</span>  
           </span> <%= stay.rating?.toFixed(2) %> &bull; <%=reviews.length%>  reviews
         </h2>
         <div class="modal-review">
@@ -97,12 +101,13 @@
               <p>Rating: <%=reviews[i].rating%></p>
               <p >Comment: <%= reviews[i].comment %></p>
             </div>
-
-            <p>
-              <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
-                <button class="review-delete">Delete</button>
-              </form>
-            </p>
+            <% if(`${reviews[i]?.user}` === `${currentUser?._id}`){ %> 
+              <p>
+                <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
+                  <button class="review-delete">Delete</button>
+                </form>
+              </p>
+            <% } %> 
           </div>
           <% } %> 
         </div>
@@ -110,10 +115,10 @@
         <input type="radio" name="toggle-review" id="hide-radio">        
       </div>
       <% } %> 
-
+      <% if(currentUser){ %>      
       <div class="review-form_container">
         <h2>Leave a Review</h2>
-        <form action="/stays/<%=stay._id%>/reviews" id="review-form" class="<%=reviewErrors[0]%> post-form" method="POST" novalidate>
+        <form action="/stays/<%=stay._id%>/reviews" id="review-form" class="<%=review_formStatus%> post-form" method="POST" novalidate>
           <div class="review-form">
             <label for="rating">Rating</label>
             <input type="range" name="rating" class="review-form_input" id="rating" step="0.1" min="1" max="5" value="1" required>
@@ -121,11 +126,21 @@
           <div class="review-form">
             <label for="comment">Comment</label>
             <textarea name="comment" id="comment" minlength="2" title="must contain at least 2 characters" class="review-form_input form_input" cols="20" rows="10" required></textarea>
-            <small class="validity-feedback"><%=reviewErrors[2]%></small>
+            <small class="validity-feedback"></small>
+
+            <% if(reviewErrors.length){ %> 
+              <% reviewErrors.forEach(error =>{ %> 
+                <% if(error){ %> 
+                <small class="validity-feedback invalid"><%=error%></small>
+                <% } %> 
+              <% }) %> 
+            <% } %> 
+            
           </div>
           <button class="review-form_button">Submit</button>
         </form>
       </div>
+      <% } %> 
   </div>
 
   <% bookings.forEach(booking =>{%> 

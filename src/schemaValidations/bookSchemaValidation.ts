@@ -1,22 +1,25 @@
-import express, {Request, Response, NextFunction} from 'express';
-const{Book} = require('../models/bookingSchema');
-const{Stay} = require('../models/staySchema');
+import {Request, Response, NextFunction} from 'express';
+import { BookModel, bookSchema } from '../models/bookingSchema';
+import { StayModel } from '../models/staySchema';
 const wrapAsync = require('../utils/wrapAsync');
 
 let bookErrors: string[]  = [];
 
 
 const check_validity = (req:Request,res:Response,next:NextFunction) =>{
-    const booking = new Book(req.body);
-    const {id} = req.params;
+    const booking = new BookModel(req.body);
+    const {id} : any = req.params;
+    booking.stay = id;
+    booking.user = req.user?._id
+    let requiredPaths = bookSchema.requiredPaths();
     let book_error = booking.validateSync();
     if(book_error) {
         bookErrors.push('form-validated');
-        for(let data in req.body) {
-            if(book_error.errors[`${data}`]?.message) {
-              bookErrors.push(book_error.errors[`${data}`]?.message)
-            }          
-       }
+        requiredPaths.forEach((path:string) =>{
+            if(book_error?.errors[`${path}`]?.message) {
+                bookErrors.push(book_error?.errors[`${path}`]?.message)
+              }    
+        })
        res.redirect(`/stays/${id}#booking`)
     } else {
        res.locals.booking = booking;
@@ -45,8 +48,8 @@ const check_dates = (req:Request,res:Response,next:NextFunction) =>{
 
 const getBookings = wrapAsync(async(req:Request,res:Response,next:NextFunction) =>{
     const {id} = res.locals
-    const stay = await Stay.findById(id).select('+bookings -title -price -image -description -location -reviews -rating')
-    const {bookings} = stay
+    const stay = await StayModel.findById(id).select('bookings')
+    let bookings = BookModel.find({_id:{$in:stay?.bookings}})
     res.locals.bookings = bookings;
     next();
 })
@@ -73,4 +76,4 @@ const check_availability = (req:Request,res:Response,next:NextFunction) => {
 
 const booking_validations = [check_validity,check_dates,getBookings,check_availability]
 
-module.exports = {booking_validations,bookErrors,Book}
+module.exports = {booking_validations,bookErrors}

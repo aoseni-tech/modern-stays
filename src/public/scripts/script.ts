@@ -5,8 +5,10 @@ const navContent = document.querySelector('.nav-content')! as HTMLElement;
 const menu = document.querySelector('.menu')! as HTMLElement;
 const hamburgerLines = document.querySelectorAll('#hamburger>svg')! as NodeListOf<HTMLElement>;
 const post_form = document.querySelector('.post-form')! as HTMLFormElement;
+const book_form = document.querySelector('.book-form')! as HTMLFormElement;
 const form_inputs = document.querySelectorAll('.form_input')! as NodeListOf<HTMLInputElement>;
 const feedback = document.querySelectorAll('.post-form .validity-feedback')! as NodeListOf<HTMLElement>;
+const errorMessage = document.querySelector('.error')! as HTMLElement;
 const openModal = document.querySelector('.show-reviews')! as HTMLElement;
 const openModalRadio = document.querySelector('#show-radio')! as HTMLInputElement;
 const closeModal = document.querySelector('.hide-reviews')! as HTMLElement;
@@ -94,18 +96,21 @@ function validationCheck() {
   }
 }
 
-if (post_form) {
-  post_form.addEventListener('submit', function (e) {
-    if (!this.checkValidity()) {
-      e.preventDefault()
-      e.stopPropagation()
-      this.classList.add('form-validated')
-      validationCheck();
-      for(let i = 0; i < form_inputs.length;i++) {   
-        form_inputs[i].addEventListener('input',validationCheck)
+if (post_form || book_form) {
+  [post_form,book_form].forEach((form:HTMLFormElement) => {
+    form?.addEventListener('submit', function (e) {
+      if(errorMessage) errorMessage.remove()
+      if (!this.checkValidity()) {
+        e.preventDefault()
+        e.stopPropagation()
+        this.classList.add('form-validated')
+        validationCheck();
+        for(let i = 0; i < form_inputs.length;i++) {   
+          form_inputs[i].addEventListener('input',validationCheck)
+        }
       }
-    }
-  });
+    });
+  })
   }
 
   //reviews modal
@@ -197,5 +202,42 @@ const flashMessage = document.querySelector('.message')!as HTMLElement;
 if(flashMessage) {
   setTimeout(()=>{
    flashMessage.remove()
-  }, 10000)
+  }, 5000)
 }
+
+let actDeleteForm = document.querySelector('#actDelete-form')! as HTMLFormElement; 
+let profileCard = document.querySelector('.profile-card')! as HTMLElement; 
+let noActionBtn : HTMLElement;
+let actionBtn : HTMLElement;
+let confirmModal: HTMLElement; 
+let deleteAct = false;
+let isModal = false;
+if(actDeleteForm) {
+  actDeleteForm.addEventListener('submit',function(e){
+    if(!isModal) {
+      e.preventDefault();
+      let modal = document.createElement('DIV');
+      modal.classList.add('confirm-action');
+      modal.setAttribute('role','alert')
+      modal.innerHTML = ` 
+            <small style="font-size: .75em; font-style: italic; color: #fd705d;" role="doc-notice">&ast;Accounts can not be recovered after they have been deleted,your added stays,reviews and bookings will be gone.
+            </small>
+            <p style="font-size: 1.5em;" role="alertdialog">Are you sure you want to delete your account?</p>
+            <button class="delete-button" id="actDelete-btn" form="actDelete-form">Yes</button>
+            <a class="no-btn" role="button">No</a>   
+       `
+      profileCard.appendChild(modal);
+      isModal=true;
+      noActionBtn = document.querySelector('.no-btn')! as HTMLElement; 
+      confirmModal = document.querySelector('.confirm-action')! as HTMLElement;
+      if(isModal) {
+        noActionBtn.addEventListener('click',()=>{
+          isModal = false;
+          confirmModal.remove();
+        })
+      } 
+    }
+
+  })
+}
+

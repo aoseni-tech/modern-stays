@@ -1,18 +1,35 @@
-import mongoose from 'mongoose';
-const{Schema} = mongoose;
+import {Schema, model,Document } from 'mongoose';
+import { StayModel } from './staySchema';
+import { UserModel } from './userSchema';
+import{BookModel} from './bookingSchema';
 
-const reviewSchema = new Schema({
-    comment:  {
-        type:String,
-        minLength:[2,'comment must contain at least 2 characters'],
-        required:[true,'comment is required to submit reviews']
-    },
+export interface Review extends Document {
+    rating: String;
+    comment: String;
+    user?: Schema.Types.ObjectId;
+}
+
+const reviewSchema = new Schema<Review>({
     rating: {
-        type:Number,
+        type: String,
         required:[true,'rating is required']
+    },
+    comment: {
+        type: String,
+        validate: {
+            validator: function(v:any) {
+              return /^[a-zA-Z0-9\s,.'-]{2,}$/.test(v);
+            },
+            message: () => `comment must contain at least 2 characters`
+          },
+          required:[true,'comment must contain at least 2 characters']
+    },
+    user:{
+        type: Schema.Types.ObjectId,
+        ref:'User'
     }
 })
 
-const Review = mongoose.model('Review',reviewSchema);
+const ReviewModel = model<Review>('Review',reviewSchema);
 
-module.exports = {Review}
+export{ReviewModel,reviewSchema}
