@@ -37,7 +37,7 @@ const check_dates = (req:Request,res:Response,next:NextFunction) =>{
         bookErrors.push('form-validated','You can not book a stay for more than 30 days')
         res.redirect(`/stays/${id}#booking`)
     } else if(new Date(`${lodgeOut}`) < new Date(`${lodgeIn}`)){
-        bookErrors.push('form-validated','check-out date can not be less than check-in date')
+        bookErrors.push('form-validated','check-out date can not come before check-in date')
         res.redirect(`/stays/${id}#booking`)
     }else {
       res.locals.lodgeIn = lodgeIn

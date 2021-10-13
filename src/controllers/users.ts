@@ -1,17 +1,16 @@
-import express, {Request, Response, NextFunction} from 'express';
-const router = express.Router({mergeParams:true});
-import passport from 'passport';
-const wrapAsync = require('../utils/wrapAsync');
-import { StayModel } from '../models/staySchema';
+import {Request, Response, NextFunction} from 'express';
 import { UserModel} from '../models/userSchema';
+import { StayModel } from '../models/staySchema';
 import { BookModel} from '../models/bookingSchema';
-const {checkuserValidity,registerUser}= require('../schemaValidations/userSchemaValidation');
-const {isAuthenticated} = require('../middlewares/isAuthenticated');
-import {authenticatePost}  from '../middlewares/authenticatePost'
+import passport from 'passport';
 
-router.route('/register')
-.get(registerUser)
-.post(checkuserValidity,wrapAsync(async(req:Request,res:Response,next:NextFunction)=>{
+module.exports.renderSignUpForm = (req:Request, res: Response)=>{
+    const title = 'Register';
+    const page = 'register';
+    res.render('pages/register',{title,page})
+  }
+
+module.exports.registerUser = async(req:Request,res:Response)=>{
     try {
         const { email, username, password } = req.body;
         const user = new UserModel({ email, username });
@@ -32,28 +31,28 @@ router.route('/register')
         req.flash('error', e.message);
         res.redirect('/register');
     }
-}))
+}
 
-router.route('/login')
-.get((req:Request, res: Response)=>{
-      const title = 'LogIn';
-      const page = 'Login';
-      res.render('pages/login',{title,page})
-})
-.post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }),(req:Request,res:Response)=>{
+module.exports.renderLoginPage = (req:Request, res: Response)=>{
+    const title = 'LogIn';
+    const page = 'Login';
+    res.render('pages/login',{title,page})
+}
+
+module.exports.login = (req:Request,res:Response)=>{
     let username = req.user?.username
     req.flash('success', `Welcome back,  ${username}`);
     let redirectUrl = req.session.returnTo?.replace('/bookings','') || '/'
     res.redirect(redirectUrl);
-})
+}
 
-router.get('/logout', function(req, res){
+module.exports.logout = (req:Request,res:Response) => {
     req.logout();
     req.flash('info','You have been logged out')
     res.redirect('/');
-});
+}
 
-router.get('/user',isAuthenticated,wrapAsync(async (req:Request,res:Response) =>{
+module.exports.profilePage = async (req:Request,res:Response) =>{
     let title = `my profile-@${req.user?.username}`
     let myStays = req.user?.stays
     let myBookings = req.user?.bookings
@@ -61,9 +60,9 @@ router.get('/user',isAuthenticated,wrapAsync(async (req:Request,res:Response) =>
     let bookings = await BookModel.find({_id:{$in:myBookings}}).select('lodgeIn lodgeOut').populate('stay','title location')
     let page = 'profile'
     res.render('pages/user',{title,page,stays,bookings})
-})) 
+}
 
-router.delete('/user/:userId',authenticatePost,wrapAsync(async (req:Request,res:Response) =>{
+module.exports.deleteUserAccount = async (req:Request,res:Response) =>{
     const {userId} = req.params; 
     if(userId != req.user?._id) {
         req.logOut();
@@ -73,6 +72,4 @@ router.delete('/user/:userId',authenticatePost,wrapAsync(async (req:Request,res:
     await UserModel.findByIdAndRemove(userId);
     req.flash('info','Your account have been deleted')
     res.redirect('/')
-})) 
-  
-module.exports = router
+}

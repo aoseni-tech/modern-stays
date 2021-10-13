@@ -14,7 +14,7 @@ const validateReview = (req:Request,res:Response,next:NextFunction) =>{
         requiredPaths.forEach((path:string)=>{
             reviewErrors.push(review.validateSync()?.errors[`${path}`]?.message!)
         })
-        res.redirect(`/stays/${id}`)
+        res.redirect(`/stays/${id}#review-form`)
     } else {
         res.locals.review = review
         next();

@@ -102,9 +102,9 @@ async function calcRating (stayDoc:any) {
   reviews.forEach((review:any) => ratings.push(parseFloat(review.rating)));
   let rating = (ratings.reduce((a,b)=>a+b)/reviews.length).toFixed(2)
   stayDoc.rating = rating;
-  return await stayDoc.save();
+  }else {
+    stayDoc.rating = '0';
   }
-  stayDoc.rating = '0';
   await stayDoc.save()
 }
 

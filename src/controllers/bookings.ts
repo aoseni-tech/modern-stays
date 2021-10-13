@@ -1,19 +1,15 @@
-import express, {Request, Response} from 'express';
-const router = express.Router({mergeParams:true});
-const{booking_validations} = require('../schemaValidations/bookSchemaValidation');
-const wrapAsync = require('../utils/wrapAsync');
+import {Request, Response} from 'express';
+import {BookModel} from '../models/bookingSchema';
 import { StayModel } from '../models/staySchema';
 import { UserModel } from '../models/userSchema';
-import {BookModel} from '../models/bookingSchema';
-import {authenticatePost}  from '../middlewares/authenticatePost'
 
-router.route('')
-.get(wrapAsync(async(req:Request, res: Response)=>{
+module.exports.getStayBookings = async(req:Request, res: Response)=>{
     let {id}: any = req.params;
     const bookings = await BookModel.find({stay: id})
     res.json(bookings)
-  }))
-.post(authenticatePost,booking_validations,wrapAsync(async(req:Request,res:Response)=>{
+};
+
+module.exports.bookStay = async(req:Request,res:Response)=>{
     const {id} = req.params;
     const {booking} = res.locals;
     const {lodgeIn,lodgeOut} = req.body;
@@ -26,12 +22,12 @@ router.route('')
     ]) 
     req.flash('success',`You have been booked from ${new Date(from).toLocaleDateString()} - ${new Date(to).toLocaleDateString()}`)
     res.redirect(`/stays/${id}`)
-  }))
-  
-router.delete('/:bookingId',authenticatePost,wrapAsync(async(req:Request, res: Response)=>{
+};
+
+module.exports.cancelBooking = async(req:Request, res: Response)=>{
     const {id,bookingId} = req.params;
     const stay = await StayModel.findById(id).select('title')
-    const booking = await BookModel.findById(id).select('user');
+    const booking = await BookModel.findById(bookingId).select('user');
     const user = booking?.user; 
     if(`${user}` != `${req.user?._id}`) {
       req.flash('info','Permission denied: You can only cancel your bookings.')
@@ -41,6 +37,4 @@ router.delete('/:bookingId',authenticatePost,wrapAsync(async(req:Request, res: R
     req.flash('info',`Your booking for "${stay?.title}" have been canceled`)
     let referer = req.headers.referer!
     res.redirect(referer)
-  }))
-  
-module.exports = router;
+};

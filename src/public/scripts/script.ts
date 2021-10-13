@@ -206,6 +206,7 @@ if(flashMessage) {
 }
 
 let actDeleteForm = document.querySelector('#actDelete-form')! as HTMLFormElement; 
+let actDeleteBtn = document.querySelector('#actDelete-btn')! as HTMLButtonElement; 
 let profileCard = document.querySelector('.profile-card')! as HTMLElement; 
 let noActionBtn : HTMLElement;
 let actionBtn : HTMLElement;
@@ -216,6 +217,7 @@ if(actDeleteForm) {
   actDeleteForm.addEventListener('submit',function(e){
     if(!isModal) {
       e.preventDefault();
+      actDeleteBtn.disabled = true
       let modal = document.createElement('DIV');
       modal.classList.add('confirm-action');
       modal.setAttribute('role','alert')
@@ -233,6 +235,7 @@ if(actDeleteForm) {
       if(isModal) {
         noActionBtn.addEventListener('click',()=>{
           isModal = false;
+          actDeleteBtn.disabled = false;
           confirmModal.remove();
         })
       } 
@@ -241,3 +244,58 @@ if(actDeleteForm) {
   })
 }
 
+
+// STAR RATINGS   
+let stars = document.querySelectorAll('.rating_stars')! as NodeListOf<HTMLSpanElement>;
+
+if(stars) {
+  stars.forEach((star:HTMLSpanElement)=>{
+    let rating;
+    if(star.dataset.rating && typeof parseFloat(star.dataset.rating) === 'number') {
+      rating = parseFloat(star.dataset.rating)
+    } else {rating = 0}
+
+    let goldStar = (rating/5) * 100;
+    
+    star.style.background = `linear-gradient(90deg, #f5bd23 ${goldStar}%, #afb8c1 ${goldStar}%)`
+    star.style.backgroundClip = `inherit`
+  })
+}
+
+// STAR FORM SLIDER   
+let starSlider = document.querySelector('#star-range')! as HTMLElement;
+let sliderRating = document.querySelector('#rating')!as HTMLInputElement;
+
+if(starSlider) {
+  starSlider.style.backgroundClip = `inherit`
+  starSlider.addEventListener('mousemove', function(e){
+    let sliderWidth = this.clientWidth;
+    let rating = (e.offsetX/sliderWidth) * 100;
+    this.style.background = `linear-gradient(90deg, #f5bd23 ${rating}%, #afb8c1 ${rating}%)`
+    this.style.backgroundClip = `inherit`
+  })
+
+  starSlider.addEventListener('mouseleave', function(e){
+    let sliderWidth = this.clientWidth;
+    let rating = (e.offsetX/sliderWidth) * 100;
+    if(!sliderRating.value || parseFloat(sliderRating.value) < 1){
+      this.style.background = ``
+      this.style.backgroundClip = `inherit`
+    }else {
+      let rated = (parseFloat(sliderRating.value)/5) * 100;
+      this.style.background = `linear-gradient(90deg, #f5bd23 ${rated}%, #afb8c1 ${rated}%)`
+      this.style.backgroundClip = `inherit`
+    }
+  })
+
+  starSlider.addEventListener('click', function(e){
+    let sliderWidth = this.clientWidth;
+    let rating = (e.offsetX/sliderWidth) * 100;
+    sliderRating.value = `${((rating/100) * 5).toFixed(1)}`;
+    if(sliderRating.value && parseFloat(sliderRating.value) > 1){
+      this.style.background = `linear-gradient(90deg, #f5bd23 ${rating}%, #afb8c1 ${rating}%)`
+      this.style.backgroundClip = `inherit`
+    }
+  })
+
+}

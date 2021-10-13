@@ -48,7 +48,7 @@
       </form>
       <% if(bookErrors.length > 0) { %> 
         <% for(let i = 1; i < bookErrors.length; i++){ %>   
-        <small class="validity-feedback invalid"><%=bookErrors[i]%></small>
+        <small class="invalid booking-error"><%=bookErrors[i]%></small>
         <% } %>  
       <% } %> 
 
@@ -64,15 +64,19 @@
       <%= stay.rating?.toFixed(2) %> 
       <span>(<%= stay.reviews.length %> <% if(stay.reviews.length >1) {%>reviews <% }else{ %>review <% } %>   ) </span>
     </p>     
-    <div class="reviews">
+    <div id="reviews">
         <% for (let i = 0; i < 5 ; i++){ %>
           <% if(reviews[i]) {%>
         <div class="review">
+          <p class="reviewer"> @<%= reviews[i].user.username%> </p>
           <div class='review-text'>
-            <p>Rating: <%=reviews[i].rating%></p>
-            <p>Comment: <%= reviews[i].comment %></p>
+            <p class="rating">
+              Rating is <%=reviews[i].rating%>
+              <span class="rating_stars" data-rating="<%=reviews[i].rating%>">★★★★★</span>
+            </p>
+            <p class="comment"><span>Comment:</span> <%= reviews[i].comment %></p>
           </div>
-          <% if(`${reviews[i]?.user}` === `${currentUser?._id}`){ %> 
+          <% if(`${reviews[i]?.user._id}` === `${currentUser?._id}`){ %> 
           <p>
             <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
               <button class="review-delete">Delete</button>
@@ -97,11 +101,15 @@
         <div class="modal-review">
         <% for (let i = 0; i < reviews.length ; i++){ %>
           <div class="review">
+            <p class="reviewer">@<%= reviews[i].user.username%> </p>
             <div class='review-text'>
-              <p>Rating: <%=reviews[i].rating%></p>
-              <p >Comment: <%= reviews[i].comment %></p>
+              <p class="rating">
+                Rating is <%=reviews[i].rating%>
+                <span class="rating_stars" data-rating="<%=reviews[i].rating%>">★★★★★</span>
+              </p>
+              <p  class="comment"><span>Comment:</span> <%= reviews[i].comment %></p>
             </div>
-            <% if(`${reviews[i]?.user}` === `${currentUser?._id}`){ %> 
+            <% if(`${reviews[i]?.user._id}` === `${currentUser?._id}`){ %> 
               <p>
                 <form action="/stays/<%=stay._id%>/reviews/<%=reviews[i]._id%>?_method=DELETE" method="POST">
                   <button class="review-delete">Delete</button>
@@ -115,23 +123,28 @@
         <input type="radio" name="toggle-review" id="hide-radio">        
       </div>
       <% } %> 
+
       <% if(currentUser){ %>      
       <div class="review-form_container">
         <h2>Leave a Review</h2>
         <form action="/stays/<%=stay._id%>/reviews" id="review-form" class="<%=review_formStatus%> post-form" method="POST" novalidate>
           <div class="review-form">
-            <label for="rating">Rating</label>
-            <input type="range" name="rating" class="review-form_input" id="rating" step="0.1" min="1" max="5" value="1" required>
+            <label for="rating">Rating:</label>
+            <div class="slider-input">
+              <p role="slider" aria-roledescription="rating slider" id="star-range">★★★★★</p>
+              <input type="hidden" name="rating" class="review-form_input" id="rating" required>
+            </div>
           </div>
           <div class="review-form">
-            <label for="comment">Comment</label>
-            <textarea name="comment" id="comment" minlength="2" title="must contain at least 2 characters" class="review-form_input form_input" cols="20" rows="10" required></textarea>
-            <small class="validity-feedback"></small>
-
+            <label for="comment">Comment:</label>
+            <textarea name="comment" id="comment" minlength="2" title="comment must contain at least 2 characters" class="review-form_input form_input" cols="20" rows="10" required></textarea>
+            <% if(!reviewErrors?.length){ %>             
+                <small class="validity-feedback"></small>
+            <% } %>        
             <% if(reviewErrors.length){ %> 
               <% reviewErrors.forEach(error =>{ %> 
                 <% if(error){ %> 
-                <small class="validity-feedback invalid"><%=error%></small>
+                <small class="validity-feedback"><%=error%></small>
                 <% } %> 
               <% }) %> 
             <% } %> 

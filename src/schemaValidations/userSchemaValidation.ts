@@ -1,19 +1,22 @@
 import {Request, Response, NextFunction} from 'express';
 import { UserModel } from '../models/userSchema';
-let errMessages: string[]  = []; //array to store the error messages from the stayschema
+let errMessages:{username:string;email:string;password:string;form:string;} = {
+  username: '',
+  email: '',
+  password: '',
+  form:''
+}; //array to store the error messages from the stayschema
 
 const clearErrors = ()=>{
-  errMessages = [];
+  errMessages = {
+    username: '',
+    email: '',
+    password: '',
+    form:''
+  };
 }
 
-const registerUser = (req:Request, res: Response)=>{
-  const title = 'Register';
-  const page = 'register';
-  res.render('pages/register',{title,page,errMessages})
-  clearErrors(); 
-}
-
-const validate = (req:Request,res:Response,next:NextFunction)=>{
+const validateUser = (req:Request,res:Response,next:NextFunction)=>{
   const {username,password} =  req.body;
   let validUsername = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/
   let validPassword = /.{5,}/   
@@ -21,29 +24,28 @@ const validate = (req:Request,res:Response,next:NextFunction)=>{
   let schema_error  = user.validateSync();
 
   if (!username || !username.match(validUsername)) {
-    errMessages.push('username can only use letters(a-z,A-Z),numbers,underscores and periods below 30 characters')
+    errMessages.username = 'username can only use letters(a-z,A-Z),numbers,underscores and periods below 30 characters'
+    errMessages.form = 'form-validated'
   }
   
   if(schema_error){
       let message  = schema_error.errors['email']?.message;
-      errMessages.push(message)
+      errMessages.email = message;
+      errMessages.form = 'form-validated'
   }
 
    if (!password || !password.match(validPassword)) {
-    errMessages.push('password must contain at least five(5) characters')
+    errMessages.password = 'password must contain at least five(5) characters'
+    errMessages.form = 'form-validated'
   }
+  if(errMessages.form){return res.redirect(`/register`);}
   next();
 }
 
-const showErrors =  (req:Request,res:Response,next:NextFunction)=>{  
-    if(errMessages.length) {
-        errMessages.unshift('form-validated')
-        res.redirect(`/register`);
-    }  else {
-      next();
-    }
-  }
+const showUserValidationErrors =  (req:Request,res:Response,next:NextFunction)=>{  
+  res.locals.errMessages = errMessages;
+  next()
+  clearErrors()
+}
 
-const checkuserValidity = [validate,showErrors]
-
-module.exports = {checkuserValidity,registerUser}
+module.exports = {validateUser,showUserValidationErrors}

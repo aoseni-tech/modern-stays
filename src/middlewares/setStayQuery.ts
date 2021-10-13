@@ -4,7 +4,7 @@ const wrapAsync = require('../utils/wrapAsync');
 let sortBy:string;
 let rate:string; 
 
-const checkQuery = wrapAsync(async(req:Request,res:Response,next:NextFunction)=>{   
+module.exports.setStayQuery = wrapAsync(async(req:Request,res:Response,next:NextFunction)=>{   
     let{location='',page_offset='0',sorts ='',ratings,checkInDate,checkOutDate}:any = req.query;
 
     let start = new Date(checkInDate);
@@ -40,5 +40,3 @@ const checkQuery = wrapAsync(async(req:Request,res:Response,next:NextFunction)=>
 
     next()  
   })
-
-  module.exports = {checkQuery}
