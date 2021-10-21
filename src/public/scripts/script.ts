@@ -85,13 +85,13 @@ doc.addEventListener('click', function (e) {
 
 function validationCheck() {
   for(let i = 0; i < form_inputs.length;i++) {
-    feedback[i].classList.remove('valid-feedback');
+    feedback[i]?.classList.remove('valid-feedback');
     if(!form_inputs[i].checkValidity()) {
       if(form_inputs[i].value==='') feedback[i].innerHTML=`${form_inputs[i].name} is required`
       else feedback[i].innerHTML=`${form_inputs[i].title}`
     } else {
       feedback[i].innerHTML = '&check; Looks good'
-      feedback[i].classList.add('valid-feedback');
+      feedback[i]?.classList.add('valid-feedback');
     }
   }
 }
@@ -299,3 +299,155 @@ if(starSlider) {
   })
 
 }
+
+
+// BUILDING CAROUSEL 
+const scenes = document.querySelectorAll('.carousel_scene') !as NodeListOf<HTMLDivElement>;
+let carousels = document.querySelectorAll('.carousel')! as NodeListOf<HTMLDivElement>;
+let carousel_prevBtn = document.querySelectorAll(`.carousel_prevBtn`)!as NodeListOf<HTMLButtonElement>;
+let carousel_nxtBtn = document.querySelectorAll(`.carousel_nxtBtn`)!as NodeListOf<HTMLButtonElement>;
+
+function rotateCarousel(carousel:HTMLDivElement,transZ:number,rotate:number){
+  carousel.style.transform = `translateZ(-${transZ}px) rotateY(${rotate}deg)`
+}
+
+if(scenes){
+  for(let i=0; i<scenes.length; i++) {
+    let id=scenes[i].id;
+    
+    let cells = document.querySelectorAll(`#${id} .carousel-cell`)! as NodeListOf<HTMLDivElement>;
+    let carouselAngle  = 360/cells.length;
+    let cell_width = carousels[i].clientWidth;
+    let carouselRotation = 0;
+    let half_width = cell_width/2 ;
+    let half_angle = carouselAngle/2;
+    let transZ = Math.abs(Math.round(half_width/(Math.tan(half_angle))));
+
+    rotateCarousel(carousels[i],transZ,carouselRotation)
+
+    for(let i = 0; i< cells.length; i++) {
+      cells[i].style.transform = `rotateY(${i*carouselAngle}deg) translateZ(${transZ}px)`
+    }
+
+    carousel_prevBtn[i].addEventListener('click', ()=> {
+      carouselRotation+=carouselAngle
+      rotateCarousel(carousels[i],transZ,carouselRotation)
+    })
+
+    carousel_nxtBtn[i].addEventListener('click', ()=> {
+      carouselRotation-=carouselAngle
+      rotateCarousel(carousels[i],transZ,carouselRotation)
+    })
+
+  }
+}
+
+//DRAG And DROP
+let dropbox = document.querySelector('.dropbox')!as HTMLElement;
+let dropbox_info = document.querySelector('.dropbox p')!as HTMLElement;
+// let imageForm = document.querySelector('.uploadForm')!as HTMLElement;
+let fileElem = document.querySelector('#fileElem')!as HTMLInputElement;
+
+
+function dragenter(e:DragEvent) {
+  e.stopPropagation();
+  e.preventDefault();
+  this.classList.add('dragEnter')
+}
+
+function dragover(e:DragEvent) {
+  e.stopPropagation();
+  e.preventDefault();
+  this.classList.add('dragEnter')
+}
+
+function drop(e:DragEvent) {
+  e.stopPropagation();
+  e.preventDefault();
+  this.classList.remove('dragEnter')
+
+  const dt = e.dataTransfer;
+  const files = dt?.files;
+
+  transferFiles(files);
+}
+
+function dragend(e:DragEvent) {
+  e.stopPropagation();
+  e.preventDefault();
+  this.classList.remove('dragEnter')
+}
+
+function transferFiles(files:any) {
+  let dropboxImages = document.querySelectorAll('.dropboxImg');
+  if(dropboxImages) {
+    dropboxImages.forEach(image => {
+      image.remove()
+    })
+  }
+  if(files.length){
+    dropbox_info.innerHTML = ``
+  
+    fileElem.files = files;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+       
+      if (!file.type.startsWith('image/')){ continue}
+
+      const img = document.createElement("img");
+      img.src = URL.createObjectURL(file);
+      img.onload = function() {
+        URL.revokeObjectURL(img.src);
+      }
+      img.classList.add("dropboxImg");
+      dropbox.appendChild(img); 
+
+    }
+  } else {
+    fileElem.files = null
+  }
+
+  }
+
+  function handleFiles() {
+    fileElem.click();
+    fileElem.addEventListener('change', () =>{
+      if(fileElem.files){ 
+        dropbox_info.innerHTML = ``
+      let dropboxImages = document.querySelectorAll('.dropboxImg');
+      if(dropboxImages) {
+        dropboxImages.forEach(image => {
+          image.remove()
+        })
+      }
+      for (let i = 0; i < fileElem.files.length; i++) {
+        const file = fileElem.files[i];
+         
+        if (!file.type.startsWith('image/')){ continue}
+  
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.onload = function() {
+          URL.revokeObjectURL(img.src);
+        }
+        img.classList.add("dropboxImg");
+        dropbox.appendChild(img); 
+  
+        }
+      } else {
+      fileElem.files = null
+      
+      dropbox_info.innerHTML = `<span style="font-size: 1.5em;"><b> &#8685;</b></span>`
+     }
+    })
+
+  }
+
+if(dropbox) {
+  dropbox.addEventListener('dragenter', dragenter, false);
+  dropbox.addEventListener('dragover', dragover, false);
+  dropbox.addEventListener('drop', drop, false);
+  dropbox.addEventListener('dragend', dragend, false);
+  dropbox.addEventListener('dragleave', dragend, false);
+  dropbox.addEventListener('click',handleFiles, false);
+}  

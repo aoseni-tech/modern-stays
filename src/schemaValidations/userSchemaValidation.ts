@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from 'express';
-import { UserModel } from '../models/userSchema';
+import { User } from '../models/userSchema';
 let errMessages:{username:string;email:string;password:string;form:string;} = {
   username: '',
   email: '',
@@ -20,7 +20,7 @@ const validateUser = (req:Request,res:Response,next:NextFunction)=>{
   const {username,password} =  req.body;
   let validUsername = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/
   let validPassword = /.{5,}/   
-  let user = new UserModel(req.body);
+  let user = new User(req.body);
   let schema_error  = user.validateSync();
 
   if (!username || !username.match(validUsername)) {

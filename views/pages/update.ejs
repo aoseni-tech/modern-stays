@@ -16,11 +16,6 @@
             <small class="validity-feedback"><%=stayValidation.location?.error%></small>
         </div>
         <div class="listing-form__group">
-            <label for="image">Image</label>
-            <input type="url" name="image" id="image-url" class="listing-form_input form_input" value="<%=stayValidation.image?.value||stay.image%>" title="image must be a valid url" required>
-            <small class="validity-feedback"><%=stayValidation.image?.error%></small>
-        </div>
-        <div class="listing-form__group">
             <label for="price">Price</label>
             <div class="dollar-sign">
                 <span id="price-label">&dollar;</span>

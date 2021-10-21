@@ -1,10 +1,10 @@
 import { Schema, model,Document, PassportLocalDocument,PassportLocalSchema, PassportLocalModel} from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
-import { StayModel } from './staySchema';
-import { ReviewModel } from './reviewSchema';
-import{BookModel} from './bookingSchema';
+import { Stay } from './staySchema';
+import { Review } from './reviewSchema';
+import{Book} from './bookingSchema';
 
-export interface User extends PassportLocalDocument {
+export interface UserDoc extends PassportLocalDocument {
   username:string;
   email: string;
   stays?: Array<Schema.Types.ObjectId>;
@@ -47,18 +47,18 @@ const schema = new Schema({
 
 interface UserModel<T extends Document> extends PassportLocalModel<T> {}
 
-schema.post('findOneAndRemove',async(doc:User)=>{
+schema.post('findOneAndRemove',async(doc:UserDoc)=>{
   if(doc){
     await Promise.all([
-      StayModel.updateMany({reviews:{$in:doc.reviews}},{$pull:{reviews:{$in:doc.reviews}}}),
-      StayModel.updateMany({bookings:{$in:doc.bookings}},{$pull:{bookings:{$in:doc.bookings}}}),
-      ReviewModel.deleteMany({_id: {$in:doc.reviews}}),
-      StayModel.deleteMany({_id: {$in:doc.stays}}),
-      BookModel.deleteMany({_id: {$in:doc.bookings}})
+      Stay.updateMany({reviews:{$in:doc.reviews}},{$pull:{reviews:{$in:doc.reviews}}}),
+      Stay.updateMany({bookings:{$in:doc.bookings}},{$pull:{bookings:{$in:doc.bookings}}}),
+      Review.deleteMany({_id: {$in:doc.reviews}}),
+      Stay.deleteMany({_id: {$in:doc.stays}}),
+      Book.deleteMany({_id: {$in:doc.bookings}})
     ]) 
   }
 })
 
-let UserModel: UserModel<User> = model<User>('User',schema);
+let User: UserModel<UserDoc> = model<UserDoc>('User',schema);
 
-export{schema,UserModel};
+export{schema,User};

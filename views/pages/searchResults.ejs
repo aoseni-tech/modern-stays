@@ -58,30 +58,50 @@
     <input type="hidden" name="checkInDate" value="<%=checkInDate%>" class="view-stay_input">
     <input type="hidden" name="checkOutDate" value="<%=checkOutDate%>" class="view-stay_input">
     <input type="hidden" name="noDate" value="true" class="view-stay_input">
+
+
    <% stays.forEach(stay => { %>
-   <div class="search-card" >
-    <div class="card-div">
-      <img src="<%=stay.image%>" alt="" />   
-    </div>
-    <div class="card-div">
-       <h2><%=stay.title%></h2>
-       <% if(stay.reviews.length) { %> 
-        <p role="doc-tip" aria-roledescription="average-rating" class="average-rating">
-          <span style="color: #fd705d; font-size: 1em;">&bigstar;</span>  
-          <%=stay.rating?.toFixed(2)%>    
-          <span style="opacity: .5;">(<%= stay.reviews.length %> <% if(stay.reviews.length >1) {%>reviews <% }else{ %>review <% } %>   ) </span>
-        </p>
-      <% } %>
-       <p class="description"><%=stay.description.slice(0,100)%>...</p>
-       <span class="location"><%=stay.location%></span>
-       <div class="view-button">
-         <form action="/stays/<%=stay.id%>" id='<%=stay.title%>' target="_blank" class="view-stay">
-           <button class="show-link">view</button>
-         </form>  
-           <p><b>$<%=parseFloat(stay.price)%></b>/night</p>
-       </div>
-    </div>
-   </div>
+      <div class="search-card" >
+          <% if(stay.images.length > 1){ %> 
+            <div class="card-div carousel_scene" id="<%=stay.title.replace(/ /g,'')%>">
+              <a class="carousel_prevBtn carousel_Btn" role="button">&lsaquo;</a>
+              <a class="carousel_nxtBtn carousel_Btn" role="button">&rsaquo;</a>
+              <div class="carousel">
+                <% stay.images?.forEach(image => { %> 
+                  <div class="carousel-cell">
+                    <img src="<%=image.url%>" alt="stay-photos" />  
+                  </div>
+                <% } ) %> 
+              </div> 
+            </div>      
+          <% } else{%> 
+            <div class="card-div">
+              <img src="<%=stay.images[0]?.url || "https://res.cloudinary.com/dqhszkxiy/image/upload/v1634738564/ModernStays/No-picture_pp12rv.gif"%>" alt="stay-photos" />  
+            </div>
+          <% } %>
+
+        <div class="card-div">
+
+          <h2><%=stay.title%></h2>
+          <% if(stay.reviews.length) { %> 
+              <p role="doc-tip" aria-roledescription="average-rating" class="average-rating">
+                <span style="color: #fd705d; font-size: 1em;">&bigstar;</span>  
+                <%=stay.rating?.toFixed(2)%>    
+                <span style="opacity: .5;">(<%= stay.reviews.length %> <% if(stay.reviews.length >1) {%>reviews <% }else{ %>review <% } %>   ) </span>
+              </p>
+          <% } %>
+          <p class="description"><%=stay.description.slice(0,100)%>...</p>
+          <span class="location"><%=stay.location%></span>
+          <div class="view-button">
+            <form action="/stays/<%=stay.id%>" id='<%=stay.title%>' target="_blank" class="view-stay">
+              <button class="show-link">view</button>
+            </form>  
+            <p><b>$<%=parseFloat(stay.price)%></b>/night</p>
+          </div>
+          
+        </div>
+    
+      </div>
   <% }) %>
 
   <nav class="paginators">

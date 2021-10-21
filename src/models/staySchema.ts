@@ -1,12 +1,16 @@
 import { Schema, model,Document} from 'mongoose';
-import { UserModel } from './userSchema';
-import { ReviewModel } from './reviewSchema';
-import{BookModel} from './bookingSchema';
+import { User } from './userSchema';
+import { Review } from './reviewSchema';
+import{Book} from './bookingSchema';
+const {cloudinary} = require('../cloudinary/config')
 
-export interface Stay extends Document  {
+export interface StayDoc extends Document  {
   title: string;
-  price: String;
-  image: string;
+  price: string;
+  images:[{
+    url:string;
+    filename:string;
+  }];
   description: string;
   location: string;
   host: Schema.Types.ObjectId;
@@ -15,7 +19,7 @@ export interface Stay extends Document  {
   rating?: Number;
 }
 
-const schema = new Schema<Stay>({
+const staySchema = new Schema<StayDoc>({
     host: {
       type: Schema.Types.ObjectId,
       ref : 'User',
@@ -33,7 +37,7 @@ const schema = new Schema<Stay>({
         trim:true
     },
     price: {
-        type: Number,
+        type: String,
         validate: {
             validator: function(v:any) {
               return /^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/.test(v);
@@ -43,17 +47,10 @@ const schema = new Schema<Stay>({
           required:[true,'price is required and must match US dollar price format'],
           trim:true
     },
-    image: {
-      type: String,
-      validate: {
-        validator: function(v:any) {
-          return /^(ftp|http|https):\/\/[^ ']+$/.test(v);
-        },
-        message: () => `image url is not valid`
-      },
-      required:[true,'image url is required'],
-      trim:true
-  },
+    images:[{
+      url:String,
+      filename:String
+  }],
     description: {
       type: String,
       validate: {
@@ -97,7 +94,7 @@ const schema = new Schema<Stay>({
 
 async function calcRating (stayDoc:any) {
   let ratings:Array<number> = [0];
-  const reviews:Array<Document> = await ReviewModel.find({_id: {$in:stayDoc.reviews}})
+  const reviews:Array<Document> = await Review.find({_id: {$in:stayDoc.reviews}})
   if(reviews.length){
   reviews.forEach((review:any) => ratings.push(parseFloat(review.rating)));
   let rating = (ratings.reduce((a,b)=>a+b)/reviews.length).toFixed(2)
@@ -108,13 +105,13 @@ async function calcRating (stayDoc:any) {
   await stayDoc.save()
 }
 
-schema.post('findOneAndUpdate', async function (doc){
+staySchema.post('findOneAndUpdate', async function (doc){
   if(doc){
     calcRating (doc)
   }
 })
 
-schema.post('find', async function (docs){
+staySchema.post('find', async function (docs){
   if(docs){
     docs.forEach((doc:any) => {
       calcRating (doc)
@@ -122,15 +119,18 @@ schema.post('find', async function (docs){
   }
 })
 
-schema.post('findOneAndRemove',async(doc:Stay)=>{
+staySchema.post('findOneAndRemove',async(doc:StayDoc)=>{
   if(doc){
+    doc.images.forEach(async (image)=>{
+      await cloudinary.uploader.destroy(image.filename);
+    })
     await Promise.all([
-      ReviewModel.deleteMany({_id: {$in:doc.reviews}}),
-      UserModel.findByIdAndUpdate(doc.host,{$pull:{bookings:{$in:doc.bookings},reviews:{$in:doc.reviews}}}),
-      BookModel.deleteMany({_id: {$in:doc.bookings}})
+      Review.deleteMany({_id: {$in:doc.reviews}}),
+      User.findByIdAndUpdate(doc.host,{$pull:{bookings:{$in:doc.bookings},reviews:{$in:doc.reviews}}}),
+      Book.deleteMany({_id: {$in:doc.bookings}})
     ]) 
   }
 })
 
-const StayModel = model<Stay>('Stay',schema);
-export{schema,StayModel};
+const Stay = model<StayDoc>('Stay',staySchema);
+export{staySchema,Stay};

@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 import express, {Request, Response, NextFunction} from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
@@ -13,7 +17,7 @@ const staysRoute =  require('./routes/stays');
 const reviewsRoute = require('./routes/reviews');
 const bookingsRoute = require('./routes/bookings');
 const passport = require('passport');
-import { UserModel } from './models/userSchema';
+import { User } from './models/userSchema';
 const LocalStrategy = require('passport-local').Strategy;
 
 function createDateString(date:string) {
@@ -57,11 +61,11 @@ app.use(flash())
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new LocalStrategy(UserModel.authenticate()));
-passport.use(UserModel.createStrategy());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.use(User.createStrategy());
 
-passport.serializeUser(UserModel.serializeUser());
-passport.deserializeUser(UserModel.deserializeUser());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req:Request, res: Response,next) => {
   res.locals.location = req.query.location;

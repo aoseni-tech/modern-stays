@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
-import { UserModel} from '../models/userSchema';
-import { StayModel } from '../models/staySchema';
-import { BookModel} from '../models/bookingSchema';
+import { User, UserDoc} from '../models/userSchema';
+import { Stay } from '../models/staySchema';
+import { Book} from '../models/bookingSchema';
 import passport from 'passport';
 
 module.exports.renderSignUpForm = (req:Request, res: Response)=>{
@@ -13,8 +13,8 @@ module.exports.renderSignUpForm = (req:Request, res: Response)=>{
 module.exports.registerUser = async(req:Request,res:Response)=>{
     try {
         const { email, username, password } = req.body;
-        const user = new UserModel({ email, username });
-        UserModel.register(user, password,(err,user) =>{
+        const user = new User({ email, username });
+        User.register(user, password,(err,user:UserDoc) =>{
             if(err) {
                 req.flash('error',err.message)
                 return res.redirect('/register')
@@ -56,8 +56,8 @@ module.exports.profilePage = async (req:Request,res:Response) =>{
     let title = `my profile-@${req.user?.username}`
     let myStays = req.user?.stays
     let myBookings = req.user?.bookings
-    let stays = await StayModel.find({_id:{$in:myStays}}).select('title location')
-    let bookings = await BookModel.find({_id:{$in:myBookings}}).select('lodgeIn lodgeOut').populate('stay','title location')
+    let stays = await Stay.find({_id:{$in:myStays}}).select('title location')
+    let bookings = await Book.find({_id:{$in:myBookings}}).select('lodgeIn lodgeOut').populate('stay','title location')
     let page = 'profile'
     res.render('pages/user',{title,page,stays,bookings})
 }
@@ -69,7 +69,7 @@ module.exports.deleteUserAccount = async (req:Request,res:Response) =>{
         req.flash('info',`Permission denied: You can not delete another user's account`)
         return res.redirect('/');
     }
-    await UserModel.findByIdAndRemove(userId);
+    await User.findByIdAndRemove(userId);
     req.flash('info','Your account have been deleted')
     res.redirect('/')
 }

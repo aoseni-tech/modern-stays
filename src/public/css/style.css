@@ -8,6 +8,12 @@
   box-sizing: border-box;
 }
 
+:root {
+  --firstmonthGrid: 1/1;
+  --secondmonthGrid: 1/1;
+  --scene-height: 100vh;
+}
+
 html {
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -174,12 +180,6 @@ a{
   margin: 1.3em 0;
   max-width: 100%;
   color: #dc3545;
-}
-
-:root {
-  --firstmonthGrid: 1/1;
-  --secondmonthGrid: 1/1;
-  --scene-height: 100vh;
 }
 
 /* NAVBAR */
@@ -519,7 +519,7 @@ a{
   max-width: 830px;
   height: 280px;
   border-radius: 0.2em;
-  perspective: 11000px;
+  perspective: 1000px;
   background-color: white;
   user-select: none;
   position: absolute;
@@ -550,7 +550,8 @@ a{
   position: relative;
   transform: translateZ(-290px) rotateY(0deg);
   -webkit-transform: translateZ(-290px) rotateY(0deg);
-  transition: all 0.2s ease-in-out;
+  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
 }
 
 .calendar {
@@ -1041,7 +1042,45 @@ a{
 .search-card:last-child {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-.search-card img {
+
+.carousel_scene {
+  perspective: 100000px;
+  -webkit-perspective: 100000px;
+}
+.carousel_Btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  z-index: 1;
+}
+.carousel_prevBtn {
+  left: 0.5em;
+}
+.carousel_nxtBtn {
+  right: 0.5em;
+}
+
+.carousel {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  position: relative;
+  display: flex;
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+}
+
+.carousel-cell {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.carousel-cell img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1063,6 +1102,11 @@ a{
 }
 .card-div h2 {
   font-weight: 600;
+}
+.card-div img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }
 .average-rating {
   position: absolute;
@@ -1099,7 +1143,8 @@ a{
   font-weight: 500;
 }
 
-.paginators a {
+.paginators a,
+.carousel_Btn {
   font-weight: 600;
   font-size: 1.2em;
   padding: 0.5em .8em;
@@ -1167,6 +1212,20 @@ a{
   border-radius: 0.2em;
 }
 
+.editImageBtn {
+  position: absolute;
+  right: .5em;
+  bottom: .5em;
+  color: #fff;
+  background-color: #0dcaf0;
+  font-size: 0.8em;
+  font-weight: 600;
+  padding: 0.5em 1em;
+  border-radius: 0.4em;
+  z-index: 1;
+  box-shadow: 0px 0px 15px 2px rgb(0 0 0 / 25%);
+}
+
 .stay-delete_form {
   position: absolute;
   bottom: 0.5em;
@@ -1189,7 +1248,7 @@ a{
 .stay-details__price {
   position: absolute;
   right: .5em;
-  bottom: .5em;
+  top: .5em;
   font-weight: 500;
   background-color: #fff;
   display: flex;
@@ -1198,6 +1257,7 @@ a{
   width: 100px;
   height: 30px;
   border-radius: 0.2em;
+  z-index: 1;
 }
 
 .stay-details__description {
@@ -1347,6 +1407,8 @@ a{
   top: -60%;
   padding: 0;
   color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
 }
 
 .review:nth-child(1) {
@@ -1478,6 +1540,8 @@ a{
   color: transparent;
   background: #afb8c1;
   cursor: pointer;
+  background-clip: text;
+  -webkit-background-clip: text;
 }
 
 .review-form_input {
@@ -1761,6 +1825,96 @@ button#actDelete-btn {
   border-bottom: 2px solid #0d6efd;
   color: #0d6efd;
 }
+/* DRAG AND DROP IMAGE PAGE  */
+.editImages {
+  width: 90%;
+  max-width: 600px;
+  margin: 1em auto;
+}
+
+.editImages h1 {
+  font-size: 1.5em;
+}
+
+.editImages h1+p {
+  font-size: .8em;
+  opacity: .5;
+  margin-bottom: 1em;
+}
+
+.imageList {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.imageList .imageContainer{
+  position: relative;
+  margin: .5em;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 0.5em;
+  width: 150px;
+  max-width: 50%;
+}
+
+.imageList .imageContainer img{
+   max-width: 100%;
+   height: auto;
+   min-height: 150px;
+}
+
+.imageContainer input[type="checkbox"] {
+  position: absolute;
+  top: .5em;
+  right: .5em;
+  width: 1.2em;
+  height: 1.2em;
+  z-index: 3;
+}
+
+.imageContainer input[type="checkbox"]:checked ~ img
+ {
+  opacity: .5;
+}
+
+.post-form input[type="file"]{
+  display: none;
+}
+
+.dropbox {
+    border: 2px dotted #ff8474;
+    border-radius: .5em;
+    width:  100%;
+    min-height: 150px;
+    max-width: 100%;
+    overflow-x: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    margin: .2em auto 1em;
+}
+.dragEnter {
+  box-shadow: 0 0 0 0.25rem rgb(255 132 116/25%);
+  border: 2px solid #ff8474;
+}
+
+.dropboxImg {
+    width: 150px;
+    height: 150px;
+    margin: 0.5em;
+}
+
+#fileElem {
+  display: none;
+}
+
+.updatePhoto-btn {
+  margin: 1em 0;
+}
 
 /* ERROR PAGE */
 .error-page {
@@ -1910,7 +2064,8 @@ footer {
   color: #fff;
 }
 
-.paginators a:hover {
+.paginators a:hover,
+.carousel_Btn:hover {
   box-shadow: 0px 0px 0px 1px #d3d3d3;
 }
 .paginators .disabled-btn:hover {

@@ -1,8 +1,8 @@
 import {Schema, model,Model,Document} from 'mongoose';
-import { UserModel } from './userSchema';
-import { StayModel } from './staySchema';
+import { User } from './userSchema';
+import { Stay } from './staySchema';
 
-export interface Book extends Document {
+export interface BookDoc extends Document {
     lodgeIn: Date;
     lodgeOut: Date;
     totalFee: String;
@@ -10,7 +10,7 @@ export interface Book extends Document {
     stay: Schema.Types.ObjectId;
 }
 
-const bookSchema = new Schema<Book>({
+const bookSchema = new Schema<BookDoc>({
     lodgeIn:  {
         type:Date,
         required:[true,'Check-in date is required to book'],
@@ -40,11 +40,11 @@ const bookSchema = new Schema<Book>({
 bookSchema.post('findOneAndRemove',async(doc)=>{
     if(doc){
       await Promise.all([
-        UserModel.findByIdAndUpdate(doc.user,{$pull:{bookings:doc._id}}),
-        StayModel.findByIdAndUpdate(doc.stay,{$pull:{bookings:doc._id}})
+        User.findByIdAndUpdate(doc.user,{$pull:{bookings:doc._id}}),
+        Stay.findByIdAndUpdate(doc.stay,{$pull:{bookings:doc._id}})
       ]) 
     }
   })
 
-const BookModel = model<Book>('Book',bookSchema);
-export{BookModel,bookSchema};
+const Book = model<BookDoc>('Book',bookSchema);
+export{Book,bookSchema};

@@ -1,13 +1,13 @@
 import {Request, Response, NextFunction} from 'express';
-import { BookModel, bookSchema } from '../models/bookingSchema';
-import { StayModel } from '../models/staySchema';
+import { Book, bookSchema } from '../models/bookingSchema';
+import { Stay } from '../models/staySchema';
 const wrapAsync = require('../utils/wrapAsync');
 
 let bookErrors: string[]  = [];
 
 
 const check_validity = (req:Request,res:Response,next:NextFunction) =>{
-    const booking = new BookModel(req.body);
+    const booking = new Book(req.body);
     const {id} : any = req.params;
     booking.stay = id;
     booking.user = req.user?._id
@@ -48,8 +48,8 @@ const check_dates = (req:Request,res:Response,next:NextFunction) =>{
 
 const getBookings = wrapAsync(async(req:Request,res:Response,next:NextFunction) =>{
     const {id} = res.locals
-    const stay = await StayModel.findById(id).select('bookings')
-    let bookings = BookModel.find({_id:{$in:stay?.bookings}})
+    const stay = await Stay.findById(id).select('bookings')
+    let bookings = Book.find({_id:{$in:stay?.bookings}})
     res.locals.bookings = bookings;
     next();
 })

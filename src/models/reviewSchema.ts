@@ -1,15 +1,12 @@
 import {Schema, model,Document } from 'mongoose';
-import { StayModel } from './staySchema';
-import { UserModel } from './userSchema';
-import{BookModel} from './bookingSchema';
 
-export interface Review extends Document {
+export interface ReviewDoc extends Document {
     rating: Number;
     comment: String;
     user?: Schema.Types.ObjectId;
 }
 
-const reviewSchema = new Schema<Review>({
+const reviewSchema = new Schema<ReviewDoc>({
     rating: {
         type: Number,
         max:[5,'rating can not be greater than 5'],
@@ -26,6 +23,6 @@ const reviewSchema = new Schema<Review>({
     }
 })
 
-const ReviewModel = model<Review>('Review',reviewSchema);
+const Review = model<ReviewDoc>('Review',reviewSchema);
 
-export{ReviewModel,reviewSchema}
+export{Review,reviewSchema}

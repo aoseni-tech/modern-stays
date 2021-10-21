@@ -49,17 +49,17 @@ let clearLocation = false;
 let isBooking = false;
 
 //get booking dates that are unavailable
-let stay_id = document.querySelector('.book-form')?.getAttribute('action');
+let route = document.querySelector('.book-form')?.getAttribute('action');
 let bookings:Array<{lodgeIn:string,lodgeOut:string}> ;
 const unavailable_dates = async () =>{
   try {
-    let response = await fetch(`http://localhost:3000${stay_id}`);
+    let response = await fetch(`http://localhost:3000${route}`);
     bookings = await response.json();
   } catch(e:any){
     console.log(e.message)
   }
 }
-if(stay_id) {
+if(route) {
   unavailable_dates();
 }
 

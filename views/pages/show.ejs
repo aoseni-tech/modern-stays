@@ -8,10 +8,36 @@
         <h2> <%= stay.title %> </h2>
         <p class="muted stay-details__location"><%= stay.location %>. </p>
       </div>
-      <div class="container__show-image">
-        <img src="<%=stay.image%>" alt="">
-        <p role="heading" class="stay-details__price">$<b class="price"><%=parseFloat(stay.price)%></b>/night</p>
-      </div>
+
+      <p role="contentinfo" class="stay-details__price">$<b class="price"><%=parseFloat(stay.price)%></b>/night</p>
+
+      
+        <% if(stay.images.length>1){ %> 
+          <div class="container__show-image carousel_scene" id="<%=stay.title.replace(/ /g,'')%>">
+            <a class="carousel_prevBtn carousel_Btn" role="button">&lsaquo;</a>
+            <a class="carousel_nxtBtn carousel_Btn" role="button">&rsaquo;</a>
+            <% if(`${stay?.host}` === `${currentUser?._id}`){ %> 
+            <a href="/stays/<%= stay._id %>/edit/images" class="editImageBtn">Edit Images</a>
+            <% } %> 
+            <div class="carousel">
+              <% stay.images?.forEach(image => { %> 
+                <div class="carousel-cell">
+                  <img src="<%=image.url%>" alt="stay-photos" />  
+                </div>
+              <% } ) %> 
+            </div>       
+          </div>
+        <% } else{%> 
+          <div class="container__show-image">
+            <% if(`${stay?.host}` === `${currentUser?._id}`){ %> 
+              <a href="/stays/<%= stay._id %>/edit/images" class="editImageBtn">Edit Images</a>
+              <% } %>
+            <img src="<%=stay.images[0]?.url || "https://res.cloudinary.com/dqhszkxiy/image/upload/v1634738564/ModernStays/No-picture_pp12rv.gif"%>" alt="stay-photos" />  
+          </div>
+        <% } %> 
+      
+
+      
       <p class= "stay-details__description"><%=stay.description%></p>
       <% if(`${stay?.host}` === `${currentUser?._id}`){ %> 
       <a class="update-form__link" href='/stays/<%=stay._id%>/update'>Update Listing</a>
