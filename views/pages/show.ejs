@@ -82,6 +82,8 @@
 
   </div>
 
+  <div id="map" ></div>
+
   <div class="reviews-container">
     <% if(reviews.length) { %>
     <h2>Ratings & Reviews</h2>
@@ -181,6 +183,7 @@
       </div>
       <% } %> 
   </div>
+  
 
   <% bookings.forEach(booking =>{%> 
     <form action="/stays/<%=stay._id%>/bookings/<%=booking._id%>?_method=DELETE" method="post">
@@ -190,5 +193,10 @@
 
 </section>
 
-<% block('calendar').append('<script src="/scripts/calendar.js"></script>') %>
-<% block('script').append('<script src="/scripts/script.js"></script>') %>
+<script>
+  const mapToken = `<%-process.env.MAPBOX_TOKEN%>`;
+  const coordinates = `<%-stay.geometry.coordinates%>`;
+  const stay_title = `<%-stay.title%>`;
+  const stay_location = `<%-stay.location%>`;
+</script>
+<%- include('../partials/scripts') %> 

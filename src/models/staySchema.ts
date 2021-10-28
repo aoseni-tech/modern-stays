@@ -13,6 +13,10 @@ export interface StayDoc extends Document  {
   }];
   description: string;
   location: string;
+  geometry:{
+    type:string,
+    coordinates:[number]
+  };
   host: Schema.Types.ObjectId;
   reviews?: Array<Schema.Types.ObjectId>;
   bookings?: Array<Schema.Types.ObjectId>;
@@ -74,6 +78,15 @@ const staySchema = new Schema<StayDoc>({
       required:[true,'location is required'],
       trim:true
   },
+  geometry: {
+    type: {
+      type: String,
+      enum: ['Point']
+    },
+    coordinates: {
+      type: [Number]
+    }
+  },
   reviews: [
     {
       type: Schema.Types.ObjectId,
@@ -92,6 +105,14 @@ const staySchema = new Schema<StayDoc>({
   }
 });
 
+staySchema.set('toJSON', { virtuals: true });
+
+staySchema.virtual('properties.mapText').get( function () {
+  return `<strong><a href='/stays/${this._id}' target='_blank'>${this.title}</a></strong>
+          <p class='muted'>${this.location}</p>
+         `
+});
+
 async function calcRating (stayDoc:any) {
   let ratings:Array<number> = [0];
   const reviews:Array<Document> = await Review.find({_id: {$in:stayDoc.reviews}})
@@ -105,17 +126,17 @@ async function calcRating (stayDoc:any) {
   await stayDoc.save()
 }
 
-staySchema.post('findOneAndUpdate', async function (doc){
-  if(doc){
-    calcRating (doc)
-  }
-})
-
 staySchema.post('find', async function (docs){
   if(docs){
     docs.forEach((doc:any) => {
       calcRating (doc)
     })  
+  }
+})
+
+staySchema.post('findOneAndUpdate', async function (doc){
+  if(doc){
+    calcRating (doc)
   }
 })
 

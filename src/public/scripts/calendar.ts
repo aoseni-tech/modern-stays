@@ -1,6 +1,7 @@
 const calendars: NodeListOf<HTMLElement> = document.querySelectorAll('.calendar');
-const prev = document.querySelector('.prev-btn') as HTMLElement;
-const next = document.querySelector('.next-btn') as HTMLElement;
+const calendar_container = document.querySelector('.calendar-container')! as HTMLElement;
+const prevBtn_Cal = document.querySelector('.prev-btn')! as HTMLElement;
+const nextBtn_Cal = document.querySelector('.next-btn')! as HTMLElement;
 const slider = document.querySelector('.slider') as HTMLElement;
 const daysList = document.querySelectorAll('.days')! as NodeListOf<HTMLElement>;
 const months = document.querySelectorAll('.month')! as NodeListOf<HTMLElement>;
@@ -224,7 +225,8 @@ checkout:HTMLElement,checkoutinput:HTMLInputElement,checkoutsection:HTMLElement
 
         }
       }
-      generateMonths(checkin,checkininput,checkout,checkoutinput);
+      if(isBooking) generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
+      else generateMonths(checkIn,checkInInput,checkOut,checkOutInput)
     });
 
 }
@@ -271,9 +273,11 @@ function generateMonths(
 
   if (window.innerWidth > 800) {
     if(isBooking) {
-      let top = (bookingForm.offsetTop - bookingForm.clientHeight) - 2;
-      scene.style.top = `${top}px`;
-      scene.style.left = `2%`;  
+      let top = (bookingForm.offsetTop - (bookingForm.offsetHeight*2) - scene.offsetHeight);
+      let left = `2em`
+      calendar_container.style.top = `${top}px`;
+      calendar_container.style.margin = `${left}`;  
+
     } 
     const calendars = document.querySelectorAll('.calendar')!as NodeListOf<HTMLElement>;
     for (let i = 0; i < calendars.length; i++) {
@@ -285,8 +289,8 @@ function generateMonths(
       }
     }
   } else if (window.innerWidth <= 800) {
-    scene.style.top = ``;
-    scene.style.left = ``; 
+    calendar_container.style.top = `0`;
+    calendar_container.style.margin = ``; 
     const daysList = document.querySelectorAll('.days')! as NodeListOf<HTMLElement>;
     const months = document.querySelectorAll('.month')! as NodeListOf<HTMLElement>;
     n = d.getMonth();
@@ -302,10 +306,12 @@ function generateMonths(
 window.addEventListener('load', ()=>{
   if(isBooking) generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
   else generateMonths(checkIn,checkInInput,checkOut,checkOutInput)
+  rotateCalendars()
 });
 window.addEventListener('resize',()=>{
   if(isBooking) generateMonths(lodgeInDate,lodgeIn,lodgeOutDate,lodgeOut)
   else generateMonths(checkIn,checkInInput,checkOut,checkOutInput)
+  rotateCalendars()
 });
 
 slider.addEventListener('scroll', function () {
@@ -336,7 +342,7 @@ slider.addEventListener('scroll', function () {
 function rotateCalendars() {
   if (window.innerWidth > 800) {
     slider.style.transform = `translateZ(-290px) rotateY(${x}deg)`;
-    prev.classList.add('disabled-btn');
+    prevBtn_Cal.classList.add('disabled-btn');
     for (let i = 0; i < calendars.length; i++) {
       calendars[i].style.transform = `rotateY(${
         i * angle
@@ -352,21 +358,18 @@ function rotateCalendars() {
   }
 }
 
-window.addEventListener('load', rotateCalendars);
-window.addEventListener('resize', rotateCalendars);
-
 function disableBtn() {
   if (count > 0) {
-    prev.classList.remove('disabled-btn');
+    prevBtn_Cal.classList.remove('disabled-btn');
     startSlide = true;
   } else {
-    prev.classList.add('disabled-btn');
+    prevBtn_Cal.classList.add('disabled-btn');
     startSlide = false;
   }
 }
 
 let currentMonth = n;
-prev.addEventListener('click', function (e) {
+prevBtn_Cal.addEventListener('click', function (e) {
   e.preventDefault()
   if (startSlide) {
     count--;
@@ -379,7 +382,7 @@ prev.addEventListener('click', function (e) {
   } 
 });
 
-next.addEventListener('click', (e) => {
+nextBtn_Cal.addEventListener('click', (e) => {
   e.preventDefault()
   count++;
   n = (Math.floor(count/4)*4) + currentMonth;
@@ -399,8 +402,6 @@ const checkOutSection = document.querySelector('#check-out-section')! as HTMLEle
 const closeCalendar = document.querySelector('.close-cal')! as HTMLElement;
 const searchForm = document.querySelector('#search-form')! as HTMLFormElement;
 const clear_location_input = document.querySelector('.clear-location')! as HTMLElement;
-const close_warning_modal = document.querySelector('.orientation-warning span')! as HTMLElement;
-const orientation_warning_modal = document.querySelector('.orientation-warning')! as HTMLElement;
 const paginators = document.querySelectorAll('.page')!as NodeListOf<HTMLElement>;
 const pages = document.querySelector('.paginators span')!as HTMLElement;
 const skips = document.querySelector('#skips')!as HTMLInputElement;
@@ -483,10 +484,6 @@ clear_location_input.addEventListener('mousedown', function(e) {
       this.classList.remove('show-clear-location');
       locationInput.focus();
 })
-//event listener to close orientation warning
-close_warning_modal.addEventListener('click', function(e) {
-  orientation_warning_modal.classList.add('close-modal_orientation');
-})
 
 //event listener to displayCalendar && add focus on form element
 function changeCalStyle() {
@@ -497,9 +494,9 @@ function changeCalStyle() {
   lodgeInDate?.classList.remove('form-focus')
   lodgeOutDate?.classList.remove('form-focus')
   toggleCalendarScene();
-  scene.style.top = ``;
-  scene.style.left = ``;
-  scene.classList.remove('book-cal')
+  calendar_container.style.top = ``;
+  calendar_container.style.margin = ``;
+  calendar_container.classList.remove('book-cal')
 }
 
 checkInSection.addEventListener('click', function (e) {
@@ -598,18 +595,16 @@ searchForm.addEventListener('submit', function () {
 function toggleCalendarScene() {
   if (!showCalendar) {
     isBooking = false;
-    scene.classList.remove('display-calendar','book-cal');
-    scene.style.top = ``;
-    scene.style.left = ``;
+    calendar_container.classList.remove('display-calendar','book-cal');
+    calendar_container.style.top = ``;
+    calendar_container.style.margin = ``;
     body.classList.remove('hidden');
     navBar.classList.remove('hide');
-    orientation_warning_modal.classList.add('close-modal_orientation');
   } else if (showCalendar) {
     disableBtn()    
-    scene.classList.add('display-calendar');
+    calendar_container.classList.add('display-calendar');
     body.classList.add('hidden');
     navBar.classList.add('hide');
-    orientation_warning_modal.classList.remove('close-modal_orientation');
   }
 }
 
@@ -624,8 +619,8 @@ body.addEventListener('click', function (e) {
     !checkOutSection.contains(e.target as HTMLElement) &&
     !lodgeInDate?.contains(e.target as HTMLElement) &&
     !lodgeOutDate?.contains(e.target as HTMLElement) &&
-    !orientation_warning_modal.contains(e.target as HTMLElement) &&
     !scene.contains(e.target as HTMLElement) &&
+    !calendar_container.contains(e.target as HTMLElement)&&
     !(<HTMLElement>e.target).classList.contains('day') 
   ) {
     checkInSection.classList.remove('form-focus');

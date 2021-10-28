@@ -5,7 +5,7 @@ import {User} from '../models/userSchema'
 import { Book,BookDoc } from '../models/bookingSchema';
 const{reviewErrors} = require('../schemaValidations/reviewSchemaValidation');
 const{bookErrors} = require('../schemaValidations/bookSchemaValidation');
-const {cloudinary} = require('../cloudinary/config')
+const {cloudinary} = require('../cloudinary/config');
 
 module.exports.getStays = async(req:Request, res: Response)=>{  
     let{query,sorts,location,page_offset,start,end}=res.locals;
@@ -42,8 +42,14 @@ module.exports.getStays = async(req:Request, res: Response)=>{
   
   }
 
+  module.exports.staysData = async(req:Request, res: Response)=>{
+    let stays = await Stay.find({});
+    res.json({features: stays})  
+  }
+
   module.exports.createNewStay = async (req:Request, res: Response)=>{
     const {stay} = res.locals;
+
     await Promise.all(
       [
         User.findByIdAndUpdate(stay.host,{$push:{stays:stay._id}}),
@@ -52,7 +58,7 @@ module.exports.getStays = async(req:Request, res: Response)=>{
     )
 
     req.flash('success', `Successfully added to the listings:  ${stay.title}, ${stay.location}.`)
-    res.redirect(`/stays/${stay._id}/editImages`);
+    res.redirect(`/stays/${stay._id}/edit/images`);
   }
 
   module.exports.renderNewStayForm = (req:Request, res: Response)=>{
@@ -68,6 +74,18 @@ module.exports.getStays = async(req:Request, res: Response)=>{
     res.render('pages/update',{title:`Update ${title}.MS`,stay,page});  
   }
 
+  module.exports.editStay = async(req:Request, res: Response)=>{
+    const {id} = req.params;
+    const {geometry} = res.locals;
+    req.body.geometry = geometry;
+    const update = req.body;
+    const stay = await Stay.findByIdAndUpdate(id, update,{ new: true })
+    let {title,location} = stay!;
+
+    req.flash('success', `Updated your listing:  ${title}, ${location}.`)
+    res.redirect(`/stays/${id}`);
+ }
+
   module.exports.renderEditImageForm = async(req:Request, res: Response)=>{
     const stay = await Stay.findById(req.params.id);
     const title = stay?.title;
@@ -76,7 +94,6 @@ module.exports.getStays = async(req:Request, res: Response)=>{
   }
 
   module.exports.addImages = async(req:Request, res: Response)=>{
-
     const {deleteImages} = req.body;
     const stay = await Stay.findById(req.params.id);
     if(deleteImages){
@@ -98,8 +115,7 @@ module.exports.getStays = async(req:Request, res: Response)=>{
       })
       await stay?.save()
     } 
-    res.redirect(`/stays/${stay?._id}`);  
-
+    res.redirect(`/stays/${stay?._id}`); 
   }
 
   module.exports.showStay = async(req:Request, res: Response)=>{
@@ -118,15 +134,6 @@ module.exports.getStays = async(req:Request, res: Response)=>{
     bookErrors.length = 0;
     reviewErrors.length = 0;
   }
-
-  module.exports.editStay = async(req:Request, res: Response)=>{
-    const {id} = req.params;
-    const update = req.body;
-    const stay = await Stay.findByIdAndUpdate(id, update)
-    let {title,location} = stay!;
-    req.flash('success', `Updated your listing:  ${title}, ${location}.`)
-    res.redirect(`/stays/${id}`);
- }
 
  module.exports.deleteStay = async(req:Request, res: Response)=>{
     const {id} = req.params;

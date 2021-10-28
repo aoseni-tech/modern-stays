@@ -46,135 +46,218 @@
     </form>
   </div>
 
-  <div class="scene calendar-container">
+  <section class="calendar-container">
 
-    <div class="span-button_container">
-       <span class="cal-clear">Clear</span>
-       <span class="close-cal">&Cross;</span>
+    <div class="container_absolute">
+      
+      <div class="cal-btn_container">
+        <button class="prev-btn cal-btn disabled-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi-chevron-compact-left"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"
+            />
+          </svg>
+        </button>
+        <button class="next-btn cal-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi-chevron-compact-right"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z"
+            />
+          </svg>
+        </button>
+      </div>
+  
+      <div class="scene"> 
+        <div class="sm-cal-form">
+          <div class="sm-date-picker">
+            <span id="sm-check-in-label" class="sm-form-label">Check-in</span>
+            <span id="sm-cal-check-in" class="sm-cal-value"></span>
+          </div>
+          <h4 class="sm-date-picker"><b>&rarr;</b></h4>
+          <div class="sm-date-picker">
+            <span id="sm-check-out-label" class="sm-form-label">Check-out</span>
+            <span id="sm-cal-check-out" class="sm-cal-value"></span>
+          </div>
+        </div>
+    
+        <div class="continue-box">
+          <p class="no-of-nights"></p>
+          <span class="cont-btn" role="button">Continue</span>
+        </div>
+    
+        <div class="slider calendar-control">
+          <div class="calendar">
+            <div class="weeks-container">
+              <div class="weeks">
+                <p class="week">SU</p>
+                <p class="week">MO</p>
+                <p class="week">TU</p>
+                <p class="week">WE</p>
+                <p class="week">TH</p>
+                <p class="week">FR</p>
+                <p class="week">SA</p>
+              </div>
+              <div class="weeks">
+                <p class="week">SU</p>
+                <p class="week">MO</p>
+                <p class="week">TU</p>
+                <p class="week">WE</p>
+                <p class="week">TH</p>
+                <p class="week">FR</p>
+                <p class="week">SA</p>
+              </div>
+            </div>
+            <div class="months">
+              <h3 class="month-1 month"></h3>
+              <h3 class="month-2 month"></h3>
+            </div>
+            <div class="calendar-days">
+              <div class="grid-day-1 days"></div>
+              <div class="grid-day-2 days"></div>
+            </div>
+          </div>
+    
+          <div class="calendar">
+            <div class="weeks-container">
+              <div class="weeks">
+                <p class="week">SU</p>
+                <p class="week">MO</p>
+                <p class="week">TU</p>
+                <p class="week">WE</p>
+                <p class="week">TH</p>
+                <p class="week">FR</p>
+                <p class="week">SA</p>
+              </div>
+              <div class="weeks">
+                <p class="week">SU</p>
+                <p class="week">MO</p>
+                <p class="week">TU</p>
+                <p class="week">WE</p>
+                <p class="week">TH</p>
+                <p class="week">FR</p>
+                <p class="week">SA</p>
+              </div>
+            </div>
+            <div class="months">
+              <h3 class="month-1 month"></h3>
+              <h3 class="month-2 month"></h3>
+            </div>
+            <div class="calendar-days">
+              <div class="grid-day-1 days"></div>
+              <div class="grid-day-2 days"></div>
+            </div>
+          </div>
+    
+          <div class="calendar">
+            <div class="weeks-container">
+              <div class="weeks">
+                <p class="week">SU</p>
+                <p class="week">MO</p>
+                <p class="week">TU</p>
+                <p class="week">WE</p>
+                <p class="week">TH</p>
+                <p class="week">FR</p>
+                <p class="week">SA</p>
+              </div>
+              <div class="weeks">
+                <p class="week">SU</p>
+                <p class="week">MO</p>
+                <p class="week">TU</p>
+                <p class="week">WE</p>
+                <p class="week">TH</p>
+                <p class="week">FR</p>
+                <p class="week">SA</p>
+              </div>
+            </div>
+            <div class="months">
+              <h3 class="month-1 month"></h3>
+              <h3 class="month-2 month"></h3>
+            </div>
+            <div class="calendar-days">
+              <div class="grid-day-1 days"></div>
+              <div class="grid-day-2 days"></div>
+            </div>
+          </div>
+    
+          <div class="calendar">
+            <div class="weeks-container">
+              <div class="weeks">
+                <p class="week">SU</p>
+                <p class="week">MO</p>
+                <p class="week">TU</p>
+                <p class="week">WE</p>
+                <p class="week">TH</p>
+                <p class="week">FR</p>
+                <p class="week">SA</p>
+              </div>
+              <div class="weeks">
+                <p class="week">SU</p>
+                <p class="week">MO</p>
+                <p class="week">TU</p>
+                <p class="week">WE</p>
+                <p class="week">TH</p>
+                <p class="week">FR</p>
+                <p class="week">SA</p>
+              </div>
+            </div>
+            <div class="months">
+              <h3 class="month-1 month"></h3>
+              <h3 class="month-2 month"></h3>
+            </div>
+            <div class="calendar-days">
+              <div class="grid-day-1 days"></div>
+              <div class="grid-day-2 days"></div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="weeks-container" id="mobile-weeks">
+          <div class="weeks">
+            <p class="week">SU</p>
+            <p class="week">MO</p>
+            <p class="week">TU</p>
+            <p class="week">WE</p>
+            <p class="week">TH</p>
+            <p class="week">FR</p>
+            <p class="week">SA</p>
+          </div>
+          <div class="weeks">
+            <p class="week">SU</p>
+            <p class="week">MO</p>
+            <p class="week">TU</p>
+            <p class="week">WE</p>
+            <p class="week">TH</p>
+            <p class="week">FR</p>
+            <p class="week">SA</p>
+          </div>
+        </div>
+  
+      </div>
+  
+      <div class="span-button_container">
+        <span class="cal-clear">Clear</span>
+        <p class="no-of-nights" id="lodge-nights"></p>
+        <span class="close-cal">Close</span>
+      </div>
+
     </div>
 
-    <div class="sm-cal-form">
-      <div class="sm-date-picker">
-        <span id="sm-check-in-label" class="sm-form-label">Check-in</span>
-        <span id="sm-cal-check-in" class="sm-cal-value"></span>
-      </div>
-      <h4 class="sm-date-picker"><b>&rarr;</b></h4>
-      <div class="sm-date-picker">
-        <span id="sm-check-out-label" class="sm-form-label">Check-out</span>
-        <span id="sm-cal-check-out" class="sm-cal-value"></span>
-      </div>
-    </div>
+  </section>
 
-    <div class="continue-box">
-      <p class="no-of-nights"></p>
-      <span class="cont-btn" role="button">Continue</span>
-    </div>
-
-    <div class="slider calendar-control">
-      <div class="calendar">
-        <div class="months">
-          <h3 class="month-1 month"></h3>
-          <h3 class="month-2 month"></h3>
-        </div>
-        <div class="calendar-days">
-          <div class="grid-day-1 days"></div>
-          <div class="grid-day-2 days"></div>
-        </div>
-      </div>
-
-      <div class="calendar">
-        <div class="months">
-          <h3 class="month-1 month"></h3>
-          <h3 class="month-2 month"></h3>
-        </div>
-        <div class="calendar-days">
-          <div class="grid-day-1 days"></div>
-          <div class="grid-day-2 days"></div>
-        </div>
-      </div>
-
-      <div class="calendar">
-        <div class="months">
-          <h3 class="month-1 month"></h3>
-          <h3 class="month-2 month"></h3>
-        </div>
-        <div class="calendar-days">
-          <div class="grid-day-1 days"></div>
-          <div class="grid-day-2 days"></div>
-        </div>
-      </div>
-
-      <div class="calendar">
-        <div class="months">
-          <h3 class="month-1 month"></h3>
-          <h3 class="month-2 month"></h3>
-        </div>
-        <div class="calendar-days">
-          <div class="grid-day-1 days"></div>
-          <div class="grid-day-2 days"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="weeks-container">
-      <div class="weeks">
-        <p class="week">SU</p>
-        <p class="week">MO</p>
-        <p class="week">TU</p>
-        <p class="week">WE</p>
-        <p class="week">TH</p>
-        <p class="week">FR</p>
-        <p class="week">SA</p>
-      </div>
-      <div class="weeks">
-        <p class="week">SU</p>
-        <p class="week">MO</p>
-        <p class="week">TU</p>
-        <p class="week">WE</p>
-        <p class="week">TH</p>
-        <p class="week">FR</p>
-        <p class="week">SA</p>
-      </div>
-    </div>
-    <div>
-      <p class="no-of-nights" id="lodge-nights"></p>
-    </div>
-    <div>
-      <button class="prev-btn cal-btn disabled-btn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          fill="currentColor"
-          class="bi-chevron-compact-left"
-          viewBox="0 0 16 16"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"
-          />
-        </svg>
-      </button>
-      <button class="next-btn cal-btn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          fill="currentColor"
-          class="bi-chevron-compact-right"
-          viewBox="0 0 16 16"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z"
-          />
-        </svg>
-      </button>
-    </div>
-  </div>
 </section>
-
-<div class="orientation-warning">
-  <span style="font-size: 1.2em; font-weight: 600;">&Cross;</span>
-  <p>For a better exprience please use the site in potrait mode</p>
-</div>

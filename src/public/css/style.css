@@ -27,6 +27,24 @@ body {
   position: relative;
   padding-bottom: 2em;
 }
+
+/* MAPBOX STYLES  */
+.mapboxgl-popup-close-button {
+  margin-left: 1em;
+  margin-bottom: 0.5em;
+  width: 1em;
+  font-size: 1.5em;
+  color: #ff0000;
+
+}
+.mapboxgl-popup-content h1 {
+  margin-top: 0.5em;
+  margin-right: 0.5em;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* COMMON CLASS STYLES  */
 .overflow-hide {
   overflow: hidden;
 }
@@ -40,7 +58,7 @@ body {
   opacity: 0.5;
 }
 
-button {
+.button {
   cursor: pointer;
 }
 
@@ -305,7 +323,9 @@ a{
   width: 80%;
   transform: translateY(-25%);
   min-width: 800px;
-  z-index: 5;
+  z-index: 1;
+  position: absolute;
+  top: 50%;
 }
 
 .brand-quote h1 {
@@ -332,10 +352,7 @@ a{
 }
 /* SEARCH FORM */
 .search-form_section {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  width: 100vw;
   position: relative;
 }
 
@@ -348,20 +365,15 @@ a{
 }
 
 #show .search-form_section {
-  position: relative;
+  position: static;
 }
 
 #form-container {
   position: relative;
   width: 90%;
-  max-width: 830px;
-}
-.stays #form-container {
-  margin: 1em auto;
-  padding: 1em 0 2em 0;
-}
-#show #form-container {
-  position: relative;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 1em  0;
 }
 
 #search-form {
@@ -369,7 +381,7 @@ a{
   justify-content: space-between;
   background: #ffc996;
   padding: 0.2em;
-  margin-top: 30vh;
+  margin-top: 25%;
   position: relative;
   border-radius: 0.2em;
 }
@@ -514,44 +526,54 @@ a{
 }
 
 /* calendar */
-.scene {
-  width: 90%;
-  max-width: 830px;
-  height: 280px;
-  border-radius: 0.2em;
-  perspective: 1000px;
-  background-color: white;
-  user-select: none;
-  position: absolute;
-  top: 40vh;
-  margin-top: 0.5em;
+.calendar-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  z-index: 2;
+  -webkit-transform: scale(0);
   transform: scale(0);
-  overflow: hidden;
-  z-index: 10;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  -webkit-box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
-  box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
 }
 
-.stays .scene {
+.container_absolute {
   position: absolute;
-  top: 70%;
+  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.3); 
+  box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.3);
+}
+
+.scene {
+  width: 100%;
+  height: 250px;
+  perspective: 100000px;
+  -webkit-perspective: 100000px;
+  background-color: white;
+  user-select: none;
+  margin: 0 auto;
+  overflow: hidden;
+  z-index: 10;
 }
 
 .display-calendar {
-  transform: scale(1);  
+  transform: scale(1);
+  -webkit-transform: scale(1);
   transition: rotate 0.1s ease-out;
+  -webkit-transition: rotate 0.1s ease-out;
 }
 
 .slider {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   position: relative;
   transform: translateZ(-290px) rotateY(0deg);
   -webkit-transform: translateZ(-290px) rotateY(0deg);
-  transition: all 0.4s ease-in-out;
-  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
 }
 
 .calendar {
@@ -572,6 +594,10 @@ a{
   z-index: 5;
 }
 
+#mobile-weeks {
+  display: none;
+}
+
 .weeks {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -581,6 +607,7 @@ a{
   font-size: 0.8em;
   font-weight: 500;
   opacity: 0.7;
+  z-index: 5;
 }
 
 .week {
@@ -651,6 +678,7 @@ a{
   height: 2em;
   border-radius: 50%;
   transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
   z-index: -1;
   display: flex;
   align-items: center;
@@ -672,6 +700,7 @@ a{
 }
 .start-day::after {
   transform: translateX(25%);
+  -webkit-transform: translateX(25%);
   border-top-left-radius: 2em;
   border-bottom-left-radius: 2em;
 }
@@ -722,6 +751,15 @@ a{
   align-items: center;
 }
 
+.cal-btn_container {
+  width: 100%;
+  min-height: 3em;
+  background: #fff;
+  position: relative;
+  padding-top: 0.5em;
+  margin: 0 auto;
+}
+
 .cal-btn {
   display: flex;
   justify-content: center;
@@ -734,10 +772,9 @@ a{
   border-radius: 50%;
   font-size: 1.8em;
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   cursor: pointer;
   transition: all 0.2s ease-out;
+  z-index: 5;
 }
 
 .next-btn {
@@ -751,13 +788,23 @@ a{
   cursor: not-allowed;
 }
 
+.span-button_container {
+  z-index: 5;
+  width: 100%;
+  background: #fff;
+  height: 2.5em;
+  position: relative;  
+  z-index: 5;
+  font-size: 1.2em;
+  margin: 0 auto;
+}
+
 .cal-clear {
   position: absolute;
   right: 1em;
   top: 0.5em;
   font-weight: 500;
-  opacity: 0.5;
-  z-index: 5;
+  opacity: 0.5; 
 }
 .cal-clear.clear-dates {
   opacity: 1;
@@ -766,13 +813,12 @@ a{
 }
 
 .close-cal {
-  font-weight: 600;
-  font-size: 2em;
+  font-weight: 500;
   cursor: pointer;
   position: absolute;
   left: 0.5em;
-  top: 0;
-  z-index: 5;
+  top: .5em;
+  color: #ff0000;
 }
 
 .sm-cal-form {
@@ -811,20 +857,6 @@ a{
   font-size: 0.8em;
   font-weight: 600;
 }
-
-.orientation-warning {
-  display: none;
-  position: relative;
-}
-
-.orientation-warning span {
-  position: absolute;
-  top: 0;
-  right: 0.5em;
-  font-size: 1.5em;
-  font-weight: 600;
-}
-
 
 /* showcase */
 #showcase-section {
@@ -911,11 +943,49 @@ a{
 
 /* SEARCH PAGE */
 .search-page {
-  z-index: -1;
-  padding-top: 148px;
+  display: grid;
+  gap: 1em;
+  grid-template-columns: 60% 40%;
+  grid-template-areas: 
+  "stays map";
+  position: relative;
 }
 
-.search-page .filters {
+.search-page #map {
+  height: 90%;
+  width: 38%;
+  position: fixed;
+  right: .5em;
+}
+
+.staysList {
+  padding-top: 148px;
+  grid-area: stays;
+  position: relative;
+  min-height: 100vh;
+}
+
+.toggleMap {
+  position: fixed;
+  bottom: 1em;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: .5em;
+  border: none;
+  color: #fff;
+  background: #000;
+  z-index: 1;
+  border-radius: 1em;
+  cursor: pointer;
+  display: none;
+}
+#toggleMap {
+  position: absolute;
+  left: 100%;
+  display: none;
+}
+
+.staysList .filters {
   width: 100%;
   max-width: 40rem;
   display: flex;
@@ -960,7 +1030,6 @@ a{
   outline: none;
   padding-left: 0.2em;
   border-radius: 0.5em;
-  z-index: 1;
   background-color: transparent;
   cursor: pointer;
   text-transform: capitalize;
@@ -1029,18 +1098,18 @@ a{
 }
 
 .search-card {
-  width: 40rem;
+  width: 100%;
   text-decoration: none;
   color: #000;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1em;
   height: 250px;
-  padding: 1em 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1em .5em;
 }
-.search-card:last-child {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+.search-card:nth-of-type(2n) {
+  background: rgb(0 0 0 / 2%);
 }
 
 .carousel_scene {
@@ -1158,20 +1227,24 @@ a{
 /* SHOW PAGE  */
 .show-wrapper {
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-auto-flow: row dense;
-  column-gap: 1.5em;
-  justify-content: space-around;
-  align-content: space-between;
-  width: 100%;
-  position: relative;
-  padding: 1em 2em;
+  grid-template-areas: 
+  "stay map"
+   "stay reviews"
+   "stay reviews"
+   "stay reviews";
+   grid-template-columns: 50% 50%;
+   gap: 0.5em;
+   padding: 1em;
 }
 
 .show-wrapper h2 {
   font-size: 1.2em;
   font-weight: 600;
   margin-bottom: 0.5em;
+}
+
+.stay-details {
+  grid-area: stay;
 }
 
 .stay-info {
@@ -1187,7 +1260,6 @@ a{
 .container__show-image {
   height: 350px;
   width: 100%;
-  max-width: 800px;
   overflow: hidden;
   border-radius: 0.3em;
   margin: 0.5em 0;
@@ -1257,7 +1329,6 @@ a{
   width: 100px;
   height: 30px;
   border-radius: 0.2em;
-  z-index: 1;
 }
 
 .stay-details__description {
@@ -1358,11 +1429,22 @@ a{
   border-radius: .5em;
   height: 3em;
 }
+
+.show-wrapper #map {
+  grid-area: map;
+  min-height: 400px;
+}
+
+.mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-top-left, .mapboxgl-ctrl-top-right {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* REVIEWs  */
 
 .reviews-container {
-  grid-row: 1/2;
-  grid-column: 2/3;
+  grid-area: reviews;
   margin-bottom: 1em;
   position: relative;
 }
@@ -1830,6 +1912,7 @@ button#actDelete-btn {
   width: 90%;
   max-width: 600px;
   margin: 1em auto;
+  position: relative;
 }
 
 .editImages h1 {
@@ -1914,6 +1997,12 @@ button#actDelete-btn {
 
 .updatePhoto-btn {
   margin: 1em 0;
+}
+
+.editImages .listing-form__back-link {
+  position: absolute;
+  top: 0.5em;
+  right: .5em;
 }
 
 /* ERROR PAGE */

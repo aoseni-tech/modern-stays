@@ -1,5 +1,8 @@
 import {Request, Response, NextFunction} from 'express';
-import {staySchema,Stay} from '../models/staySchema'
+import {staySchema,Stay} from '../models/staySchema';
+const mbxGeocoder = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geoCoder = mbxGeocoder({ accessToken: mapBoxToken });
 class Validator {
   error: string;
   value: string;
@@ -19,7 +22,7 @@ const clearInfo = () =>{
   formStatus = ''
 }
 
-const checkStayValidity = (req:Request,res:Response,next:NextFunction)=>{   
+const checkStayValidity = async (req:Request,res:Response,next:NextFunction)=>{   
   clearInfo();
   const stay = new Stay(req.body);
   stay.host = req.user?._id;
@@ -41,7 +44,14 @@ const checkStayValidity = (req:Request,res:Response,next:NextFunction)=>{
     res.redirect(`/stays/new`);
   } else {
     isValidated = true;
-    res.locals.stay = stay;
+    let geoData = await geoCoder.forwardGeocode({
+      query: stay.location,
+      limit: 1
+    }).send()
+ 
+    stay.geometry = geoData.body.features[0].geometry;
+    if(req.method === 'PUT') {res.locals.geometry = stay.geometry;}
+    else {res.locals.stay = stay;}
     next();
   }
 }
