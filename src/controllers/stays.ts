@@ -42,10 +42,20 @@ module.exports.getStays = async(req:Request, res: Response)=>{
   
   }
 
+  //** 
+// API TO GET ALL  STAYS INFO 
   module.exports.staysData = async(req:Request, res: Response)=>{
     let stays = await Stay.find({});
-    res.json({features: stays})  
+    res.json({features: stays,mapToken:process.env.MAPBOX_TOKEN})  
   }
+// API TO GET A SINGLE STAY INFO 
+  module.exports.stayInfo = async(req:Request, res: Response)=>{
+    let {id} = req.params
+    let stay = await Stay.findById(id);
+    res.json({features: stay,mapToken:process.env.MAPBOX_TOKEN})  
+  }
+
+//**  
 
   module.exports.createNewStay = async (req:Request, res: Response)=>{
     const {stay} = res.locals;

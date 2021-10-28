@@ -19,6 +19,10 @@ const bookingsRoute = require('./routes/bookings');
 const passport = require('passport');
 import { User } from './models/userSchema';
 const LocalStrategy = require('passport-local').Strategy;
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require("helmet");
+import { cspOptions } from "./security/helmet";
+
 
 function createDateString(date:string) {
   let options: object = {month:'short',year:'numeric',weekday:'short',day:'2-digit'};
@@ -44,8 +48,12 @@ app.use(methodOverride('_method'));
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'../views'))
+app.use(mongoSanitize());
+app.use(helmet.contentSecurityPolicy(cspOptions))
+
 
 const sessionConfig = {
+  name: 'session',
   secret: 'keyboardcat',
   resave: false,
   saveUninitialized: true,

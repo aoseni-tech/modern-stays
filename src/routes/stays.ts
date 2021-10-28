@@ -15,6 +15,7 @@ router.route('')
 .post(checkStayValidity,wrapAsync(stays.createNewStay));
 
 router.get('/data',wrapAsync(stays.staysData))
+router.get('/data/:id',wrapAsync(stays.stayInfo))
 
 
 router.get('/new',isAuthenticated,validationResult,stays.renderNewStayForm);

@@ -24,6 +24,9 @@ const clearInfo = () =>{
 
 const checkStayValidity = async (req:Request,res:Response,next:NextFunction)=>{   
   clearInfo();
+  for(let value in req.body) {
+    req.body[value] = req.body[value].replace(/[&\/\\#,+()$~%:*?<>{}]/g,'')
+  }
   const stay = new Stay(req.body);
   stay.host = req.user?._id;
   let {id} = req.params;
