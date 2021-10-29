@@ -22,7 +22,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require("helmet");
 import { cspOptions } from "./security/helmet";
-const dbUrl =  'mongodb://localhost:27017/modernStays';
+const dbUrl =  process.env.DB_URL || 'mongodb://localhost:27017/modernStays';
 const MongoStore = require('connect-mongo');
 
 function createDateString(date:string) {
