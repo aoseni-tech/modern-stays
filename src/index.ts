@@ -95,7 +95,7 @@ app.use((req:Request, res: Response,next) => {
   res.locals.info = req.flash('info')
   res.locals.error = req.flash('error')
   res.locals.currentUser = req.user
-  if(!['/login','/register','/data'].includes(req.originalUrl)){
+  if(!['/login','/register','/stays/data'].includes(req.originalUrl)){
   req.session.returnTo = req.originalUrl
   }
   next()
