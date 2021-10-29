@@ -315,7 +315,7 @@ a{
   height: 100vh;
   max-height: 700px;
   min-height: 600px;
-  background: url('/images/hero.jpg') center/cover no-repeat;
+  background: url('/images/Hero.jpg') center/cover no-repeat;
   z-index: 2;
 }
 
