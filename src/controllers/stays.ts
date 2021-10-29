@@ -119,7 +119,7 @@ module.exports.getStays = async(req:Request, res: Response)=>{
     }
     
     if(req.files) {
-      req.files.forEach((file)=>{
+      req.files.forEach((file:any)=>{
         let imageData = {url:file.path,filename:file.filename};
         stay?.images.push(imageData)
       })
