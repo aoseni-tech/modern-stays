@@ -30,6 +30,7 @@ const cspOptions = {
         scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
         styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
         workerSrc: ["'self'", "blob:"],
+        childSrc: ["blob:"],
         objectSrc: [],
         imgSrc: [...imageSrcUrls],
         fontSrc: ["'self'", ...fontSrcUrls],
