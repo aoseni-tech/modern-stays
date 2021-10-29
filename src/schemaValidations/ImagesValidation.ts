@@ -16,7 +16,7 @@ const uploadCb = function (req:Request, res:Response,next:NextFunction) {
     let {id} = req.params;
     if (err) {
       let message = err?.message;
-      req.flash('info',`${message} : maximum of 3 images allowed not exceeding 1mb each`);
+      req.flash('info',`${message}`);
       return res.redirect(`/stays/${id}`)
     } 
     next()    
