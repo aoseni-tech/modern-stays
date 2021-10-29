@@ -183,13 +183,6 @@
       </div>
       <% } %> 
   </div>
-  
-
-  <% bookings.forEach(booking =>{%> 
-    <form action="/stays/<%=stay._id%>/bookings/<%=booking._id%>?_method=DELETE" method="post">
-      <button>delete</button>
-    </form>
-  <%}) %> 
 
 </section>
 
