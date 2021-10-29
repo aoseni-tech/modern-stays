@@ -22,7 +22,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require("helmet");
 import { cspOptions } from "./security/helmet";
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/modernStays';
+const dbUrl =  'mongodb://localhost:27017/modernStays';
 const MongoStore = require('connect-mongo');
 
 function createDateString(date:string) {
@@ -33,9 +33,9 @@ function createDateString(date:string) {
 }
 
 const db = mongoose.connect(dbUrl, {
+  useUnifiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true,
-  useUnifiedTopology: true,
   useFindAndModify: false
 }).then(() => {
   console.log('db connection open!')
@@ -95,7 +95,7 @@ app.use((req:Request, res: Response,next) => {
   res.locals.info = req.flash('info')
   res.locals.error = req.flash('error')
   res.locals.currentUser = req.user
-  if(!['/login','/register'].includes(req.originalUrl)){
+  if(!['/login','/register','/data'].includes(req.originalUrl)){
   req.session.returnTo = req.originalUrl
   }
   next()
