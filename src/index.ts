@@ -24,7 +24,6 @@ const helmet = require("helmet");
 import { cspOptions } from "./security/helmet";
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/modernStays';
 const MongoStore = require('connect-mongo');
-// 'mongodb://localhost:27017/modernStays'
 
 function createDateString(date:string) {
   let options: object = {month:'short',year:'numeric',weekday:'short',day:'2-digit'};
