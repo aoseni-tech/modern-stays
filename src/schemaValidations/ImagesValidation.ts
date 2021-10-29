@@ -1,12 +1,11 @@
 import {Request, Response, NextFunction} from 'express';
-import { FileFilterCallback } from 'multer';
 const multer  = require('multer');
 const {storage} = require('../cloudinary/config');
 const limits = { fileSize: 1200000 }
 
 const upload = multer({
   storage,
-  fileFilter: function (req:Request, file:File, cb:FileFilterCallback) {
+  fileFilter: function (req:Request, file:File, cb:any) {
       return cb(null, true)
   },
   limits
