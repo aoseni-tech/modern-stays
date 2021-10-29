@@ -22,7 +22,9 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require("helmet");
 import { cspOptions } from "./security/helmet";
-
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/modernStays';
+const MongoStore = require('connect-mongo');
+// 'mongodb://localhost:27017/modernStays'
 
 function createDateString(date:string) {
   let options: object = {month:'short',year:'numeric',weekday:'short',day:'2-digit'};
@@ -31,7 +33,7 @@ function createDateString(date:string) {
   else return;
 }
 
-const db = mongoose.connect('mongodb://localhost:27017/modernStays', {
+const db = mongoose.connect(dbUrl, {
   useNewUrlParser: true, 
   useUnifiedTopology: true,
   useFindAndModify:false,
@@ -51,10 +53,18 @@ app.set('views', path.join(__dirname,'../views'))
 app.use(mongoSanitize());
 app.use(helmet.contentSecurityPolicy(cspOptions))
 
+const secret = process.env.SECRET || 'keyboardcat';
+
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  touchAfter: 24 * 3600 
+})
+
 
 const sessionConfig = {
+  store,
   name: 'session',
-  secret: 'keyboardcat',
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: { 
