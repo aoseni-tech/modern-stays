@@ -7,7 +7,7 @@ import path from 'path';
 import mongoose from 'mongoose';
 const methodOverride = require('method-override');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
