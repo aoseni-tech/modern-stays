@@ -33,10 +33,10 @@ function createDateString(date:string) {
 }
 
 const db = mongoose.connect(dbUrl, {
-  useNewUrlParser: true, 
+  useNewUrlParser: true,
+  useCreateIndex: true,
   useUnifiedTopology: true,
-  useFindAndModify:false,
-  useCreateIndex: true
+  useFindAndModify: false
 }).then(() => {
   console.log('db connection open!')
 }).catch((err: { message: any; }) => console.log(err.message));
