@@ -1,4 +1,4 @@
-# modern-stays
+# modern-stays <img src='https://github.com/GoldenAceTech/modern-stays/blob/master/src/public/images/favicon.png' alt='modernstay-icon'>
 This is a NodeJS project for an online vacation rentals marketplace where you can search for stays to rent and book one.
 
 # Features
