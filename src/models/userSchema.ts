@@ -53,13 +53,6 @@ schema.post('findOneAndRemove',async(doc:UserDoc)=>{
       Stay.updateMany({reviews:{$in:doc.reviews}},{$pull:{reviews:{$in:doc.reviews}}}),
       Stay.updateMany({bookings:{$in:doc.bookings}},{$pull:{bookings:{$in:doc.bookings}}}),
       Review.deleteMany({_id: {$in:doc.reviews}}),
-      Stay.find({_id: {$in:doc.stays}},function (err,docs){
-        docs.forEach((doc)=>{
-          doc.images.forEach(async (image)=>{
-            await cloudinary.uploader.destroy(image.filename);
-          })
-        })
-      }),
       Stay.deleteMany({_id: {$in:doc.stays}}),
       Book.deleteMany({_id: {$in:doc.bookings}})
     ]) 

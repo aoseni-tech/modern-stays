@@ -3,6 +3,7 @@ import { User, UserDoc} from '../models/userSchema';
 import { Stay } from '../models/staySchema';
 import { Book} from '../models/bookingSchema';
 import passport from 'passport';
+const {cloudinary} = require('../cloudinary/config')
 
 module.exports.renderSignUpForm = (req:Request, res: Response)=>{
     const title = 'Register';
@@ -69,7 +70,18 @@ module.exports.deleteUserAccount = async (req:Request,res:Response) =>{
         req.flash('info',`Permission denied: You can not delete another user's account`)
         return res.redirect('/');
     }
-    await User.findByIdAndRemove(userId);
+
+    let user = await User.findById(userId);
+
+    await Stay.find({_id: {$in:user?.stays}},function (err,docs){
+        docs.forEach((doc)=>{
+          doc.images.forEach(async (image)=>{
+            await cloudinary.uploader.destroy(image.filename);
+          })
+        })
+      });
+
+    if(user) await User.findByIdAndRemove(userId);
     req.flash('info','Your account have been deleted')
     res.redirect('/')
 }

@@ -22,7 +22,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require("helmet");
 import { cspOptions } from "./security/helmet";
-const dbUrl =  process.env.DB_URL || 'mongodb://localhost:27017/modernStays';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/modernStays';
 const MongoStore = require('connect-mongo');
 
 function createDateString(date:string) {
@@ -118,7 +118,6 @@ app.all('*', (req:Request,res:Response,next:NextFunction) => {
 
 app.use((err:any,req:Request,res:Response,next:NextFunction) => {
   const {message = 'Something went wrong!',statusCode = 500} = err;
-  console.log(message);
   const title = 'page not found - 404'
   const page = 'error'
   res.status(statusCode).render('pages/error',{title,page,message})

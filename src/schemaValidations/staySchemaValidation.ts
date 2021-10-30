@@ -25,7 +25,7 @@ const clearInfo = () =>{
 const checkStayValidity = async (req:Request,res:Response,next:NextFunction)=>{   
   clearInfo();
   for(let value in req.body) {
-    req.body[value] = req.body[value].replace(/[&\/\\#,+()$~%:*?<>{}]/g,'')
+    req.body[value] = req.body[value].replace(/[&\/\\#+()$~%:*?<>{}]/g,'')
   }
   const stay = new Stay(req.body);
   stay.host = req.user?._id;
@@ -48,11 +48,21 @@ const checkStayValidity = async (req:Request,res:Response,next:NextFunction)=>{
   } else {
     isValidated = true;
     let geoData = await geoCoder.forwardGeocode({
-      query: stay.location,
+      query: stay.location.slice(0,stay.location.indexOf(' ')),
       limit: 1
     }).send()
- 
-    stay.geometry = geoData.body.features[0].geometry;
+
+    let geometry = geoData.body.features[0]?.geometry;
+
+    if(geometry) {stay.geometry = geometry;}
+    else {
+      let geoData = await geoCoder.forwardGeocode({
+        query: stay.location.slice(0,2),
+        limit: 1
+      }).send()
+      stay.geometry = geoData.body.features[0]?.geometry;
+    }
+
     if(req.method === 'PUT') {res.locals.geometry = stay.geometry;}
     else {res.locals.stay = stay;}
     next();
