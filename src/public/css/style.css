@@ -326,13 +326,12 @@ a{
   min-width: 800px;
   z-index: 1;
   position: absolute;
-  top: 50%;
+  top: 55%;
 }
 
 .brand-quote h1 {
   font-size: 3.5em;
   font-weight: 600;
-  margin-top: 1em;
   color: #fff;
   text-shadow: 4px 4px 9px rgba(0, 0, 0, 0.5);
 }
