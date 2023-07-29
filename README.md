@@ -13,7 +13,7 @@ After booking you can check your bookings on your profile and make changes to it
 
 Another thing you can do is add your own listings and upload their images, you can update your listings and add or delete images when you want. You can also delete the listings you posted.
 
-Here is the link https://modern-stay.herokuapp.com/ , check it out! The project is written mainly in typescript, the main tools used are:
+Here is the link https://modern-stays.onrender.com/ , check it out! The project is written mainly in typescript, the main tools used are:
 
 
 # Tools used
