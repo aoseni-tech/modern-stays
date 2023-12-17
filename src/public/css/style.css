@@ -1697,7 +1697,7 @@ svg.bi.bi-person-circle {
 
 .expandbutton input[type=checkbox] {
   position: absolute;
-  left: -100%;
+  left: -500%;
 }
 
 .expandbutton label {
