@@ -10,7 +10,7 @@
   },
   "author": "afolabi",
   "engines": {
-    "node": "^16.11.1"
+    "node": "^21.4.0"
   },
   "license": "ISC",
   "dependencies": {
