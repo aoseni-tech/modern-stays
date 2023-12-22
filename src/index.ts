@@ -5,6 +5,7 @@ if(process.env.NODE_ENV !== 'production') {
 import express, {Request, Response, NextFunction} from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
+const punycode = require('punycode/');
 const methodOverride = require('method-override');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,7 +23,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require("helmet");
 import { cspOptions } from "./security/helmet";
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/modernStays';
+const dbUrl = punycode.decode(process.env.DB_URL) || 'mongodb://localhost:27017/modernStays';
 const MongoStore = require('connect-mongo');
 
 function createDateString(date:string) {
