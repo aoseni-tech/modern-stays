@@ -37,7 +37,7 @@ const bookSchema = new Schema<BookDoc>({
     }
 })
 
-bookSchema.post('findOneAndRemove',async(doc)=>{
+bookSchema.post('findOneAndDelete',async(doc)=>{
     if(doc){
       await Promise.all([
         User.findByIdAndUpdate(doc.user,{$pull:{bookings:doc._id}}),

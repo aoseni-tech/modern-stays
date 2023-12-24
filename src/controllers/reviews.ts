@@ -23,7 +23,7 @@ module.exports.deleteReview = async(req:Request, res: Response)=>{
       return res.redirect(`/stays/${id}`);
     }
     await Promise.all ([
-      Review.findByIdAndRemove(_id),
+      Review.findByIdAndDelete(_id),
       Stay.findByIdAndUpdate(id, {$pull: {reviews: _id}},{new:true}),
       User.findByIdAndUpdate(user, {$pull: {reviews: _id}},{new:true})
   ])

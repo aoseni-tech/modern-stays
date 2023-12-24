@@ -33,7 +33,7 @@ module.exports.cancelBooking = async(req:Request, res: Response)=>{
       req.flash('info','Permission denied: You can only cancel your bookings.')
       return res.redirect(`/stays/${id}`);
     }
-    await Book.findByIdAndRemove(bookingId)
+    await Book.findByIdAndDelete(bookingId)
     req.flash('info',`Your booking for "${stay?.title}" have been canceled`)
     let referer = req.headers.referer!
     res.redirect(referer)

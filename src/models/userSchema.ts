@@ -47,7 +47,7 @@ const schema = new Schema({
 
 interface UserModel<T extends Document> extends PassportLocalModel<T> {}
 
-schema.post('findOneAndRemove',async(doc:UserDoc)=>{
+schema.post('findOneAndDelete',async(doc:UserDoc)=>{
   if(doc){
     await Promise.all([
       Stay.updateMany({reviews:{$in:doc.reviews}},{$pull:{reviews:{$in:doc.reviews}}}),

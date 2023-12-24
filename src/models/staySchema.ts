@@ -140,7 +140,7 @@ staySchema.post('findOneAndUpdate', async function (doc){
   }
 })
 
-staySchema.post('findOneAndRemove',async(doc:StayDoc)=>{
+staySchema.post('findOneAndDelete',async(doc:StayDoc)=>{
   if(doc){
     doc.images.forEach(async (image)=>{
       await cloudinary.uploader.destroy(image.filename);

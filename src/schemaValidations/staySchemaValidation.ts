@@ -40,6 +40,7 @@ const checkStayValidity = async (req:Request,res:Response,next:NextFunction)=>{
     })      
    if(stayValidation['description'].value.length<10) stayValidation['description'].value = "";
    for(let data in req.body) {
+    //@ts-ignore
      if(!stayValidation[data].error) stayValidation[data].error = staySchema.obj[data].validate.message();
     }
     isValidated = false;
