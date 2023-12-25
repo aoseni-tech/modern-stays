@@ -6,9 +6,12 @@ files:
 hooks:
   BeforeInstall:
     - location: Scripts/before_install.sh
+      timeout: 30
   AfterInstall:
     - location: Scripts/install_packages.sh
+      timeout: 120
     - location: Scripts/build_dist.sh
+      timeout: 120
   ApplicationStart:
     - location: Scripts/start_app.sh
-      timeout: 3600
+      timeout: 120
