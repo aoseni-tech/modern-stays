@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /Documents/node/modern_stays
+    destination: /home/ec2-user/modern_stays
 hooks:
   BeforeInstall:
     - location: Scripts/before_install.sh

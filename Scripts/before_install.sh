@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # Create directory and cd into directory
-mkdir Documents
-mkdir /Documents/node
-mkdir /Documents/node/modern_stays
-cd /Documents/node/modern_stays
+mkdir /home/ec2-user/modern_stays
+cd /home/ec2-user/modern_stays
 
 #install packages
 npm install
