@@ -1,45 +1,9 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
-import {
-  SecretsManagerClient,
-  GetSecretValueCommand,
-  GetSecretValueCommandOutput
-} from "@aws-sdk/client-secrets-manager";
-
-const secret_name = "Modern_Stays_Variables";
-
-const client = new SecretsManagerClient({
-  region: "us-east-2",
-});
-
-let response: GetSecretValueCommandOutput;
-
-(async function getSecretResponse() {
-  try {
-    response = await client.send(
-      new GetSecretValueCommand({
-        SecretId: secret_name,
-        VersionStage: "AWSCURRENT",
-      })
-    );
-    const secrets = response!.SecretString as string;
-    const secretObject = JSON.parse(secrets)
-  } catch (error) {
-    // For a list of exceptions thrown, see
-    // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-    throw error;
-  }
-})();
-
-
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import mongoose from "mongoose";
-const methodOverride = require("method-override");
-const app = express();
-const port = process.env.PORT || 3000;
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -50,14 +14,17 @@ const reviewsRoute = require("./routes/reviews");
 const bookingsRoute = require("./routes/bookings");
 const passport = require("passport");
 import { User } from "./models/userSchema";
+const methodOverride = require("method-override");
 const LocalStrategy = require("passport-local").Strategy;
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 import { cspOptions } from "./security/helmet";
-const dbUrl =
-  process.env.DB_URL ||
-  "mongodb://localhost:27017/modernStays";
 const MongoStore = require("connect-mongo");
+import { envSecret } from "./awsConfig";
+
+const app = express();
+const port = process.env.PORT || 3000;
+const dbUrl = envSecret.DB_URL || "mongodb://localhost:27017/modernStays";
 
 function createDateString(date: string) {
   let options: object = {
@@ -92,7 +59,7 @@ app.set("views", path.join(__dirname, "../views"));
 app.use(mongoSanitize());
 app.use(helmet.contentSecurityPolicy(cspOptions));
 
-const secret = process.env.SECRET || "keyboardcat";
+const secret = envSecret.SECRET || "keyboardcat";
 
 const store = MongoStore.create({
   mongoUrl: dbUrl,
