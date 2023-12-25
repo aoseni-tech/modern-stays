@@ -8,9 +8,7 @@ hooks:
     - location: Scripts/before_install.sh
   AfterInstall:
     - location: Scripts/install_packages.sh
-      timeout: 1800
     - location: Scripts/build_dist.sh
-      timeout: 1800
   ApplicationStart:
     - location: Scripts/start_app.sh
       timeout: 3600

@@ -1,4 +1,3 @@
 #!/bin/bash
 
-#install packages
-npm install
+npm run build

@@ -5,3 +5,6 @@ mkdir Documents
 mkdir /Documents/node
 mkdir /Documents/node/modern_stays
 cd /Documents/node/modern_stays
+
+#install packages
+npm install
