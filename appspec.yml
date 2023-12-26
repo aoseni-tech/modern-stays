@@ -5,6 +5,8 @@ files:
     destination: /home/ec2-user/modern_stays
 hooks:
   BeforeInstall:
+    - location: Scripts/install_nvm.sh
+      timeout: 300
     - location: Scripts/activate_nvm.sh
       timeout: 60
     - location: Scripts/install_node.sh
