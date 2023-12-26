@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/home/ec2-user/.nvm/nvm.sh
+sudo /home/ec2-user/.nvm/nvm.sh
