@@ -4,9 +4,6 @@ files:
   - source: /
     destination: /home/ec2-user/modern_stays
 hooks:
-  BeforeInstall:
-    - location: Scripts/create_dir.sh
-      timeout: 30
   AfterInstall:
     - location: Scripts/install_packages.sh
       timeout: 300
