@@ -1,3 +1,3 @@
 #!/bin/bash
 
-source ~/.nvm/nvm.sh
+/home/ec2-user/.nvm/nvm.sh
