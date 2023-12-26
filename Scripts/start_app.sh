@@ -5,4 +5,4 @@ source /home/ec2-user/.bash_profile
 
 export AWS_MODERNSTAY_CONFIG="$(aws secretsmanager get-secret-value --secret-id Modern_Stays_Variables)"
 
-/home/ec2-user/.nvm/versions/node/v20.10.0/bin/npm run start
+npm run start
