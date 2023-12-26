@@ -12,6 +12,7 @@ export interface UserDoc extends PassportLocalDocument {
   bookings?: Array<Schema.Types.ObjectId>;
 }
 
+
 const schema = new Schema({
     email: { 
       type: String,
@@ -41,6 +42,7 @@ const schema = new Schema({
         ref:'Book'
       }
     ]
+    // @ts-ignore
   })  as PassportLocalSchema;
 
   schema.plugin(passportLocalMongoose);
