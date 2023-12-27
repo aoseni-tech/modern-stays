@@ -11,6 +11,3 @@ hooks:
   ApplicationStart:
     - location: Scripts/start_app.sh
       timeout: 60
-  ApplicationStop:
-    - location: Scripts/stop_app.sh
-      timeout: 60
