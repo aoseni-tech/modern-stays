@@ -6,7 +6,7 @@ cd /home/ec2-user/
 npm install
 
 #install pm2
-npm install pm2 -g
+# npm install pm2 -g
 
 #build files
 npm run build
