@@ -23,7 +23,7 @@ const MongoStore = require("connect-mongo");
 import { envSecret } from "./awsConfig";
 
 const app = express();
-const port = process.env.PORT || 22;
+const port = process.env.PORT || 3000;
 const dbUrl = envSecret.DB_URL || "mongodb://localhost:27017/modernStays";
 
 function createDateString(date: string) {
