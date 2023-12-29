@@ -1,9 +1,8 @@
 import {Request, Response, NextFunction} from 'express';
 import {staySchema,Stay} from '../models/staySchema';
 const mbxGeocoder = require('@mapbox/mapbox-sdk/services/geocoding');
-import { envSecret } from '../awsConfig';
 
-const mapBoxToken = envSecret.MAPBOX_TOKEN;
+const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geoCoder = mbxGeocoder({ accessToken: mapBoxToken });
 class Validator {
   error: string;

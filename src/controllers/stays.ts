@@ -6,7 +6,6 @@ import { Book, BookDoc } from "../models/bookingSchema";
 const { reviewErrors } = require("../schemaValidations/reviewSchemaValidation");
 const { bookErrors } = require("../schemaValidations/bookSchemaValidation");
 const { cloudinary } = require("../cloudinary/config");
-import { envSecret } from "../awsConfig";
 
 module.exports.getStays = async (req: Request, res: Response) => {
   let { query, sorts, location, page_offset, start, end } = res.locals;
@@ -57,13 +56,13 @@ module.exports.getStays = async (req: Request, res: Response) => {
 // API TO GET ALL  STAYS INFO
 module.exports.staysData = async (req: Request, res: Response) => {
   let stays = await Stay.find({});
-  res.json({ features: stays, mapToken: envSecret.MAPBOX_TOKEN });
+  res.json({ features: stays, mapToken: process.env.MAPBOX_TOKEN });
 };
 // API TO GET A SINGLE STAY INFO
 module.exports.stayInfo = async (req: Request, res: Response) => {
   let { id } = req.params;
   let stay = await Stay.findById(id);
-  res.json({ features: stay, mapToken: envSecret.MAPBOX_TOKEN });
+  res.json({ features: stay, mapToken: process.env.MAPBOX_TOKEN });
 };
 
 //**
