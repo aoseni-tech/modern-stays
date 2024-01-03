@@ -1,6 +1,6 @@
 {
   "name": "modern-stays",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "luxerious rents",
   "main": "dist/index.js",
   "scripts": {
