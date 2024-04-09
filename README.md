@@ -16,9 +16,11 @@ Username: guest
 
 Password: Guest123 
 
-# Tools used
+# Language and Technologies
  This is a Node JS project and is mainly written in typescript
  
  Express Js - to write the application logic and CRUD operation API.
  
  MongoDB(Backend) - to store,retrieve and query data. 
+
+ AWS Elastic BeanStalk - Deployment
