@@ -35,7 +35,7 @@
     "fs-extra": "^10.1.0",
     "helmet": "^4.6.0",
     "method-override": "^3.0.0",
-    "mongoose": "^8.0.3",
+    "mongoose": "^8.17.0",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
     "node": "^18.18.2",
