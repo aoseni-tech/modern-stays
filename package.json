@@ -10,7 +10,7 @@
   },
   "author": "afolabi",
   "engines": {
-    "node": "^22.18.0"
+    "node": "^22.17.1"
   },
   "license": "ISC",
   "dependencies": {
@@ -31,7 +31,7 @@
     "mongoose": "^8.17.0",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "node": "^22.18.0",
+    "node": "^22.17.1",
     "nodemon": "^3.1.10",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
@@ -47,8 +47,7 @@
     "@types/express-session": "^1.17.10",
     "@types/mapbox__mapbox-sdk": "^0.13.10",
     "@types/mapbox-gl": "^2.7.19",
-    "@types/passport": "^1.0.17",
-    "@types/passport-local-mongoose": "^6.1.5"
+    "@types/passport": "^1.0.17"
   },
   "nodemonConfig": {
     "ignore": [
