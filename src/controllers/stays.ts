@@ -20,7 +20,7 @@ module.exports.getStays = async (req: Request, res: Response) => {
 
   let bookingsID: Array<Schema.Types.ObjectId> = [];
   docs.forEach((doc: BookDoc) => {
-    bookingsID.push(doc._id);
+    bookingsID.push(doc._id as Schema.Types.ObjectId);
   });
 
   let stayCount = await Stay.find(query)
@@ -109,9 +109,9 @@ module.exports.editStay = async (req: Request, res: Response) => {
 
 module.exports.renderEditImageForm = async (req: Request, res: Response) => {
   const stay = await Stay.findById(req.params.id);
-  const title = stay?.title;
+  const title = stay?.title || 'Edit images.MS';
   const page = "editImage";
-  res.render("pages/editImages", { title: `Edit images.MS`, stay, page });
+  res.render("pages/editImages", { title, stay, page });
 };
 
 module.exports.addImages = async (req: Request, res: Response) => {
@@ -171,7 +171,7 @@ module.exports.deleteStay = async (req: Request, res: Response) => {
   const stay = await Stay.findOneAndDelete({ _id: id });
   const user = await User.findById(stay?.host);
   let { stays } = user!;
-  let i = stays?.indexOf(stay?._id)!;
+  let i = stays?.indexOf(stay?._id as Schema.Types.ObjectId)!;
   if (i > -1) {
     stays?.splice(i, 1);
   }
