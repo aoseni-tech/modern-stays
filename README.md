@@ -23,4 +23,4 @@ Password: Guest123
  
  MongoDB(Backend) - to store,retrieve and query data. 
 
- AWS Elastic BeanStalk - Deployment
+ Google Cloud Run - Deployment
