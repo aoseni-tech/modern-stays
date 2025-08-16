@@ -6,7 +6,7 @@ Modern Stays is an online marketplace to rent a place for your next vacation.  U
 
 It has a unique, beautiful and fully responsive user interface that is easy to use and navigate. The calendar was designed and built from scratch. The map is integrated in the application to show users the exact location of stays and the number of stays available within an area.  
 
-Users can browse the app either as a guest or an authenticated user. Only authenticated users are allowed to list their properties or rent a stay, they can also rate and review stays. In addition, authenticated users have a profile page that shows all their past, present and future bookings and the properties they have listed on the website if any.  
+Users can browse the app either as a guest or an authenticated user. Only authenticated users are allowed to list their properties or rent a stay, they can also rate and review stays. In addition, authenticated users have a profile page that shows all their past and present bookings and the properties they have listed on the website if any.  
 
 Modern Stays is a full stack NodeJS application written in Typescript. It uses Express for the application server logic, CRUD operations and REST API. And MongoDB is the database used to store, retrieve, filter and query data.  
 
