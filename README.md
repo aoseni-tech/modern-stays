@@ -1,6 +1,6 @@
 # <img src="https://github.com/GoldenAceTech/modern-stays/blob/master/src/public/images/favicon.png?raw=true" alt="favicon" width="24" height="24" style="vertical-align:middle; margin-right:8px;"> Modern Stays
 
-[Live Site](https://modern-stay-976221425311.us-south1.run.app/) | [GitHub Repo](https://github.com/aoseni-tech/modern-stays)
+[Live Site](https://modern-stay-976221425311.us-south1.run.app/)
 
 ---
 
